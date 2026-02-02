@@ -128,10 +128,10 @@ const HomePage = () => {
                 ali.abouelazz@gmail.com
               </a>
               <a
-                href="tel:0769630844"
+                href="tel:+33777451629"
                 className="block text-gray-300 hover:text-[#9F8E6D] transition-colors duration-300"
               >
-                07 69 63 08 44
+                +33 7 77 45 16 29
               </a>
             </div>
           </div>

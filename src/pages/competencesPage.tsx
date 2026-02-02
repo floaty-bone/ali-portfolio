@@ -38,11 +38,12 @@ const CompetencesPage = () => {
   const software = [
     { name: 'Ansys Workbench', logo: '/ali-portfolio/images-videos/softwareImages/ansys.png' },
     { name: 'Matlab Simulink', logo: '/ali-portfolio/images-videos/softwareImages/simulink.jpg' },
-    { name: 'C++', logo: '/ali-portfolio/images-videos/softwareImages/cpp.png' },
+    { name: 'C++', logo: '/ali-portfolio/images-videos/softwareImages/CPP.png' }, // Fixed casing from search
     { name: 'Python', logo: '/ali-portfolio/images-videos/softwareImages/python.png' },
     { name: 'Django', logo: '/ali-portfolio/images-videos/softwareImages/django.svg' },
     { name: 'Creo', logo: '/ali-portfolio/images-videos/softwareImages/creo.svg.png' },
-    { name: 'SolidWorks', logo: '/ali-portfolio/images-videos/softwareImages/solidWorks.png' }
+    { name: 'SolidWorks', logo: '/ali-portfolio/images-videos/softwareImages/solidWorks.png' },
+    { name: 'CATIA', logo: '/ali-portfolio/images-videos/softwareImages/catia.png' }
   ];
 
   const languages = [
@@ -177,7 +178,7 @@ const CompetencesPage = () => {
             {/* Software Section */}
             <section className="mb-16">
               <h2 className="text-4xl font-light mb-12 text-white">Outils et Logiciels</h2>
-              <div className="grid grid-cols-6 gap-4">
+              <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
                 {software.map((item) => (
                   <div
                     key={item.name}
@@ -186,7 +187,7 @@ const CompetencesPage = () => {
                     <img
                       src={item.logo}
                       alt={item.name}
-                      className="w-19 h-16 mb-3"
+                      className="w-19 h-16 mb-3 object-contain"
                     />
                     <span className="text-sm">{item.name}</span>
                   </div>
@@ -229,10 +230,10 @@ const CompetencesPage = () => {
                 ali.abouelazz@gmail.com
               </a>
               <a
-                href="tel:0769630844"
+                href="tel:+33777451629"
                 className="block text-gray-300 hover:text-[#9F8E6D] transition-colors duration-300"
               >
-                07 69 63 08 44
+                +33 7 77 45 16 29
               </a>
             </div>
           </div>
