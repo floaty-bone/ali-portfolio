@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
+//test
 const CentreInteret = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [navVisible, setNavVisible] = useState(true);
