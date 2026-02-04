@@ -278,22 +278,25 @@ const ExperienceEducationPage = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-start" style={{ top: "10px" }}>
           <div className="max-w-lg">
             <h3 className="text-4xl font-light mb-8">Me contacter</h3>
-            <p className="text-gray-400 mb-8 font-light leading-relaxed">
-              Pour garantir une réponse rapide et efficace, je vous invite à privilégier l'<b>email</b> ou <b>LinkedIn</b> pour toute première prise de contact. Le téléphone reste disponible pour les échanges préalablement organisés.
-            </p>
-            <div className="space-y-4">
-              <a
-                href="mailto:ali.abouelazz@gmail.com"
-                className="block text-gray-300 hover:text-[#9F8E6D] transition-colors duration-300"
-              >
-                ali.abouelazz@gmail.com
-              </a>
-              <a
-                href="tel:+33777451629"
-                className="block text-gray-300 hover:text-[#9F8E6D] transition-colors duration-300"
-              >
-                +33 7 77 45 16 29
-              </a>
+            <div className="space-y-8">
+              <div>
+                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Email</span>
+                <a
+                  href="mailto:ali.abouelazz@gmail.com"
+                  className="text-lg font-light text-white hover:text-[#9F8E6D] transition-colors duration-300"
+                >
+                  ali.abouelazz@gmail.com
+                </a>
+              </div>
+              <div>
+                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Contact via WhatsApp uniquement</span>
+                <a
+                  href="tel:+33777451629"
+                  className="text-lg font-light text-white hover:text-[#9F8E6D] transition-colors duration-300"
+                >
+                  +33 7 77 45 16 29
+                </a>
+              </div>
             </div>
           </div>
           <div className="w-[200px] flex justify-center items-center">
