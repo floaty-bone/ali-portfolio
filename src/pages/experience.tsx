@@ -79,7 +79,7 @@ const ExperienceEducationPage = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="text-2xl mb-2">Diplôme d'ingénieur Grenoble-inp</h4>
-                    <p className="text-gray-400 mb-4">2021-2025</p>
+                    <p className="text-gray-400 mb-4">2022-2025</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">Ingénierie Mécanique</p>
@@ -106,7 +106,7 @@ const ExperienceEducationPage = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="text-2xl mb-2">Classes préparatoires</h4>
-                    <p className="text-gray-400 mb-4">2019-2021</p>
+                    <p className="text-gray-400 mb-4">2020-2022</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">Maths sup, Maths spé</p>
