@@ -86,7 +86,8 @@ const DownloadsPage = () => {
           <div className="w-full max-w-4xl">
             <h2 className="text-4xl font-light mb-12 text-white mt-16">Téléchargements</h2>
             <div className="grid grid-cols-2 gap-8">
-              <div className="bg-white/10 border border-white/20 rounded-lg p-8 flex flex-col items-center">
+              {/* CV Download Card */}
+              <div className="bg-white/10 border border-white/20 rounded-lg p-8 flex flex-col items-center transition-all duration-300 hover:bg-white/15 hover:border-[#9F8E6D]/40 hover:shadow-lg hover:shadow-[#9F8E6D]/20 hover:scale-105">
                 <h3 className="text-2xl mb-6">Mon CV</h3>
                 <p className="text-gray-300 mb-8 text-center">
                   Consultez mon parcours professionnel et académique détaillé
@@ -94,14 +95,15 @@ const DownloadsPage = () => {
                 <a
                   href="/ali-portfolio/downloads/cv.pdf"
                   download
-                  className="flex items-center gap-2 bg-[#9F8E6D] px-8 py-3 hover:bg-[#8F7E5D] transition-colors duration-300 text-white/90 rounded-md"
+                  className="group flex items-center gap-2 bg-[#9F8E6D] px-8 py-3 hover:bg-[#B09E7D] transition-all duration-300 text-white rounded-md shadow-md hover:shadow-xl hover:shadow-[#9F8E6D]/30 hover:scale-110 cursor-pointer active:scale-95"
                 >
-                  <Download className="w-5 h-5" />
-                  Télécharger CV
+                  <Download className="w-5 h-5 group-hover:animate-bounce" />
+                  <span className="font-medium">Télécharger CV</span>
                 </a>
               </div>
 
-              <div className="bg-white/10 border border-white/20 rounded-lg p-8 flex flex-col items-center">
+              {/* Portfolio Technique Download Card */}
+              <div className="bg-white/10 border border-white/20 rounded-lg p-8 flex flex-col items-center transition-all duration-300 hover:bg-white/15 hover:border-[#9F8E6D]/40 hover:shadow-lg hover:shadow-[#9F8E6D]/20 hover:scale-105">
                 <h3 className="text-2xl mb-6">Portfolio Technique</h3>
                 <p className="text-gray-300 mb-8 text-center">
                   Explorez mes projets techniques et réalisations détaillées
@@ -109,10 +111,10 @@ const DownloadsPage = () => {
                 <a
                   href="/ali-portfolio/downloads/Portfolio-technique.pdf"
                   download
-                  className="flex items-center gap-2 bg-[#9F8E6D] px-8 py-3 hover:bg-[#8F7E5D] transition-colors duration-300 text-white/90 rounded-md"
+                  className="group flex items-center gap-2 bg-[#9F8E6D] px-8 py-3 hover:bg-[#B09E7D] transition-all duration-300 text-white rounded-md shadow-md hover:shadow-xl hover:shadow-[#9F8E6D]/30 hover:scale-110 cursor-pointer active:scale-95"
                 >
-                  <Download className="w-5 h-5" />
-                  Télécharger Portfolio
+                  <Download className="w-5 h-5 group-hover:animate-bounce" />
+                  <span className="font-medium">Télécharger Portfolio</span>
                 </a>
               </div>
             </div>
