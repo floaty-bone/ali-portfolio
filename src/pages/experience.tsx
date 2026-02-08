@@ -87,7 +87,7 @@ const ExperienceEducationPage = () => {
                 </div>
                 <p className="text-gray-300 leading-relaxed">
                   Formation approfondie en systèmes mécaniques, propriétés des matériaux, et processus de fabrication.
-                  Maîtrise des outils de conception assistée par ordinateur (Creo, Solidworks) et de simulation numérique
+                  Maîtrise des outils de conception assistée par ordinateur (Creo, Catia, Solidworks) et de simulation numérique
                   (ANSYS Fluent, Static Structural, Thermal, Nastran) et Mathlab Simulink pour l'implémentation de
                   systèmes d'asservissement.
                 </p>
@@ -144,7 +144,7 @@ const ExperienceEducationPage = () => {
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Design conceptuel d'un système de tension de chenille autonome basé sur un vérin hydraulique alimenté
+                  Design conceptuel d'un système de tension de chenille autonome basé on un vérin hydraulique alimenté
                   par une pompe électrique et piloté par une logique de contrôle dédiée, permettant l'ajustement automatique
                   de la tension sans intervention opérateur. Définition de l'architecture fonctionnelle (vérin, pompe, vanne,
                   capteurs, unité de contrôle), élaboration des lois de commande et modélisation sous Matlab Simulink.
