@@ -50,7 +50,7 @@ const ExperienceEducationPage = () => {
           <div className="flex gap-12 text-sm font-light tracking-wider">
             <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">ACCUEIL</Link>
             <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION ET EXPERIENCES</Link>
-            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">CV+PORTFOLIO TECHNIQUE</Link>
+            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">PORTFOLIO TECHNIQUE</Link>
             <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">COMPÉTENCES</Link>
             <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">LOISIRS</Link>
             <a href='#' onClick={handleContactClick} className="hover:text-[#9F8E6D] transition-colors duration-300">CONTACT</a>
@@ -87,8 +87,8 @@ const ExperienceEducationPage = () => {
                 </div>
                 <p className="text-gray-300 leading-relaxed">
                   Formation approfondie en systèmes mécaniques, propriétés des matériaux, et processus de fabrication.
-                  Maîtrise des outils de conception assistée par ordinateur (Creo, Catia, Solidworks) et de simulation numérique
-                  (ANSYS Fluent, Static Structural, Thermal, Nastran) et Mathlab Simulink pour l'implémentation de
+                  Maîtrise des outils de conception assistée par ordinateur (Creo, Catia) et de simulation numérique
+                  (ANSYS Fluent, Static Structural, Thermal) et Mathlab Simulink pour l'implémentation de
                   systèmes d'asservissement.
                 </p>
               </div>
@@ -209,7 +209,7 @@ const ExperienceEducationPage = () => {
                   ciblant la conformité des doigts de couronnes de contact. Acquisition automatique des données
                   de course et d'effort, rédaction des spécifications techniques, vérification via calculs statiques
                   et simulations ANSYS. Développement en C++ de l'interface graphique (ImGui) et enregistrement
-                  des données sur serveur local (MySQL, Django). Mission secondaire : calculs de vérification et
+                  des données sur serveur local (MySQL). Mission secondaire : calculs de vérification et
                   dimensionnement de bielles et chambre SF6 des disjoncteurs GCB.
                 </p>
               </div>

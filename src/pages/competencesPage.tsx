@@ -26,7 +26,7 @@ const CompetencesPage = () => {
     {
       name: 'Développement Logiciel',
       image: '/ali-portfolio/images-videos/skillsImages/3.png',
-      description: 'Développement logiciel en C++, Django et Python'
+      description: 'Développement logiciel en C++ et Python'
     },
     {
       name: 'Conception de Systèmes de Contrôle',
@@ -40,10 +40,8 @@ const CompetencesPage = () => {
     { name: 'Matlab Simulink', logo: '/ali-portfolio/images-videos/softwareImages/simulink.jpg' },
     { name: 'C++', logo: '/ali-portfolio/images-videos/softwareImages/CPP.png' }, // Fixed casing from search
     { name: 'Python', logo: '/ali-portfolio/images-videos/softwareImages/python.png' },
-    { name: 'Django', logo: '/ali-portfolio/images-videos/softwareImages/django.svg' },
     { name: 'Creo', logo: '/ali-portfolio/images-videos/softwareImages/creo.svg.png' },
-    { name: 'SolidWorks', logo: '/ali-portfolio/images-videos/softwareImages/solidWorks.png' },
-    { name: 'CATIA', logo: '/ali-portfolio/images-videos/softwareImages/catia.png' }
+{ name: 'CATIA', logo: '/ali-portfolio/images-videos/softwareImages/catia.png' }
   ];
 
   const languages = [
@@ -109,7 +107,7 @@ const CompetencesPage = () => {
           <div className="flex gap-12 text-sm font-light tracking-wider">
             <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">ACCUEIL</Link>
             <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION ET EXPERIENCES</Link>
-            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">CV+PORTFOLIO TECHNIQUE</Link>
+            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">PORTFOLIO TECHNIQUE</Link>
             <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">COMPÉTENCES</Link>
             <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">LOISIRS</Link>
             <a href='#' onClick={handleContactClick} className="hover:text-[#9F8E6D] transition-colors duration-300">CONTACT</a>
