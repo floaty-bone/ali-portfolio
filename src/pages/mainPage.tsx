@@ -83,7 +83,7 @@ const HomePage = () => {
           <p className="text-xl text-gray-200 mb-12 leading-relaxed">
             Bonjour, je suis Ali Abouelazz
             <br /><br />
-            Je suis un ingénieur en ingénierie mécanique, diplômé de Grenoble INP. Passionné par la conception, je m'efforce de créer des solutions innovantes en intégrant la rigueur de la conception physique aux outils logiciels modernes.
+            Ingénieur diplômé de Grenoble INP – Génie Industriel, filière Ingénierie de Produits (IdP). Formation pluridisciplinaire couvrant l'ensemble du cycle de développement produit : de la conceptualisation à la réalisation de prototypes physiques, en passant par la modélisation CAO, la simulation numérique et les systèmes de contrôle.
           </p>
           <Link to="/competencesPage"
             className="group flex items-center gap-2 text-lg hover:text-[#9F8E6D] transition-all duration-300">

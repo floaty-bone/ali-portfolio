@@ -41,7 +41,8 @@ const CompetencesPage = () => {
     { name: 'C++', logo: '/ali-portfolio/images-videos/softwareImages/CPP.png' }, // Fixed casing from search
     { name: 'Python', logo: '/ali-portfolio/images-videos/softwareImages/python.png' },
     { name: 'Creo', logo: '/ali-portfolio/images-videos/softwareImages/creo.svg.png' },
-{ name: 'CATIA', logo: '/ali-portfolio/images-videos/softwareImages/catia.png' }
+{ name: 'CATIA', logo: '/ali-portfolio/images-videos/softwareImages/catia.png' },
+    { name: 'SolidWorks', logo: '/ali-portfolio/images-videos/softwareImages/solidWorks.png' }
   ];
 
   const languages = [

@@ -86,10 +86,10 @@ const ExperienceEducationPage = () => {
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Formation approfondie en systèmes mécaniques, propriétés des matériaux, et processus de fabrication.
-                  Maîtrise des outils de conception assistée par ordinateur (Creo, Catia) et de simulation numérique
-                  (ANSYS Fluent, Static Structural, Thermal) et Mathlab Simulink pour l'implémentation de
-                  systèmes d'asservissement.
+                  Formation pluridisciplinaire en Génie Industriel, filière Ingénierie de Produits (IdP), couvrant
+                  l'ensemble du cycle de développement produit : de la conceptualisation à la réalisation de prototypes
+                  physiques. Maîtrise de la modélisation CAO (Creo, CATIA), de la simulation numérique
+                  (ANSYS Mechanical, Fluent) et de MATLAB Simulink pour la modélisation de systèmes et l'asservissement.
                 </p>
               </div>
             </div>
@@ -124,32 +124,32 @@ const ExperienceEducationPage = () => {
           <div className="relative min-h-screen pt-15" style={{ top: "4rem" }}>
             <h3 className="text-3xl font-light mb-8 border-b border-white/20 pb-4">Expériences Professionnelles</h3>
 
-            {/* Caterpillar CDD */}
+            {/* AI Agent Project */}
             <div className="flex mb-10">
               <div className="mr-4">
                 <img
-                  src="/ali-portfolio/images-videos/Cat_Logo.png"
-                  alt="Caterpillar logo"
+                  src="/ali-portfolio/images-videos/yc.svg"
+                  alt="Y Combinator logo"
                   style={{ width: '170px', height: 'auto', objectFit: 'contain' }}
                 />
               </div>
               <div className="mb-12">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="text-2xl mb-2">CDD - Conception d'un système de tensionneur automatique</h4>
-                    <p className="text-gray-400 mb-4">13/10/2025 – 06/02/2026 | Caterpillar</p>
+                    <h4 className="text-2xl mb-2">Implémentation et déploiement Agent IA résident et autonome</h4>
+                    <p className="text-gray-400 mb-4">09/2025 – 02/2026 | Candidat Y Combinator batch février</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#9F8E6D]">Conception & Contrôle</p>
+                    <p className="text-[#9F8E6D]">IA & Développement Logiciel</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Design conceptuel d'un système de tension de chenille autonome basé on un vérin hydraulique alimenté
-                  par une pompe électrique et piloté par une logique de contrôle dédiée, permettant l'ajustement automatique
-                  de la tension sans intervention opérateur. Définition de l'architecture fonctionnelle (vérin, pompe, vanne,
-                  capteurs, unité de contrôle), élaboration des lois de commande et modélisation sous Matlab Simulink.
-                  Analyse FMEA du système électro-hydraulique et intégration de stratégies de sécurité passive/active.
-                  Évaluation de la robustesse, fiabilité et impact coût par rapport au système manuel existant.
+                  Conception d'un agent IA résident opérant en permanence sur la machine de l'utilisateur (Linux, Windows, macOS)
+                  dans une MicroVM Firecracker persistante. Accès complet au système via outils MCP (bash, fichiers, navigateur CDP),
+                  mémoire continue entre sessions par ledger avec compression FIFO. Architecture à 3 niveaux
+                  (Orchestrateur → Worker → Cron Agent) avec délégation aux sous-agents et planification autonome.
+                  Client LLM unifié (Claude, OpenAI, Gemini, Grok). Stack : Python, asyncio, Firecracker, cdp-use, MCP.{' '}
+                  <a href="https://github.com/floaty-bone/maxent" className="text-[#9F8E6D] hover:underline">GitHub</a>
                 </p>
               </div>
             </div>
@@ -160,27 +160,24 @@ const ExperienceEducationPage = () => {
                 <img
                   src="/ali-portfolio/images-videos/Cat_Logo.png"
                   alt="Caterpillar logo"
-                  style={{ width: '170px', height: 'auto', objectFit: 'contain' }}
+                  style={{ width: '90px', height: 'auto', objectFit: 'contain' }}
                 />
               </div>
               <div className="mb-12">
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="text-2xl mb-2">Stage PFE - Optimisation du système de tensionneur bulldozer D5</h4>
-                    <p className="text-gray-400 mb-4">25/02/2025 – 31/08/2025 | Caterpillar</p>
+                    <p className="text-gray-400 mb-4">02/2025 – 09/2025 | Caterpillar</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#9F8E6D]">Analyse de Fiabilité & Data Science</p>
+                    <p className="text-[#9F8E6D]">Analyse de Fiabilité & Conception</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Analyse de fiabilité du système tensionneur de chaîne des machines Caterpillar D5 à partir de données
-                  terrain et optimisation de la conception basée sur les modes de défaillance observés. Exploitation de bases
-                  de données de retours terrain (warranty claims) pour identifier et quantifier les défaillances critiques.
-                  Traitement de données textuelles multilingues via approches de similarité sémantique (NLP) pour classifier
-                  les modes de défaillance. Modélisation FEA sous ANSYS Mechanical en conditions de surpression, benchmark
-                  technique de solutions concurrentes, et conception CAO 3D de concepts d'amélioration (Creo Parametric).
-                  Outils : Python, pandas, scipy, ANSYS, Creo, méthodologie DMAIC.
+                  Analyse de fiabilité du tensionneur de chaîne Caterpillar D5 à partir de données terrain (warranty claims),
+                  identification et priorisation des défaillances critiques via méthodologie DMAIC/FMEA.
+                  Validation de la conception par simulation FEA sous ANSYS Mechanical et conception CAO 3D
+                  de concepts d'amélioration (Creo Parametric). Outils : Python, ANSYS, Creo.
                 </p>
               </div>
             </div>
@@ -198,7 +195,7 @@ const ExperienceEducationPage = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="text-2xl mb-2">Stage Assistant Ingénieur</h4>
-                    <p className="text-gray-400 mb-4">25/05/2024 – 30/08/2024 | General Electric, Lyon</p>
+                    <p className="text-gray-400 mb-4">05/2024 – 08/2024 | General Electric, Lyon</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">Conception & Développement</p>
@@ -228,17 +225,17 @@ const ExperienceEducationPage = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="text-2xl mb-2">Projet d'École</h4>
-                    <p className="text-gray-400 mb-4">10/04/2024 – 15/05/2024 | Alstom, Lyon</p>
+                    <p className="text-gray-400 mb-4">04/2024 – 05/2024 | Alstom, Lyon</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">Simulation & Conception</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Simulation de fatigue sous ANSYS pour évaluer le comportement d'un roulement intégré dans une
-                  nouvelle gamme de générateurs. Reprise et optimisation de la conception d'une plateforme de test
-                  permettant de reproduire des sollicitations radiales et axiales périodiques. Exploitation des données
-                  expérimentales pour alimenter les modèles de simulation et estimer la durée de vie des roulements.
+                  Conception et optimisation d'un banc d'essais mécaniques reproduisant des sollicitations radiales
+                  et axiales périodiques sur un roulement intégré dans une nouvelle gamme de générateurs.
+                  Instrumentation, acquisition des données expérimentales et simulation de fatigue (ANSYS)
+                  pour estimer la durée de vie et qualifier le produit.
                 </p>
               </div>
             </div>
@@ -256,7 +253,7 @@ const ExperienceEducationPage = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="text-2xl mb-2">Stage Opérateur</h4>
-                    <p className="text-gray-400 mb-4">25/07/2023 – 05/08/2023 | Sabca (Pilatus PC-12)</p>
+                    <p className="text-gray-400 mb-4">07/2023 – 08/2023 | Sabca (Pilatus PC-12)</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">Assemblage Aéronautique</p>
