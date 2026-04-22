@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import RippleMesh from '../components/RippleMesh';
 
 const CompetencesPage = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -116,24 +117,10 @@ const CompetencesPage = () => {
         </div>
       </nav>
 
-      {/* Video Banner */}
+      {/* Ripple Mesh Banner */}
       <div className="w-full h-[180vh] relative overflow-hidden">
-        {/* Background Video */}
         <div className="absolute inset-0 h-[120vh]">
-          <video
-            className="w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-          >
-            <source src="/ali-portfolio/images-videos/24.mp4" type="video/mp4" />
-            <img
-              src="/api/placeholder/2400/800"
-              alt="Background video fallback"
-              className="w-full h-full object-cover"
-            />
-          </video>
+          <RippleMesh className="w-full h-full" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black"></div>
         </div>
 

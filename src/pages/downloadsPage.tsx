@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import RippleMesh from '../components/RippleMesh';
 
 const DownloadsPage = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -58,26 +59,10 @@ const DownloadsPage = () => {
         </div>
       </nav>
 
-      {/* Video Banner */}
+      {/* Ripple Mesh Banner */}
       <div className="w-full h-[120vh] relative overflow-hidden">
-        {/* Background Video */}
         <div className="absolute inset-0">
-          <video
-            className="w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-          >
-            <source src="/ali-portfolio/images-videos/23.mp4" type="video/mp4" />
-            {/* Fallback image in case video doesn't load */}
-            <img
-              src="/api/placeholder/2400/800"
-              alt="Background video fallback"
-              className="w-full h-full object-cover"
-            />
-          </video>
-          {/* Overlay gradient */}
+          <RippleMesh className="w-full h-full" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black"></div>
         </div>
 
