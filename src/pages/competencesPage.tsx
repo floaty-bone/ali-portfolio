@@ -9,29 +9,29 @@ const CompetencesPage = () => {
 
   const skills = [
     {
-      name: 'Conception Assistée par Ordinateur (CAO)',
+      name: 'Computer-Aided Design (CAD)',
       image: '/ali-portfolio/images-videos/skillsImages/1.png',
-      description: 'Expertise en techniques de conception avancées (usinage CNC, impression 3D, fonderie)'
+      description: 'Expertise in advanced design techniques (CNC machining, 3D printing, casting)'
     },
     {
-      name: 'Analyse par Éléments Finis (FEA)',
+      name: 'Finite Element Analysis (FEA)',
       image: '/ali-portfolio/images-videos/skillsImages/4.png',
-      description: "Simulation avancée et analyse de l'intégrité structurelle"
+      description: 'Advanced simulation and structural integrity analysis'
     },
     {
-      name: 'Écoulements + thermique',
+      name: 'Fluid Flow + Thermal Analysis',
       image: '/ali-portfolio/images-videos/skillsImages/2.png',
-      description: 'Dynamique des fluides et transfert thermique'
+      description: 'Fluid dynamics and heat transfer'
     },
     {
-      name: 'Développement Logiciel',
+      name: 'Software Development',
       image: '/ali-portfolio/images-videos/skillsImages/3.png',
-      description: 'Développement logiciel en C++ et Python'
+      description: 'Software development in C++ and Python'
     },
     {
-      name: 'Conception de Systèmes de Contrôle',
+      name: 'Control Systems Design',
       image: '/ali-portfolio/images-videos/skillsImages/controlSystems.png',
-      description: "Conception de systèmes d'automatisation et de contrôle"
+      description: 'Design of automation and control systems'
     }
   ];
 
@@ -46,9 +46,9 @@ const CompetencesPage = () => {
   ];
 
   const languages = [
-    { name: 'Français', level: 'Langue maternelle' },
-    { name: 'Arabe', level: 'Langue maternelle' },
-    { name: 'Anglais', level: 'Niveau C2' }
+    { name: 'French', level: 'Native language' },
+    { name: 'Arabic', level: 'Native language' },
+    { name: 'English', level: 'C2 Level' }
   ];
 
   useEffect(() => {
@@ -106,11 +106,11 @@ const CompetencesPage = () => {
             <h1 className="text-xl font-light tracking-wide">Ali Abouelazz</h1>
           </div>
           <div className="flex gap-12 text-sm font-light tracking-wider">
-            <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">ACCUEIL</Link>
-            <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION ET EXPERIENCES</Link>
-            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">PORTFOLIO TECHNIQUE</Link>
-            <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">COMPÉTENCES</Link>
-            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">LOISIRS</Link>
+            <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">HOME</Link>
+            <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION & EXPERIENCE</Link>
+            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">TECHNICAL PORTFOLIO</Link>
+            <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">SKILLS</Link>
+            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">INTERESTS</Link>
             <a href='#' onClick={handleContactClick} className="hover:text-[#9F8E6D] transition-colors duration-300">CONTACT</a>
           </div>
         </div>
@@ -142,7 +142,7 @@ const CompetencesPage = () => {
           <div className="w-full max-w-6xl mx-auto">
             {/* Skills Section */}
             <section className="mb-16">
-              <h2 className="text-4xl font-light mb-12 text-white">Compétences Techniques</h2>
+              <h2 className="text-4xl font-light mb-12 text-white">Technical Skills</h2>
               <div className="relative flex items-center justify-center">
                 <button
                   onClick={handleSkillPrev}
@@ -176,7 +176,7 @@ const CompetencesPage = () => {
 
             {/* Software Section */}
             <section className="mb-16">
-              <h2 className="text-4xl font-light mb-12 text-white">Outils et Logiciels</h2>
+              <h2 className="text-4xl font-light mb-12 text-white">Tools & Software</h2>
               <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
                 {software.map((item) => (
                   <div
@@ -196,7 +196,7 @@ const CompetencesPage = () => {
 
             {/* Languages Section */}
             <section>
-              <h2 className="text-4xl font-light mb-12 text-white">Langues</h2>
+              <h2 className="text-4xl font-light mb-12 text-white">Languages</h2>
               <div className="grid grid-cols-3 gap-8">
                 {languages.map((lang) => (
                   <div
@@ -217,7 +217,7 @@ const CompetencesPage = () => {
       <section className="bg-black py-32 px-24">
         <div className="max-w-7xl mx-auto flex justify-between items-start">
           <div className="max-w-lg">
-            <h3 className="text-4xl font-light mb-8">Me contacter</h3>
+            <h3 className="text-4xl font-light mb-8">Contact Me</h3>
             <div className="space-y-8">
               <div>
                 <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Email</span>
@@ -229,7 +229,7 @@ const CompetencesPage = () => {
                 </a>
               </div>
               <div>
-                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Contact via WhatsApp uniquement</span>
+                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">WhatsApp contact only</span>
                 <a
                   href="tel:+33777451629"
                   className="text-lg font-light text-white hover:text-[#9F8E6D] transition-colors duration-300"

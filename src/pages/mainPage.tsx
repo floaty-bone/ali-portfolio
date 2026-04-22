@@ -48,11 +48,11 @@ const HomePage = () => {
             <h1 className="text-xl font-light tracking-wide">Ali Abouelazz</h1>
           </div>
           <div className="flex gap-12 text-sm font-light tracking-wider">
-            <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">ACCUEIL</Link>
-            <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION ET EXPERIENCES</Link>
-            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">PORTFOLIO TECHNIQUE</Link>
-            <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">COMPÉTENCES</Link>
-            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">LOISIRS</Link>
+            <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">HOME</Link>
+            <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION & EXPERIENCE</Link>
+            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">TECHNICAL PORTFOLIO</Link>
+            <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">SKILLS</Link>
+            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">INTERESTS</Link>
             <a href='#' onClick={handleContactClick} className="hover:text-[#9F8E6D] transition-colors duration-300">CONTACT</a>
           </div>
         </div>
@@ -81,13 +81,13 @@ const HomePage = () => {
         </div>
         <div className="relative h-full flex flex-col justify-center px-24 max-w-4xl">
           <p className="text-xl text-gray-200 mb-12 leading-relaxed">
-            Bonjour, je suis Ali Abouelazz
+            Hello, I'm Ali Abouelazz
             <br /><br />
-            Ingénieur diplômé de Grenoble INP – Génie Industriel, filière Ingénierie de Produits (IdP). Formation pluridisciplinaire couvrant l'ensemble du cycle de développement produit : de la conceptualisation à la réalisation de prototypes physiques, en passant par la modélisation CAO, la simulation numérique et les systèmes de contrôle.
+            Graduate mechanical engineer from Grenoble INP – Génie Industriel, Product Engineering specialization (IdP). Multidisciplinary training covering the full product development cycle: from conceptualization to physical prototyping, including CAD modeling, numerical simulation, and control systems.
           </p>
           <Link to="/competencesPage"
             className="group flex items-center gap-2 text-lg hover:text-[#9F8E6D] transition-all duration-300">
-            Mes Compétences
+            My Skills
             <ChevronRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" />
           </Link>
         </div>
@@ -116,7 +116,7 @@ const HomePage = () => {
       <section className="bg-black py-32 px-24">
         <div className="max-w-7xl mx-auto flex justify-between items-start">
           <div className="max-w-lg">
-            <h3 className="text-4xl font-light mb-8">Me contacter</h3>
+            <h3 className="text-4xl font-light mb-8">Contact Me</h3>
             <div className="space-y-8">
               <div>
                 <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Email</span>
@@ -128,7 +128,7 @@ const HomePage = () => {
                 </a>
               </div>
               <div>
-                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Contact via WhatsApp uniquement</span>
+                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">WhatsApp contact only</span>
                 <a
                   href="tel:+33777451629"
                   className="text-lg font-light text-white hover:text-[#9F8E6D] transition-colors duration-300"

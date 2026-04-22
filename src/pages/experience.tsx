@@ -48,11 +48,11 @@ const ExperienceEducationPage = () => {
             <h1 className="text-xl font-light tracking-wide">Ali Abouelazz</h1>
           </div>
           <div className="flex gap-12 text-sm font-light tracking-wider">
-            <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">ACCUEIL</Link>
-            <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION ET EXPERIENCES</Link>
-            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">PORTFOLIO TECHNIQUE</Link>
-            <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">COMPÉTENCES</Link>
-            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">LOISIRS</Link>
+            <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">HOME</Link>
+            <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION & EXPERIENCE</Link>
+            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">TECHNICAL PORTFOLIO</Link>
+            <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">SKILLS</Link>
+            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">INTERESTS</Link>
             <a href='#' onClick={handleContactClick} className="hover:text-[#9F8E6D] transition-colors duration-300">CONTACT</a>
           </div>
         </div>
@@ -64,7 +64,7 @@ const ExperienceEducationPage = () => {
 
           {/* Education Section */}
           <div className="mb-16">
-            <h3 className="text-3xl font-light mb-8 border-b border-white/20 pb-4">Éducation</h3>
+            <h3 className="text-3xl font-light mb-8 border-b border-white/20 pb-4">Education</h3>
 
             {/* Grenoble INP Degree */}
             <div className="flex mb-10">
@@ -78,18 +78,18 @@ const ExperienceEducationPage = () => {
               <div className="mb-12">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="text-2xl mb-2">Diplôme d'ingénieur Grenoble-inp</h4>
+                    <h4 className="text-2xl mb-2">Engineering Degree – Grenoble INP</h4>
                     <p className="text-gray-400 mb-4">2022-2025</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#9F8E6D]">Ingénierie Mécanique</p>
+                    <p className="text-[#9F8E6D]">Mechanical Engineering</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Formation pluridisciplinaire en Génie Industriel, filière Ingénierie de Produits (IdP), couvrant
-                  l'ensemble du cycle de développement produit : de la conceptualisation à la réalisation de prototypes
-                  physiques. Maîtrise de la modélisation CAO (Creo, CATIA), de la simulation numérique
-                  (ANSYS Mechanical, Fluent) et de MATLAB Simulink pour la modélisation de systèmes et l'asservissement.
+                  Multidisciplinary mechanical engineering training at Grenoble INP – Génie Industriel, Product Engineering specialization (IdP), covering
+                  the full product development cycle: from conceptualization to physical prototyping.
+                  Proficiency in CAD modeling (Creo, CATIA), numerical simulation
+                  (ANSYS Mechanical, Fluent), and MATLAB Simulink for system modeling and control.
                 </p>
               </div>
             </div>
@@ -105,16 +105,16 @@ const ExperienceEducationPage = () => {
               <div>
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="text-2xl mb-2">Classes préparatoires</h4>
+                    <h4 className="text-2xl mb-2">Preparatory Classes</h4>
                     <p className="text-gray-400 mb-4">2020-2022</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#9F8E6D]">Maths sup, Maths spé</p>
+                    <p className="text-[#9F8E6D]">Mathematics & Physics (MPSI/MP)</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Deux années intensives en mathématiques, physique et ingénierie de base, développant
-                  une compréhension solide des principes fondamentaux scientifiques.
+                  Two intensive years in mathematics, physics, and foundational engineering, developing
+                  a solid understanding of core scientific principles.
                 </p>
               </div>
             </div>
@@ -122,7 +122,7 @@ const ExperienceEducationPage = () => {
 
           {/* Professional Experience Section */}
           <div className="relative min-h-screen pt-15" style={{ top: "4rem" }}>
-            <h3 className="text-3xl font-light mb-8 border-b border-white/20 pb-4">Expériences Professionnelles</h3>
+            <h3 className="text-3xl font-light mb-8 border-b border-white/20 pb-4">Professional Experience</h3>
 
             {/* AI Agent Project */}
             <div className="flex mb-10">
@@ -136,19 +136,19 @@ const ExperienceEducationPage = () => {
               <div className="mb-12">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="text-2xl mb-2">Implémentation et déploiement Agent IA résident et autonome</h4>
-                    <p className="text-gray-400 mb-4">09/2025 – 02/2026 | Candidat Y Combinator batch février</p>
+                    <h4 className="text-2xl mb-2">Implementation and Deployment of a Resident Autonomous AI Agent</h4>
+                    <p className="text-gray-400 mb-4">09/2025 – 02/2026 | Y Combinator February Batch Applicant</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#9F8E6D]">IA & Développement Logiciel</p>
+                    <p className="text-[#9F8E6D]">AI & Software Development</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Conception d'un agent IA résident opérant en permanence sur la machine de l'utilisateur (Linux, Windows, macOS)
-                  dans une MicroVM Firecracker persistante. Accès complet au système via outils MCP (bash, fichiers, navigateur CDP),
-                  mémoire continue entre sessions par ledger avec compression FIFO. Architecture à 3 niveaux
-                  (Orchestrateur → Worker → Cron Agent) avec délégation aux sous-agents et planification autonome.
-                  Client LLM unifié (Claude, OpenAI, Gemini, Grok). Stack : Python, asyncio, Firecracker, cdp-use, MCP.{' '}
+                  Designed a resident AI agent running persistently on the user's machine (Linux, Windows, macOS)
+                  inside a persistent Firecracker MicroVM. Full system access via MCP tools (bash, files, CDP browser),
+                  continuous cross-session memory via ledger with FIFO compression. 3-tier architecture
+                  (Orchestrator → Worker → Cron Agent) with sub-agent delegation and autonomous scheduling.
+                  Unified LLM client (Claude, OpenAI, Gemini, Grok). Stack: Python, asyncio, Firecracker, cdp-use, MCP.{' '}
                   <a href="https://github.com/floaty-bone/maxent" className="text-[#9F8E6D] hover:underline">GitHub</a>
                 </p>
               </div>
@@ -166,18 +166,18 @@ const ExperienceEducationPage = () => {
               <div className="mb-12">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="text-2xl mb-2">Stage PFE - Optimisation du système de tensionneur bulldozer D5</h4>
+                    <h4 className="text-2xl mb-2">Final Year Internship – Optimization of Caterpillar D5 Bulldozer Track Tensioner</h4>
                     <p className="text-gray-400 mb-4">02/2025 – 09/2025 | Caterpillar</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#9F8E6D]">Analyse de Fiabilité & Conception</p>
+                    <p className="text-[#9F8E6D]">Reliability Analysis & Design</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Analyse de fiabilité du tensionneur de chaîne Caterpillar D5 à partir de données terrain (warranty claims),
-                  identification et priorisation des défaillances critiques via méthodologie DMAIC/FMEA.
-                  Validation de la conception par simulation FEA sous ANSYS Mechanical et conception CAO 3D
-                  de concepts d'amélioration (Creo Parametric). Outils : Python, ANSYS, Creo.
+                  Reliability analysis of the Caterpillar D5 track tensioner using field data (warranty claims),
+                  identification and prioritization of critical failures via DMAIC/FMEA methodology.
+                  Design validation through FEA simulation in ANSYS Mechanical and 3D CAD modeling
+                  of improvement concepts (Creo Parametric). Tools: Python, ANSYS, Creo.
                 </p>
               </div>
             </div>
@@ -194,20 +194,20 @@ const ExperienceEducationPage = () => {
               <div className="mb-12">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="text-2xl mb-2">Stage Assistant Ingénieur</h4>
+                    <h4 className="text-2xl mb-2">Assistant Engineer Internship</h4>
                     <p className="text-gray-400 mb-4">05/2024 – 08/2024 | General Electric, Lyon</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#9F8E6D]">Conception & Développement</p>
+                    <p className="text-[#9F8E6D]">Design & Development</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Conception d'une station de contrôle de conformité pour disjoncteurs haute tension live tank,
-                  ciblant la conformité des doigts de couronnes de contact. Acquisition automatique des données
-                  de course et d'effort, rédaction des spécifications techniques, vérification via calculs statiques
-                  et simulations ANSYS. Développement en C++ de l'interface graphique (ImGui) et enregistrement
-                  des données sur serveur local (MySQL). Mission secondaire : calculs de vérification et
-                  dimensionnement de bielles et chambre SF6 des disjoncteurs GCB.
+                  Designed a compliance testing station for high-voltage live tank circuit breakers,
+                  targeting contact crown finger conformity. Automatic acquisition of stroke and force data,
+                  drafting of technical specifications, verification via static calculations
+                  and ANSYS simulations. C++ development of the graphical interface (ImGui) and
+                  data logging to a local server (MySQL). Secondary task: verification calculations and
+                  sizing of connecting rods and SF6 chambers for GCB circuit breakers.
                 </p>
               </div>
             </div>
@@ -224,18 +224,18 @@ const ExperienceEducationPage = () => {
               <div className="mb-12">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="text-2xl mb-2">Projet d'École</h4>
+                    <h4 className="text-2xl mb-2">School Project</h4>
                     <p className="text-gray-400 mb-4">04/2024 – 05/2024 | Alstom, Lyon</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#9F8E6D]">Simulation & Conception</p>
+                    <p className="text-[#9F8E6D]">Simulation & Design</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Conception et optimisation d'un banc d'essais mécaniques reproduisant des sollicitations radiales
-                  et axiales périodiques sur un roulement intégré dans une nouvelle gamme de générateurs.
-                  Instrumentation, acquisition des données expérimentales et simulation de fatigue (ANSYS)
-                  pour estimer la durée de vie et qualifier le produit.
+                  Design and optimization of a mechanical test bench reproducing periodic radial
+                  and axial loads on a bearing integrated into a new generator line.
+                  Instrumentation, experimental data acquisition, and fatigue simulation (ANSYS)
+                  to estimate service life and qualify the product.
                 </p>
               </div>
             </div>
@@ -252,17 +252,17 @@ const ExperienceEducationPage = () => {
               <div className="mb-12">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="text-2xl mb-2">Stage Opérateur</h4>
+                    <h4 className="text-2xl mb-2">Operator Internship</h4>
                     <p className="text-gray-400 mb-4">07/2023 – 08/2023 | Sabca (Pilatus PC-12)</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#9F8E6D]">Assemblage Aéronautique</p>
+                    <p className="text-[#9F8E6D]">Aerospace Assembly</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Suivi d'un plan d'aménagement d'outillage et surveillance du placement des gabarits,
-                  structures de levage, tables et équipements afin de garantir la conformité du lay-out industriel
-                  sur la chaîne d'assemblage de l'avion Pilatus PC-12.
+                  Followed a tooling layout plan and monitored the placement of jigs,
+                  lifting structures, tables, and equipment to ensure industrial layout compliance
+                  on the Pilatus PC-12 aircraft assembly line.
                 </p>
               </div>
             </div>
@@ -274,7 +274,7 @@ const ExperienceEducationPage = () => {
       <section className="bg-black py-40 px-24 mt-20">
         <div className="max-w-7xl mx-auto flex justify-between items-start" style={{ top: "10px" }}>
           <div className="max-w-lg">
-            <h3 className="text-4xl font-light mb-8">Me contacter</h3>
+            <h3 className="text-4xl font-light mb-8">Contact Me</h3>
             <div className="space-y-8">
               <div>
                 <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Email</span>
@@ -286,7 +286,7 @@ const ExperienceEducationPage = () => {
                 </a>
               </div>
               <div>
-                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Contact via WhatsApp uniquement</span>
+                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">WhatsApp contact only</span>
                 <a
                   href="tel:+33777451629"
                   className="text-lg font-light text-white hover:text-[#9F8E6D] transition-colors duration-300"

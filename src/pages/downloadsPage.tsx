@@ -48,11 +48,11 @@ const DownloadsPage = () => {
             <h1 className="text-xl font-light tracking-wide">Ali Abouelazz</h1>
           </div>
           <div className="flex gap-12 text-sm font-light tracking-wider">
-            <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">ACCUEIL</Link>
-            <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION ET EXPERIENCES</Link>
-            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">PORTFOLIO TECHNIQUE</Link>
-            <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">COMPÉTENCES</Link>
-            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">LOISIRS</Link>
+            <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">HOME</Link>
+            <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION & EXPERIENCE</Link>
+            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">TECHNICAL PORTFOLIO</Link>
+            <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">SKILLS</Link>
+            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">INTERESTS</Link>
             <a href='#' onClick={handleContactClick} className="hover:text-[#9F8E6D] transition-colors duration-300">CONTACT</a>
           </div>
         </div>
@@ -84,13 +84,13 @@ const DownloadsPage = () => {
         {/* Downloads Content */}
         <div className="relative h-full flex items-center justify-center px-24 pt-15">
           <div className="w-full max-w-4xl">
-            <h2 className="text-4xl font-light mb-12 text-white mt-16">Téléchargements</h2>
+            <h2 className="text-4xl font-light mb-12 text-white mt-16">Downloads</h2>
             <div className="flex justify-center">
               {/* Portfolio Technique Download Card */}
               <div className="bg-white/10 border border-white/20 rounded-lg p-8 flex flex-col items-center transition-all duration-300 hover:bg-white/15 hover:border-[#9F8E6D]/40 hover:shadow-lg hover:shadow-[#9F8E6D]/20 hover:scale-105">
-                <h3 className="text-2xl mb-6">Portfolio Technique</h3>
+                <h3 className="text-2xl mb-6">Technical Portfolio</h3>
                 <p className="text-gray-300 mb-8 text-center">
-                  Explorez mes projets techniques et réalisations détaillées
+                  Explore my technical projects and detailed achievements
                 </p>
                 <a
                   href="/ali-portfolio/downloads/Portfolio-technique.pdf"
@@ -98,7 +98,7 @@ const DownloadsPage = () => {
                   className="group flex items-center gap-2 bg-[#9F8E6D] px-8 py-3 hover:bg-[#B09E7D] transition-all duration-300 text-white rounded-md shadow-md hover:shadow-xl hover:shadow-[#9F8E6D]/30 hover:scale-110 cursor-pointer active:scale-95"
                 >
                   <Download className="w-5 h-5 group-hover:animate-bounce" />
-                  <span className="font-medium">Télécharger Portfolio</span>
+                  <span className="font-medium">Download Portfolio</span>
                 </a>
               </div>
             </div>
@@ -110,7 +110,7 @@ const DownloadsPage = () => {
       <section className="bg-black py-40 px-24 mt-20">
         <div className="max-w-7xl mx-auto flex justify-between items-start" style={{ top: "10px" }}>
           <div className="max-w-lg">
-            <h3 className="text-4xl font-light mb-8">Me contacter</h3>
+            <h3 className="text-4xl font-light mb-8">Contact Me</h3>
             <div className="space-y-8">
               <div>
                 <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Email</span>
@@ -122,7 +122,7 @@ const DownloadsPage = () => {
                 </a>
               </div>
               <div>
-                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Contact via WhatsApp uniquement</span>
+                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">WhatsApp contact only</span>
                 <a
                   href="tel:+33777451629"
                   className="text-lg font-light text-white hover:text-[#9F8E6D] transition-colors duration-300"

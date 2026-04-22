@@ -48,20 +48,20 @@ const CentreInteret = () => {
             <h1 className="text-xl font-light tracking-wide">Ali Abouelazz</h1>
           </div>
           <div className="flex gap-12 text-sm font-light tracking-wider">
-            <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">ACCUEIL</Link>
-            <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION ET EXPERIENCES</Link>
-            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">PORTFOLIO TECHNIQUE</Link>
-            <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">COMPÉTENCES</Link>
-            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">LOISIRS</Link>
+            <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">HOME</Link>
+            <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION & EXPERIENCE</Link>
+            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">TECHNICAL PORTFOLIO</Link>
+            <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">SKILLS</Link>
+            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">INTERESTS</Link>
             <a href='#' onClick={handleContactClick} className="hover:text-[#9F8E6D] transition-colors duration-300">CONTACT</a>
           </div>
         </div>
       </nav>
 
-      {/* Centre d'Intérêt Section */}
+      {/* Interests Section */}
       <section className="bg-black text-white py-32 px-24 pt-48">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-light mb-16 text-center">Centre d'Intérêt</h2>
+          <h2 className="text-4xl font-light mb-16 text-center">Interests</h2>
 
           {/* Surfing Section */}
           <div className="mb-24">
@@ -75,7 +75,7 @@ const CentreInteret = () => {
               </div>
               <div>
                 <p className="text-xl text-gray-300 leading-relaxed">
-                  J'ai découvert le surf grâce à mon frère, et depuis, c'est devenu bien plus qu'un simple loisir. dans ma ville natale: safi c'est plus qu'un sport mais une tradition
+                  I got into surfing through my brother. Growing up in Safi, it was just part of life there.
                 </p>
               </div>
             </div>
@@ -101,7 +101,7 @@ const CentreInteret = () => {
               </div>
               <div>
                 <p className="text-xl text-gray-300 leading-relaxed">
-                  Je suis plus jazz fusion maintenant, mais à l'époque, j'étais plutôt rock classique et blues. La vidéo à gauche date de 2016, où je joue 'The Loner' de Gary Moore.
+                  I'm more into jazz fusion now, but back then I was all about classic rock and blues. The video on the left is from 2016, where I'm playing 'The Loner' by Gary Moore.
                 </p>
               </div>
             </div>
@@ -113,7 +113,7 @@ const CentreInteret = () => {
       <section className="bg-black py-32 px-24">
         <div className="max-w-7xl mx-auto flex justify-between items-start">
           <div className="max-w-lg">
-            <h3 className="text-4xl font-light mb-8">Me contacter</h3>
+            <h3 className="text-4xl font-light mb-8">Contact Me</h3>
             <div className="space-y-8">
               <div>
                 <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Email</span>
@@ -125,7 +125,7 @@ const CentreInteret = () => {
                 </a>
               </div>
               <div>
-                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Contact via WhatsApp uniquement</span>
+                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">WhatsApp contact only</span>
                 <a
                   href="tel:+33777451629"
                   className="text-lg font-light text-white hover:text-[#9F8E6D] transition-colors duration-300"
