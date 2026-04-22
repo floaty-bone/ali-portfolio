@@ -34,7 +34,12 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen text-white" style={{ background: 'transparent' }}>
+      {/* Full-page fixed 3D background */}
+      <div className="fixed inset-0 z-0">
+        <RippleMesh className="w-full h-full" />
+      </div>
+
       {/* Navigation */}
       <nav className={`fixed w-full z-50 transition-all duration-500 ${scrollPosition > 50
         ? 'bg-black/90 backdrop-blur-sm'
@@ -44,7 +49,7 @@ const HomePage = () => {
           : 'transform -translate-y-full'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
+        <div className="w-full px-24 py-6 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-light tracking-wide">Ali Abouelazz</h1>
           </div>
@@ -58,14 +63,10 @@ const HomePage = () => {
           </div>
         </div>
       </nav>
-      {/* Ripple Mesh Banner */}
-      <div className="w-full h-[120vh] relative overflow-hidden">
-        <div className="absolute inset-0">
-          <RippleMesh className="w-full h-full" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black"></div>
-        </div>
+      {/* Hero banner */}
+      <div className="relative w-full h-[100vh] z-10">
         <div className="relative h-full flex flex-col justify-center px-24 max-w-4xl">
-          <p className="text-xl text-gray-200 mb-12 leading-relaxed">
+          <p className="text-base text-gray-200 mb-12 leading-relaxed">
             Hello, I'm Ali Abouelazz
             <br /><br />
             Graduate mechanical engineer from Grenoble INP – Génie Industriel, Product Engineering specialization (IdP). Multidisciplinary training covering the full product development cycle: from conceptualization to physical prototyping, including CAD modeling, numerical simulation, and control systems.
@@ -77,20 +78,11 @@ const HomePage = () => {
           </Link>
         </div>
       </div>
-      {/* Hero Section */}
-      <header className="relative h-screen">
-        {/* Full-width image container */}
-        <div className="absolute inset-0 w-full h-full">
-          <div className="relative w-full h-full">
-            {/* Placeholder for the paragliding image - you would replace this with your actual image */}
-            <div className="absolute inset-0 bg-[url('/api/placeholder/1920/1080')] bg-cover bg-center" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black" />
-          </div>
-        </div>
-
+      {/* Quote Section */}
+      <header className="relative z-10 h-screen">
         {/* Hero Content */}
         <div className="relative h-full flex flex-col justify-center px-24 max-w-4xl">
-          <blockquote className="relative pl-6 border-l-4 border-gray-300 italic text-xl text-gray-200 mb-12 leading-relaxed">
+          <blockquote className="relative pl-6 border-l-4 border-gray-300 italic text-base text-gray-200 mb-12 leading-relaxed">
             "I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do"
             <cite className="block text-sm not-italic text-gray-400 mt-2">— HAL 9000, 2001: A Space Odyssey</cite>
           </blockquote>
@@ -98,7 +90,7 @@ const HomePage = () => {
       </header>
 
       {/* Contact Section */}
-      <section className="bg-black py-32 px-24">
+      <section className="relative z-10 py-32 px-24">
         <div className="max-w-7xl mx-auto flex justify-between items-start">
           <div className="max-w-lg">
             <h3 className="text-4xl font-light mb-8">Contact Me</h3>

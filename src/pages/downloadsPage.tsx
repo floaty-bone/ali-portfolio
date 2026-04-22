@@ -34,7 +34,12 @@ const DownloadsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen text-white" style={{ background: 'transparent' }}>
+      {/* Full-page fixed 3D background */}
+      <div className="fixed inset-0 z-0">
+        <RippleMesh className="w-full h-full" />
+      </div>
+
       {/* Navigation */}
       <nav className={`fixed w-full z-50 transition-all duration-500 ${scrollPosition > 50
         ? 'bg-black/90 backdrop-blur-sm'
@@ -44,7 +49,7 @@ const DownloadsPage = () => {
           : 'transform -translate-y-full'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
+        <div className="w-full px-24 py-6 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-light tracking-wide">Ali Abouelazz</h1>
           </div>
@@ -59,14 +64,8 @@ const DownloadsPage = () => {
         </div>
       </nav>
 
-      {/* Ripple Mesh Banner */}
-      <div className="w-full h-[120vh] relative overflow-hidden">
-        <div className="absolute inset-0">
-          <RippleMesh className="w-full h-full" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black"></div>
-        </div>
-
-        {/* Downloads Content */}
+      {/* Downloads Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-24 pt-15">
         <div className="relative h-full flex items-center justify-center px-24 pt-15">
           <div className="w-full max-w-4xl">
             <h2 className="text-4xl font-light mb-12 text-white mt-16">Downloads</h2>
@@ -80,10 +79,10 @@ const DownloadsPage = () => {
                 <a
                   href="/ali-portfolio/downloads/Portfolio-technique.pdf"
                   download
-                  className="group flex items-center gap-2 bg-[#9F8E6D] px-8 py-3 hover:bg-[#B09E7D] transition-all duration-300 text-white rounded-md shadow-md hover:shadow-xl hover:shadow-[#9F8E6D]/30 hover:scale-110 cursor-pointer active:scale-95"
+                  className="flex items-center gap-2 bg-[#9F8E6D] hover:bg-[#7A6D54] px-8 py-3 text-white rounded-md cursor-pointer transition-colors duration-200"
                 >
-                  <Download className="w-5 h-5 group-hover:animate-bounce" />
-                  <span className="font-medium">Download Portfolio</span>
+                  <Download className="w-5 h-5" />
+                  <span>Download Portfolio</span>
                 </a>
               </div>
             </div>
@@ -92,7 +91,7 @@ const DownloadsPage = () => {
       </div>
 
       {/* Contact Section - Matching other pages */}
-      <section className="bg-black py-40 px-24 mt-20">
+      <section className="relative z-10 py-40 px-24 mt-20">
         <div className="max-w-7xl mx-auto flex justify-between items-start" style={{ top: "10px" }}>
           <div className="max-w-lg">
             <h3 className="text-4xl font-light mb-8">Contact Me</h3>

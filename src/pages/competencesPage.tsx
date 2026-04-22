@@ -92,7 +92,12 @@ const CompetencesPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen text-white" style={{ background: 'transparent' }}>
+      {/* Full-page fixed 3D background */}
+      <div className="fixed inset-0 z-0">
+        <RippleMesh className="w-full h-full" />
+      </div>
+
       {/* Navigation */}
       <nav className={`fixed w-full z-50 transition-all duration-500 ${scrollPosition > 50
         ? 'bg-black/90 backdrop-blur-sm'
@@ -102,7 +107,7 @@ const CompetencesPage = () => {
           : 'transform -translate-y-full'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
+        <div className="w-full px-24 py-6 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-light tracking-wide">Ali Abouelazz</h1>
           </div>
@@ -117,15 +122,9 @@ const CompetencesPage = () => {
         </div>
       </nav>
 
-      {/* Ripple Mesh Banner */}
-      <div className="w-full h-[180vh] relative overflow-hidden">
-        <div className="absolute inset-0 h-[120vh]">
-          <RippleMesh className="w-full h-full" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black"></div>
-        </div>
-
-        {/* Compétences Content */}
-        <div className="relative h-full flex flex-col justify-center px-24 pt-32">
+      {/* Skills Content */}
+      <div className="relative z-10 min-h-screen px-24 pt-32">
+        <div className="flex flex-col justify-center">
           <div className="w-full max-w-6xl mx-auto">
             {/* Skills Section */}
             <section className="mb-16">
@@ -201,7 +200,7 @@ const CompetencesPage = () => {
       </div>
 
       {/* Contact Section */}
-      <section className="bg-black py-32 px-24">
+      <section className="relative z-10 py-32 px-24">
         <div className="max-w-7xl mx-auto flex justify-between items-start">
           <div className="max-w-lg">
             <h3 className="text-4xl font-light mb-8">Contact Me</h3>

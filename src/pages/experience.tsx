@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import RippleMesh from '../components/RippleMesh';
 
 const ExperienceEducationPage = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -33,7 +34,12 @@ const ExperienceEducationPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen text-white" style={{ background: 'transparent' }}>
+      {/* Full-page fixed 3D background */}
+      <div className="fixed inset-0 z-0">
+        <RippleMesh className="w-full h-full" />
+      </div>
+
       {/* Navigation - identical to main page */}
       <nav className={`fixed w-full z-50 transition-all duration-500 ${scrollPosition > 50
         ? 'bg-black/90 backdrop-blur-sm'
@@ -43,7 +49,7 @@ const ExperienceEducationPage = () => {
           : 'transform -translate-y-full'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
+        <div className="w-full px-24 py-6 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-light tracking-wide">Ali Abouelazz</h1>
           </div>
@@ -59,7 +65,7 @@ const ExperienceEducationPage = () => {
       </nav>
 
       {/* Hero Section with Experience & Education */}
-      <header className="relative min-h-screen pt-24" style={{ top: "2rem" }}>
+      <header className="relative z-10 min-h-screen pt-24" style={{ top: "2rem" }}>
         <div className="max-w-7xl mx-auto px-24">
 
           {/* Education Section */}
@@ -271,7 +277,7 @@ const ExperienceEducationPage = () => {
       </header>
 
       {/* Contact Section */}
-      <section className="bg-black py-40 px-24 mt-20">
+      <section className="relative z-10 py-40 px-24 mt-20">
         <div className="max-w-7xl mx-auto flex justify-between items-start" style={{ top: "10px" }}>
           <div className="max-w-lg">
             <h3 className="text-4xl font-light mb-8">Contact Me</h3>

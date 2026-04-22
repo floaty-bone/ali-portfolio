@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import RippleMesh from '../components/RippleMesh';
 //test
 const CentreInteret = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -33,7 +34,12 @@ const CentreInteret = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen text-white" style={{ background: 'transparent' }}>
+      {/* Full-page fixed 3D background */}
+      <div className="fixed inset-0 z-0">
+        <RippleMesh className="w-full h-full" />
+      </div>
+
       {/* Navigation */}
       <nav className={`fixed w-full z-50 transition-all duration-500 ${scrollPosition > 50
         ? 'bg-black/90 backdrop-blur-sm'
@@ -43,7 +49,7 @@ const CentreInteret = () => {
           : 'transform -translate-y-full'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
+        <div className="w-full px-24 py-6 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-light tracking-wide">Ali Abouelazz</h1>
           </div>
@@ -59,7 +65,7 @@ const CentreInteret = () => {
       </nav>
 
       {/* Interests Section */}
-      <section className="bg-black text-white py-32 px-24 pt-48">
+      <section className="relative z-10 text-white py-32 px-24 pt-48">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-light mb-16 text-center">Interests</h2>
 
@@ -110,7 +116,7 @@ const CentreInteret = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="bg-black py-32 px-24">
+      <section className="relative z-10 py-32 px-24">
         <div className="max-w-7xl mx-auto flex justify-between items-start">
           <div className="max-w-lg">
             <h3 className="text-4xl font-light mb-8">Contact Me</h3>
