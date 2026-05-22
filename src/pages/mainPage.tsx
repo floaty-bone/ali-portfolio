@@ -68,7 +68,7 @@ const HomePage = () => {
           <p className="text-base text-gray-200 mb-12 leading-relaxed">
             Hello, I'm Ali Abouelazz
             <br /><br />
-            Graduate mechanical engineer from Grenoble INP – Génie Industriel, Product Engineering specialization (IdP). Multidisciplinary training covering the full product development cycle: from conceptualization to physical prototyping, including CAD modeling, numerical simulation, and control systems.
+            Graduate mechanical engineer from Grenoble INP, Product Engineering specialization (IdP). Multidisciplinary training covering the full product development cycle: from conceptualization to physical prototyping, including CAD modeling, numerical simulation, and control systems.
           </p>
           <Link to="/competencesPage"
             className="group flex items-center gap-2 text-lg hover:text-[#9F8E6D] transition-all duration-300">
