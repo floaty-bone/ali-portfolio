@@ -13,7 +13,7 @@ function App() {
     <Router basename="/ali-portfolio">
       <Routes>
         <Route path="/" element={<Navigate to="/home" replace />} />
-        <Route path='/educationExperience' element={<EducationExperience />} />
+        {/* <Route path='/educationExperience' element={<EducationExperience />} /> */}
         <Route path="/home" element={<MainPage />} />
         <Route path='/downloadsPage' element={<DownloadsPage />} />
         <Route path='/competencesPage' element={<CompetencesPage />} />

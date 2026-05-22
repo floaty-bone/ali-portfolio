@@ -55,7 +55,6 @@ const CentreInteret = () => {
           </div>
           <div className="flex gap-12 text-sm font-light tracking-wider">
             <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">HOME</Link>
-            <Link to="/educationExperience" className="hover:text-[#9F8E6D] transition-colors duration-300">EDUCATION & EXPERIENCE</Link>
             <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">TECHNICAL PORTFOLIO</Link>
             <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">SKILLS</Link>
             <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">INTERESTS</Link>
