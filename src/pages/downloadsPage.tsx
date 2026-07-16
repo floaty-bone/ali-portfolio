@@ -77,18 +77,19 @@ function Fig({ src, caption, small }: { src: string; caption: string; small?: bo
   );
 }
 
-function FigRow({ items }: { items: { src: string; caption?: string }[] }) {
+function FigRow({ items, size }: { items: { src: string; caption?: string }[]; size?: 'lg' }) {
+  const imgClass = size === 'lg' ? 'h-auto w-auto max-h-64 max-w-lg block' : 'h-auto w-auto max-h-48 max-w-sm block';
   return (
     <div className="my-4">
       <div className="flex gap-3 justify-center flex-wrap">
         {items.map((item, i) => (
           <div key={i} className="rounded-md bg-black/30 border border-white/10 inline-block">
-            <img src={item.src} alt={item.caption ?? ''} className="h-auto w-auto max-h-48 max-w-sm block" />
+            <img src={item.src} alt={item.caption ?? ''} className={imgClass} />
           </div>
         ))}
       </div>
       {items.some(i => i.caption) && (
-        <p className="text-xs text-gray-500 mt-1.5 italic text-center">{items.map(i => i.caption).filter(Boolean).join(' — ')}</p>
+        <p className="text-xs text-gray-500 mt-1.5 italic text-center">{items.map(i => i.caption).filter(Boolean).join('  ·  ')}</p>
       )}
     </div>
   );
@@ -978,6 +979,135 @@ T     &= \\sqrt{F_x^2+F_y^2+F_z^2} \\\\
   );
 }
 
+function CanardContent() {
+  return (
+    <>
+      <Subsubsection title="Context" />
+      <Para>
+        A friend of mine has been designing a concept aerobatic turboprop in SolidWorks: a Red Bull Air Race form
+        factor inspired by the Extra 330, with a Garrett TPE331 up front. One of the defining design intents of the
+        aircraft is that the wing's lift surface must remain <strong className="text-white">completely
+        uninterrupted</strong>: no ailerons, no flaps, no control surfaces of any kind on the wing. Whatever control
+        inputs the pilot applies, the wing keeps producing clean, undisturbed lift. That decision pushes roll control
+        somewhere else on the airframe, and that is the module I took ownership of: the{' '}
+        <strong className="text-white">fixed main landing gear that doubles as an actuated canard</strong>, providing
+        roll authority for the whole aircraft.
+      </Para>
+      <Para>
+        The concept borrows from two places. Mike Patey's <em>Scrappy</em> build showed that fixed landing gear can
+        carry an airfoil profile and produce lift instead of being pure parasitic drag, which is relevant here because a light
+        aerobatic plane cannot afford the weight and complexity of a retraction mechanism. And the structural
+        architecture is modelled on the Kodiak bush-plane main gear, which is the most robust fixed-gear arrangement
+        I could find. My brief was to combine the two: a rigid, bolt-on landing-gear assembly whose fairing is a
+        lifting surface, actuated as a differential control surface.
+      </Para>
+
+      {/* TODO: add screenshots — full canard/gear assembly overview */}
+      <FigRow size="lg" items={[
+        { src: `${BASE}/canard/assembly-overview.png`, caption: 'Canard landing-gear assembly (SolidWorks)' },
+        { src: `${BASE}/canard/on-aircraft.png`, caption: 'Assembly mounted on the aircraft' },
+      ]} />
+
+      <Subsection title="Landing-Gear Architecture: Rigid, but Sprung" />
+      <Para>
+        The gear is conventional taildragger gear and nominally "rigid": there is no oleo strut, no rubber donut, no
+        dedicated spring element. The suspension comes from the structure itself. Each leg is a large-diameter tube
+        ending in a hub and spindle, and each tube mounts into a <strong className="text-white">trunnion</strong> that
+        pivots on pins about an axis fixed to the chromoly-tube airframe. The two trunnions are tied together by
+        cross-braces.
+      </Para>
+      <Para>
+        Under landing loads, the vertical force at the wheels swings the legs about the trunnion pivot axes, which
+        rotates the trunnions slightly and forces the cross-braces to flex from a flat shape into a shallow arc. That
+        controlled flexure <em>is</em> the spring: the load path deliberately routes energy into members sized to bend
+        elastically, rather than bending anything that isn't supposed to bend. Compared with the one-piece aluminium
+        arc used on most aerobatic planes, this architecture is heavier but far more tolerant of hard landings; the
+        design brief was that the aircraft should be able to bounce off a runway without damage. The next step for
+        this part is an FEA study to quantify the effective spring rate and stress margins of the cross-brace flexure.
+      </Para>
+
+      {/* TODO: add screenshots — trunnion detail + load-path sketch from the review */}
+      <FigRow size="lg" items={[
+        { src: `${BASE}/canard/trunnion-detail.png`, caption: 'Trunnion and pivot-pin detail' },
+        { src: `${BASE}/canard/load-path.png`, caption: 'Load path: wheel force → trunnion rotation → cross-brace flexure' },
+      ]} />
+
+      <Subsection title="Canards as the Aircraft's Roll Control" />
+      <Para>
+        The second function of the assembly is what makes it interesting: the gear fairings are canard surfaces, and
+        they are the aircraft's <strong className="text-white">only roll-control surfaces</strong>, functionally the
+        ailerons. The aircraft is fly-by-wire with hydraulic actuation, which is what makes the mechanism practical:
+        a hydraulic actuator drives a pushrod assembly (clevis pin, heim joint, pushrod angle bracket, second
+        pushrod) into a bellcrank bolted directly to the canard. Actuating the piston deflects the two canards{' '}
+        <strong className="text-white">in opposite directions</strong>, one up and one down, producing a rolling
+        moment while the wing stays untouched.
+      </Para>
+      <Para>
+        Each canard rotates on a thrust bearing at the top and a second thrust bearing at the bottom, constraining the
+        surface axially while leaving rotation free. The whole canard unit is designed as a self-contained module that
+        bolts to the airframe as one piece, so installation and removal don't disturb the rest of the aircraft. Two
+        detail points came out of design review: the heim-joint attachment must be a bolt rather than a pin (a pin has
+        nothing constraining it axially at that joint), and the single actuator should be duplicated front and back
+        for redundancy; the assembly is symmetric, so mirroring it is a straightforward change.
+      </Para>
+      <Para>
+        Getting this mechanism right took <strong className="text-white">three design iterations</strong>. The
+        constraint that killed the first two was clearance at full deflection: with the actuator at end-of-stroke the
+        linkage passes within millimetres of the wheel assembly and the gear leg. The final geometry was validated
+        kinematically in SolidWorks by driving the actuator through its full stroke and checking the entire linkage
+        for interference and binding at every position.
+      </Para>
+
+      {/* TODO: add screenshots — pushrod/bellcrank mechanism, actuated positions */}
+      <FigRow size="lg" items={[
+        { src: `${BASE}/canard/mechanism.png`, caption: 'Hydraulic actuator, pushrod and bellcrank linkage' },
+        { src: `${BASE}/canard/deflection.png`, caption: 'Differential deflection: one canard up, one down' },
+      ]} />
+
+      <Subsubsection title="Aerodynamic Caveat" />
+      <Para>
+        One open question I'm aware of: the downwash and wake shed by the canards will interact with the airflow over
+        the main wing, and that interference could affect the wing's lift distribution and handling. This still needs
+        to be verified through CFD or wind-tunnel / flight testing, and the canard position and landing-gear angle
+        would be adjusted based on those results. The focus of this work was the mechanical side (the structure,
+        actuation and mechanisms) rather than the aerodynamic optimization, which remains a next step.
+      </Para>
+
+      {/* Temporarily hidden — Design Review (Video) section
+      <Subsubsection title="Design Review (Video)" />
+      <Para>
+        The full aircraft was presented in a recorded design review. The segment below starts at the landing-gear /
+        canard chapter, where I walk through the trunnion architecture, the flexure-based suspension and the
+        roll-control mechanism.
+      </Para>
+      <div className="my-5 flex flex-col items-center">
+        <div className="w-full max-w-2xl aspect-video rounded-md overflow-hidden border border-white/10 bg-black/30">
+          <iframe
+            src="https://www.youtube.com/embed/XNZeV1sazKA?start=1103"
+            title="Design review: canard landing-gear section"
+            className="w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+        <p className="text-xs text-gray-500 mt-1.5 italic text-center max-w-lg">
+          Design-review walkthrough: landing-gear and canard section (from 18:23)
+        </p>
+      </div>
+      */}
+
+      <Outcome accent="#9F8E6D" title="Key Outcomes">
+        <ul className="space-y-1">
+          <li>· A single assembly performing two jobs: fixed main landing gear and the aircraft's only roll-control surface, enabling a wing with zero control surfaces.</li>
+          <li>· Passive suspension achieved through controlled structural flexure (Kodiak-style trunnion architecture), with no dedicated spring or shock element.</li>
+          <li>· Hydraulic pushrod/bellcrank mechanism producing differential canard deflection, kinematically validated in SolidWorks over the full actuator stroke with no interference or binding.</li>
+          <li>· Fully modular: the complete canard/gear unit bolts to the airframe as one self-contained piece, with a mirrored second actuator planned for redundancy.</li>
+        </ul>
+      </Outcome>
+    </>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 const DownloadsPage = () => {
@@ -1046,7 +1176,7 @@ const DownloadsPage = () => {
         <div className="mb-16">
           <h2 className="text-5xl font-light text-white mb-4">Technical Portfolio</h2>
           <p className="text-gray-400 font-light max-w-2xl leading-relaxed">
-            Internship projects and personal studies in numerical simulation, structural analysis, and flight control.
+            Internship projects and personal studies in numerical simulation, structural analysis, mechanism design, and flight control.
           </p>
           <a
             href="/ali-portfolio/downloads/Portfolio-technique.pdf"
@@ -1070,6 +1200,9 @@ const DownloadsPage = () => {
           <MajorSection title="Personal Projects" initialOpen={openSection === 'lqr'}>
             <SubSection label="Personal Study" title="LQR Full-State Feedback Control & 6-DOF Body Integrator" accent="#9F8E6D" id="lqr" initialOpen={openSection === 'lqr'}>
               <LQRContent />
+            </SubSection>
+            <SubSection label="Personal Project" title="Canard Landing Gear & Roll-Control Assembly" accent="#9F8E6D" id="canard">
+              <CanardContent />
             </SubSection>
             <SubSection label="Personal Study" title="Failure Prediction of the Starship Tank" accent="#9F8E6D">
               <StarshipContent />
