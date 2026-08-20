@@ -92,7 +92,7 @@ const HomePage = () => {
         <div className="relative h-full flex flex-col justify-center px-24 max-w-4xl">
           <blockquote className="relative pl-6 border-l-4 border-gray-300 italic text-base text-gray-200 mb-12 leading-relaxed">
             "I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do"
-            <cite className="block text-sm not-italic text-gray-400 mt-2">— HAL 9000, 2001: A Space Odyssey</cite>
+            <cite className="block text-sm not-italic text-gray-400 mt-2">HAL 9000, 2001: A Space Odyssey</cite>
           </blockquote>
         </div>
       </header>

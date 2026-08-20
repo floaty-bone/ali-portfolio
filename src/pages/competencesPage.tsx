@@ -10,7 +10,7 @@ const CompetencesPage = () => {
 
   const skills = [
     {
-      name: 'Computer-Aided Design (CAD)',
+      name: 'Computer Aided Design (CAD)',
       image: '/ali-portfolio/images-videos/skillsImages/1.png',
       description: 'Expertise in advanced design techniques (CNC machining, 3D printing, casting)'
     },

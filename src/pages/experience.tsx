@@ -85,15 +85,15 @@ const ExperienceEducationPage = () => {
               <div className="mb-12">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="text-2xl mb-2">Engineering Degree – Grenoble INP</h4>
-                    <p className="text-gray-400 mb-4">2022-2025</p>
+                    <h4 className="text-2xl mb-2">Engineering Degree, Grenoble INP</h4>
+                    <p className="text-gray-400 mb-4">2022 to 2025</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">Mechanical Engineering</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Multidisciplinary mechanical engineering training at Grenoble INP – Génie Industriel, Product Engineering specialization (IdP), covering
+                  Multidisciplinary mechanical engineering training at Grenoble INP, Génie Industriel, Product Engineering specialization (IdP), covering
                   the full product development cycle: from conceptualization to physical prototyping.
                   Proficiency in CAD modeling (Creo, CATIA), numerical simulation
                   (ANSYS Mechanical, Fluent), and MATLAB Simulink for system modeling and control.
@@ -113,7 +113,7 @@ const ExperienceEducationPage = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="text-2xl mb-2">Preparatory Classes</h4>
-                    <p className="text-gray-400 mb-4">2020-2022</p>
+                    <p className="text-gray-400 mb-4">2020 to 2022</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">Mathematics & Physics (MPSI/MP)</p>
@@ -144,7 +144,7 @@ const ExperienceEducationPage = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="text-2xl mb-2">Implementation and Deployment of a Resident Autonomous AI Agent</h4>
-                    <p className="text-gray-400 mb-4">09/2025 – 02/2026 | Y Combinator February Batch Applicant</p>
+                    <p className="text-gray-400 mb-4">09/2025 to 02/2026 | Y Combinator February Batch Applicant</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">AI & Software Development</p>
@@ -153,8 +153,8 @@ const ExperienceEducationPage = () => {
                 <p className="text-gray-300 leading-relaxed">
                   Designed a resident AI agent running persistently on the user's machine (Linux, Windows, macOS)
                   inside a persistent Firecracker MicroVM. Full system access via MCP tools (bash, files, CDP browser),
-                  continuous cross-session memory via ledger with FIFO compression. 3-tier architecture
-                  (Orchestrator → Worker → Cron Agent) with sub-agent delegation and autonomous scheduling.
+                  continuous cross session memory via ledger with FIFO compression. 3 tier architecture
+                  (Orchestrator → Worker → Cron Agent) with subagent delegation and autonomous scheduling.
                   Unified LLM client (Claude, OpenAI, Gemini, Grok). Stack: Python, asyncio, Firecracker, cdp-use, MCP.{' '}
                   <a href="https://github.com/floaty-bone/maxent" className="text-[#9F8E6D] hover:underline">GitHub</a>
                 </p>
@@ -173,8 +173,8 @@ const ExperienceEducationPage = () => {
               <div className="mb-12">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="text-2xl mb-2">Final Year Internship – Optimization of Caterpillar D5 Bulldozer Track Tensioner</h4>
-                    <p className="text-gray-400 mb-4">02/2025 – 09/2025 | Caterpillar</p>
+                    <h4 className="text-2xl mb-2">Final Year Internship: Optimization of Caterpillar D5 Bulldozer Track Tensioner</h4>
+                    <p className="text-gray-400 mb-4">02/2025 to 09/2025 | Caterpillar</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">Reliability Analysis & Design</p>
@@ -202,14 +202,14 @@ const ExperienceEducationPage = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="text-2xl mb-2">Assistant Engineer Internship</h4>
-                    <p className="text-gray-400 mb-4">05/2024 – 08/2024 | General Electric, Lyon</p>
+                    <p className="text-gray-400 mb-4">05/2024 to 08/2024 | General Electric, Lyon</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">Design & Development</p>
                   </div>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
-                  Designed a compliance testing station for high-voltage live tank circuit breakers,
+                  Designed a compliance testing station for high voltage live tank circuit breakers,
                   targeting contact crown finger conformity. Automatic acquisition of stroke and force data,
                   drafting of technical specifications, verification via static calculations
                   and ANSYS simulations. C++ development of the graphical interface (ImGui) and
@@ -232,7 +232,7 @@ const ExperienceEducationPage = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="text-2xl mb-2">School Project</h4>
-                    <p className="text-gray-400 mb-4">04/2024 – 05/2024 | Alstom, Lyon</p>
+                    <p className="text-gray-400 mb-4">04/2024 to 05/2024 | Alstom, Lyon</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">Simulation & Design</p>
@@ -260,7 +260,7 @@ const ExperienceEducationPage = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="text-2xl mb-2">Operator Internship</h4>
-                    <p className="text-gray-400 mb-4">07/2023 – 08/2023 | Sabca (Pilatus PC-12)</p>
+                    <p className="text-gray-400 mb-4">07/2023 to 08/2023 | Sabca (Pilatus PC-12)</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[#9F8E6D]">Aerospace Assembly</p>

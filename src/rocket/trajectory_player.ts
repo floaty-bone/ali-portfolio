@@ -96,7 +96,7 @@ export class TrajectoryPlayer {
     this._setStatus("Connecting…");
     const ws = new WebSocket(url);
     this.ws = ws;
-    ws.onopen    = () => { if (this.ws !== ws) return; this._setStatus("Connected — waiting for first frame…"); };
+    ws.onopen    = () => { if (this.ws !== ws) return; this._setStatus("Connected, waiting for first frame…"); };
     ws.onmessage = (evt) => { if (this.ws !== ws) return; this._onMessage(JSON.parse(evt.data) as SimMeta | SimFrame); };
     ws.onerror   = () => { if (this.ws !== ws) return; this._setStatus("Connection failed", 6000); };
     ws.onclose   = () => { if (this.ws !== ws) return; if (this.meta) this._setStatus(`Complete  (${this.meta.total_time.toFixed(1)} s)`, 4000); this.ws = null; };

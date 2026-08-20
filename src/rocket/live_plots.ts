@@ -164,9 +164,9 @@ function drawEnginePlot(
   const lastT = thrust.length ? thrust[thrust.length - 1] : null;
   const maxA = isFinite(abRange.max) ? abRange.max : null;
   legend(ctx, ph, [
-    ["#00d4ff", `α=${lastA !== null ? lastA.toFixed(2) : "—"} mx=${maxA !== null ? maxA.toFixed(2) : "—"}`, null],
-    ["#55ff88", `β=${lastB !== null ? lastB.toFixed(2) : "—"} mx=${maxA !== null ? maxA.toFixed(2) : "—"}`, null],
-    ["#ff9900", lastT !== null ? `T=${lastT.toFixed(1)}kN` : "T=—", null],
+    ["#00d4ff", `α=${lastA !== null ? lastA.toFixed(2) : "N/A"} mx=${maxA !== null ? maxA.toFixed(2) : "N/A"}`, null],
+    ["#55ff88", `β=${lastB !== null ? lastB.toFixed(2) : "N/A"} mx=${maxA !== null ? maxA.toFixed(2) : "N/A"}`, null],
+    ["#ff9900", lastT !== null ? `T=${lastT.toFixed(1)}kN` : "T=N/A", null],
   ]);
 }
 

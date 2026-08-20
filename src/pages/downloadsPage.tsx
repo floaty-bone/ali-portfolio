@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Linkedin, ChevronRight, ExternalLink } from 'lucide-react';
+import { Linkedin, ChevronRight, ExternalLink } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
@@ -157,10 +157,10 @@ function RocketDemoCard() {
     >
       <div className="p-7 flex flex-col md:flex-row items-start md:items-center gap-6">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-widest mb-1 text-[#9F8E6D]">Live 3D Demo — Personal Study</p>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-1 text-[#9F8E6D]">Live 3D Demo: Personal Study</p>
           <h3 className="text-xl font-light text-white mb-2">Starship Booster Landing</h3>
           <p className="text-sm text-gray-300 leading-relaxed max-w-xl">
-            Experimenting with LQR full-state feedback control — live 3D simulation launch demo.
+            Experimenting with LQR full state feedback control, live 3D simulation launch demo.
           </p>
         </div>
         <div className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-light flex-shrink-0 transition-all duration-300"
@@ -193,11 +193,11 @@ function GEContent() {
       <Para>
         My responsibility was to develop the station in its entirety, both mechanically and in terms of software. I
         began by defining requirements with the various stakeholders (quality department, operators, design office).
-        These needs were translated into system-level requirements, then broken down into subsystem-level requirements
-        and further into component-level requirements (top-down design approach).
+        These needs were translated into system level requirements, then broken down into subsystem level requirements
+        and further into component level requirements (top down design approach).
       </Para>
       <Para>
-        Once the component-level requirements were defined, I began the design phase while simultaneously working with
+        Once the component level requirements were defined, I began the design phase while simultaneously working with
         my supervisor to identify the simulations needed to validate the measurement accuracy requirements. After
         dimensional validation, I produced the engineering drawings, which were then sent to the procurement department.
       </Para>
@@ -257,9 +257,9 @@ function CatContent() {
       <Subsection title="Objective and Context" />
       <Para>
         The Caterpillar D5 bulldozer had been accumulating field failures on its chain tensioner assembly: grease leaks,
-        cracked plugs, worn retainer plates, premature piston-seal failures. The product-support team had flagged the
+        cracked plugs, worn retainer plates, premature piston seal failures. The product support team had flagged the
         problem but the failure modes had never been quantified, and the dominant root causes were still unclear. My
-        internship mission was to close that loop: diagnose the system end-to-end, validate the diagnosis with
+        internship mission was to close that loop: diagnose the system end to end, validate the diagnosis with
         simulation, and deliver redesign concepts that addressed the root causes while remaining compatible with
         manufacturing and assembly constraints.
       </Para>
@@ -273,33 +273,33 @@ function CatContent() {
 
       <Fig
         src={`${BASE}/cat/13.png`}
-        caption="D5 track tensioner: cross-section showing the main components involved in the failure modes (spring tube, piston, piston seal, retainer, cylinder, plug). Grease pressure acts on the piston base to tension the track; the plug seals the rear of the cylinder and is bolted to the housing."
+        caption="D5 track tensioner: cross section showing the main components involved in the failure modes (spring tube, piston, piston seal, retainer, cylinder, plug). Grease pressure acts on the piston base to tension the track; the plug seals the rear of the cylinder and is bolted to the housing."
       />
       <FigRow items={[{ src: `${BASE}/cat/14.png` }, { src: `${BASE}/cat/15.png` }]} />
 
-      <Subsection title="Automated Failure-Mode Classification of Warranty Reports" />
+      <Subsection title="Automated Failure Mode Classification of Warranty Reports" />
       <Para>
         Caterpillar maintains a centralised warranty database: every time a dealer repairs a machine under warranty,
         they log the failed part, the machine hours, a short <em>comment</em> field and a longer <em>claim story</em>.
         Filtering by the tensioner part numbers returned records{' '}
-        <strong className="text-white">in the order of thousands</strong> — a dataset large enough to make statistical
+        <strong className="text-white">in the order of thousands</strong>, a dataset large enough to make statistical
         analysis meaningful, but far too large to read manually. The real obstacle was that dealers worldwide write in
         their native language: English, German, Polish, Japanese, Spanish, sometimes with abbreviations and regional
-        shorthand. Per-component <em>frequency</em> was easy to compute from the part number alone, but extracting the
+        shorthand. Per component <em>frequency</em> was easy to compute from the part number alone, but extracting the
         actual <em>failure mode</em> from free text required something smarter.
       </Para>
       <Para>
         My first attempt used the Gemini API: feed each concatenated{' '}
         <code className="text-xs bg-white/10 px-1 rounded">comment + claim_story</code> to the model with a system
-        prompt asking it to pick one mode from a fixed list. It worked well, but every call sent customer-written
-        warranty text to a third-party server. Even though the raw text did not mention "Caterpillar" or part numbers,
-        sending it out over an API was not acceptable for this use case. Deploying a local LLM server (Ollama-style)
+        prompt asking it to pick one mode from a fixed list. It worked well, but every call sent customer written
+        warranty text to a third party server. Even though the raw text did not mention "Caterpillar" or part numbers,
+        sending it out over an API was not acceptable for this use case. Deploying a local LLM server (Ollama style)
         would have solved the privacy issue but required IT approvals I was not going to get in time.
       </Para>
       <Para>
         I pivoted to a lighter, fully local approach based on{' '}
         <strong className="text-white">semantic similarity with Sentence-BERT</strong>. SBERT embeds a sentence into a
-        dense high-dimensional vector whose geometry captures semantic meaning — two sentences expressing the same idea
+        dense high dimensional vector whose geometry captures semantic meaning: two sentences expressing the same idea
         in different words (or different languages) land close together. I embedded each of the eight candidate failure
         modes (<em>grease leak, broken threads, detached part, loose part, broken/cracked part, corroded part, clogged,
         damaged threads/grooves</em>) once, then embedded every claim story, and classified each one by the argmax of
@@ -311,129 +311,129 @@ function CatContent() {
         stories would not pollute the statistics. The{' '}
         <code className="text-xs bg-white/10 px-1 rounded">all-MiniLM-L6-v2</code> model runs comfortably on CPU and
         handled the multilingual content well enough that manual translation was unnecessary. The entire pipeline ran on
-        my workstation — no data left the machine. I validated the output against 50 manually-labelled samples and the
+        my workstation, no data left the machine. I validated the output against 50 manually labelled samples and the
         classifier hit <strong className="text-white">48/50 = 96% accuracy</strong>, which was well within acceptable
         bounds for prioritisation work.
       </Para>
       <Para>
-        Crossing the resulting failure-mode distribution with each component's warranty cost revealed a clear ranking of
-        critical failures: leakage at the piston/seal interface, leakage at the fill-valve/cylinder interface, plug
-        loosening and cracking, and leakage at the relief-valve interface. Equally striking was what the data{' '}
-        <em>did not</em> contain: zero reports of the intentional fuse system actuating, despite multiple plug-cracking
+        Crossing the resulting failure mode distribution with each component's warranty cost revealed a clear ranking of
+        critical failures: leakage at the piston/seal interface, leakage at the fill valve/cylinder interface, plug
+        loosening and cracking, and leakage at the relief valve interface. Equally striking was what the data{' '}
+        <em>did not</em> contain: zero reports of the intentional fuse system actuating, despite multiple plug cracking
         cases. That contradiction became the focus of the next phase.
       </Para>
 
       <FigRow items={[{ src: `${BASE}/cat/19.png` }, { src: `${BASE}/cat/20.png` }]} />
       <Fig src={`${BASE}/cat/21.png`}
-        caption="Failure-mode distribution per component after automated classification of the warranty records. Grease leak dominates across seals, valves and plug." />
+        caption="Failure mode distribution per component after automated classification of the warranty records. Grease leak dominates across seals, valves and plug." />
 
       <Subsection title="FEA of the Fuse System: Why Plugs Were Cracking" />
       <Para>
-        The tensioner is built with an intentional mechanical fuse — a deformable steel bar backed by an O-ring —
+        The tensioner is built with an intentional mechanical fuse: a deformable steel bar backed by an O ring,
         designed to open a leak path <em>before</em> any other component reaches its yield limit. If the fuse was doing
         its job, cracked plugs should not exist in the warranty record. They did. Something in the actual stress
         response of the assembly was violating the intent of the design, and I needed an FEA model to find out what.
       </Para>
       <Para>
         I built a coupled model of the fuse assembly in ANSYS Mechanical, applying grease pressure directly to the
-        internal surfaces and pre-tensioning the bolts and plug per the design drawings. The first version modelled the
-        O-ring explicitly as a hyperelastic body — the theoretically correct choice. In practice the O-ring deformation
+        internal surfaces and pretensioning the bolts and plug per the design drawings. The first version modelled the
+        O ring explicitly as a hyperelastic body, the theoretically correct choice. In practice the O ring deformation
         became so large that mesh elements distorted past ANSYS's convergence tolerance, and the simulation crashed
-        above 24 pressure units, far below the regime of interest (130–250 units).
+        above 24 pressure units, far below the regime of interest (130 to 250 units).
       </Para>
       <Para>
         Rather than fight the solver with finer meshes and remeshing hacks, I reformulated the leak criterion{' '}
-        <em>geometrically</em>. Per the Parker O-ring Handbook, an elastomeric seal is guaranteed to hold as long as
-        its compression exceeds 5.7%, and is guaranteed to leak below 0% (loss of contact). If I remove the O-ring
+        <em>geometrically</em>. Per the Parker O ring Handbook, an elastomeric seal is guaranteed to hold as long as
+        its compression exceeds 5.7%, and is guaranteed to leak below 0% (loss of contact). If I remove the O ring
         from the simulation entirely and track the local vertical displacement{' '}
-        <Eq>{'d_{z,k}'}</Eq> of each node along the seal contour, I can compute a per-node compression:
+        <Eq>{'d_{z,k}'}</Eq> of each node along the seal contour, I can compute a per node compression:
       </Para>
       <EqBlock>{`C_{\\%,k} \\;=\\; \\frac{t_o - t_{c,k}}{t_o}, \\qquad t_{c,k} = d_{z,k} + g_d`}</EqBlock>
       <Para>
-        where <Eq>{'t_o'}</Eq> is the free O-ring thickness and <Eq>{'g_d'}</Eq> is the gland depth. Aggregating over
+        where <Eq>{'t_o'}</Eq> is the free O ring thickness and <Eq>{'g_d'}</Eq> is the gland depth. Aggregating over
         all contour nodes gives <strong className="text-white">guaranteed sealing</strong> when{' '}
         <Eq>{'\\min_k C_{\\%,k} > 5.7\\%'}</Eq> and{' '}
         <strong className="text-white">certain leakage</strong> when{' '}
-        <Eq>{'\\overline{C_\\%} < 0\\%'}</Eq>. With the O-ring removed, the model meshed cleanly and ran stable all
+        <Eq>{'\\overline{C_\\%} < 0\\%'}</Eq>. With the O ring removed, the model meshed cleanly and ran stable all
         the way to plastic yield, while still producing a physically meaningful leak prediction. The model also exploited
         the cylindrical symmetry of the assembly, halving the node count and the solve time.
       </Para>
       <Para>
-        The results were unambiguous. At roughly 130 pressure units — right around the maximum service pressure recorded
-        during bench testing — the plug threads reached 329 MPa, already above the 310 MPa yield limit of the material.
-        At that same pressure the fuse plate had barely deformed, and the O-ring compression was still sitting around
+        The results were unambiguous. At roughly 130 pressure units, right around the maximum service pressure recorded
+        during bench testing, the plug threads reached 329 MPa, already above the 310 MPa yield limit of the material.
+        At that same pressure the fuse plate had barely deformed, and the O ring compression was still sitting around
         20% everywhere along the contour. Even pushing the simulation all the way to 240 units, the fuse still would not
         open a leak path. <strong className="text-white">The fuse was massively oversized and effectively inactive</strong>,
-        leaving the plug as the <em>de facto</em> weakest link — exactly consistent with the warranty record.
+        leaving the plug as the <em>de facto</em> weakest link, exactly consistent with the warranty record.
       </Para>
 
       <FigRow items={[{ src: `${BASE}/cat/30.png` }, { src: `${BASE}/cat/31.png` }]} />
       <p className="text-xs text-gray-500 -mt-2 italic mb-4">
         Von Mises stress in the fuse assembly at 130 pressure units. The plug threads reach 329 MPa (yield = 310 MPa)
-        while the fuse plate remains elastic — the fuse never triggers before plug failure.
+        while the fuse plate remains elastic; the fuse never triggers before plug failure.
       </p>
 
-      <Subsection title="Fuse Re-sizing" />
+      <Subsection title="Fuse Resizing" />
       <Para>
         With the fuse proven ineffective, the cheapest corrective action was to keep the same topology but thin down the
         plate until it actually deformed in the right pressure window. The desired window had clear bounds: seal reliably
-        above the 130-unit maximum service pressure, and leak reliably below the 220-unit cylinder yield pressure — a
-        90-unit band to work inside. (The plug itself is weaker than the cylinder, but its redesign was out of scope for
+        above the 130 unit maximum service pressure, and leak reliably below the 220 unit cylinder yield pressure, a
+        90 unit band to work inside. (The plug itself is weaker than the cylinder, but its redesign was out of scope for
         this sizing study; once the plug is redesigned to match the cylinder, the same curves still apply.)
       </Para>
       <Para>
-        I re-ran the simulation parametrically across four supplier-standard plate thicknesses — 3, 3.5, 4 and 6 mm —
-        and for each one extracted the minimum and average O-ring compression along the contact contour as pressure
-        ramped. As expected, thinner plates leak earlier and produce wider grey-zone bands. The 6 mm plate essentially
-        replicated the current oversized behaviour; the 3 mm plate leaked too early, barely clearing the 130-unit
+        I reran the simulation parametrically across four supplier standard plate thicknesses: 3, 3.5, 4 and 6 mm,
+        and for each one extracted the minimum and average O ring compression along the contact contour as pressure
+        ramped. As expected, thinner plates leak earlier and produce wider grey zone bands. The 6 mm plate essentially
+        replicated the current oversized behaviour; the 3 mm plate leaked too early, barely clearing the 130 unit
         service ceiling.
       </Para>
 
       <Fig src={`${BASE}/cat/35.png`}
-        caption="O-ring compression vs. pressure for each plate thickness. Grey bands mark the transition between guaranteed sealing (min C% > 5.7%) and certain leakage (avg C% < 0%)." />
+        caption="O ring compression vs. pressure for each plate thickness. Grey bands mark the transition between guaranteed sealing (min C% > 5.7%) and certain leakage (avg C% < 0%)." />
 
       <Para>
         The <strong className="text-white">3.5 mm plate</strong> was the clean answer: guaranteed sealing up to around
         160 units (comfortably above 130) and guaranteed leakage by around 180 units (comfortably below 220). Part cost
         stayed negligible since the geometry is still a simple stamped plate. One important limitation worth flagging:
-        this fuse is designed for static or quasi-static overpressure. A sudden pressure spike — for example a hard
-        idler impact — would require a much higher mass-flow evacuation path than the small opening produced by plate
-        deformation. For that failure mode a proper relief valve is the right tool, and that informed the concept-level
+        this fuse is designed for static or quasi-static overpressure. A sudden pressure spike, for example a hard
+        idler impact, would require a much higher mass flow evacuation path than the small opening produced by plate
+        deformation. For that failure mode a proper relief valve is the right tool, and that informed the concept level
         redesign.
       </Para>
 
-      <Subsection title="Redesign Concepts and Pugh-Matrix Selection" />
+      <Subsection title="Redesign Concepts and Pugh Matrix Selection" />
       <Para>
         Three full CAD redesigns were developed in Creo Parametric, each informed by both the warranty analysis and a
         benchmark of the John Deere 700L, Komatsu D51 PX, and CAT D4/D7/TTL tensioners. The recurring themes across
         successful competitor designs were consistent: welded (not threaded) cylinder assembly to eliminate the
-        fill-valve leak path, chromed or sleeved piston-cylinder interface to prevent wear-induced seal failure,
-        oil-based lubrication of the sliding contact, a positive mechanical alignment between cylinder and frame, and a
+        fill valve leak path, chromed or sleeved piston cylinder interface to prevent wear induced seal failure,
+        oil based lubrication of the sliding contact, a positive mechanical alignment between cylinder and frame, and a
         proper relief valve as the overpressure safety device rather than a deformable bar.
       </Para>
       <Para>
-        Concept 1 focused on a perfect-guidance architecture: spherical joint at the piston end, a
-        spacer-and-sleeve retainer providing two line contacts against a precision-machined cylinder, and an
+        Concept 1 focused on a perfect guidance architecture: spherical joint at the piston end, a
+        spacer and sleeve retainer providing two line contacts against a precision machined cylinder, and an
         interconnected oil chamber lubricating both interfaces. Concept 2 was inspired directly by the John Deere 700L:
-        a two-piece welded cylinder, a re-sized fuse plate from the sizing study, and a guide hole catching the piston
-        if the chain goes slack. Concept 3 took a different route — it integrates the cylinder body directly into the
-        mobile portion of the TRF, uses a two-level alignment (ball joint at one end, pin-in-hole at the other) that
-        makes the sub-assembly essentially self-aligning under its own weight during installation, and keeps both valves
+        a two piece welded cylinder, a resized fuse plate from the sizing study, and a guide hole catching the piston
+        if the chain goes slack. Concept 3 took a different route: it integrates the cylinder body directly into the
+        mobile portion of the TRF, uses a two level alignment (ball joint at one end, pin in hole at the other) that
+        makes the subassembly essentially self aligning under its own weight during installation, and keeps both valves
         accessible without modifying the TRF hatch door.
       </Para>
       <Para>
         The three concepts were scored against eight criteria in a Pugh matrix using the current D5 as the reference:
         cost, intrusiveness on the existing design, serviceability, operator safety, ease of assembly, behaviour under
-        chain-loose scenarios, fuse robustness, and manufacturability. The matrix was intentionally kept qualitative —
+        chain loose scenarios, fuse robustness, and manufacturability. The matrix was intentionally kept qualitative;
         weighting the criteria with specific numerical coefficients would have introduced arbitrary bias given that
         several criteria (assembly ease especially) were the blocking constraints.
       </Para>
       <Para>
         <strong className="text-white">Concept 3 was selected.</strong> It scored positively on cost, serviceability,
-        manufacturability, intrusiveness and chain-loose guidance; neutral on assembly ease, where its self-aligning
+        manufacturability, intrusiveness and chain loose guidance; neutral on assembly ease, where its self aligning
         geometry directly addresses what had been the single biggest pain point. Concept 2 was blocked by severe
         assembly difficulty inside the cramped TRF, and Concept 1 offered no clear advantage over the reference.
-        Concept 3 is now positioned for physical prototyping and bench validation — the remaining step in the DMAIC
+        Concept 3 is now positioned for physical prototyping and bench validation, the remaining step in the DMAIC
         Control phase.
       </Para>
 
@@ -470,8 +470,8 @@ function CatContent() {
       <Outcome accent="#E8A020" title="Key Outcomes">
         <ul className="space-y-1">
           <li>· 684 multilingual warranty reports classified automatically at <strong className="text-white">96% accuracy</strong> with a local SBERT pipeline (no data leaves the machine).</li>
-          <li>· FEA with a geometric leak criterion proved the existing fuse never activates, and identified the plug as the real failure point — matching field data exactly.</li>
-          <li>· Re-sized fuse plate (3.5 mm) delivers a clean pressure window: seals up to ~160, leaks by ~180, well inside the 130–220 safety band.</li>
+          <li>· FEA with a geometric leak criterion proved the existing fuse never activates, and identified the plug as the real failure point, matching field data exactly.</li>
+          <li>· Resized fuse plate (3.5 mm) delivers a clean pressure window: seals up to ~160, leaks by ~180, well inside the 130 to 220 safety band.</li>
           <li>· Concept 3 selected via Pugh matrix, addressing all four critical failure modes identified upstream and ready for prototyping.</li>
         </ul>
       </Outcome>
@@ -489,7 +489,7 @@ function CombustionContent() {
 
       <Subsubsection title="Context" />
       <Para>
-        During operation, rocket engines — particularly the combustion chamber — are subjected to extremely high
+        During operation, rocket engines, particularly the combustion chamber, are subjected to extremely high
         temperatures. As temperature increases, the mechanical properties of metals degrade, most notably their yield
         strength. To address this issue, two methods exist for controlling the temperature of the chamber:
       </Para>
@@ -533,7 +533,7 @@ function CombustionContent() {
           ['Coolant inlet temperature (K)', '70'],
           ['Contraction/expansion ratio', '9/5.5'],
           ['Wall thickness (mm)', '10'],
-          ['Channel-to-wall margin thickness (mm)', '3'],
+          ['Channel to wall margin thickness (mm)', '3'],
           ['Throat diameter (m)', '0.0274'],
         ]}
       />
@@ -554,7 +554,7 @@ function CombustionContent() {
       <Para>After simulation in ANSYS Fluent + ANSYS Thermal, the following results were obtained:</Para>
 
       <DataTable
-        caption="Thermal data of the gas in the combustion chamber at selected cross-sections"
+        caption="Thermal data of the gas in the combustion chamber at selected cross sections"
         head={['Axial position (mm)', 'Temp. (K)', 'γ', 'Mach', 'Viscosity (10⁻⁴ Pa·s)', 'Cp (J/mol·K)', 'Pr']}
         rows={[
           ['0', '3448.78', '1.1251', '0', '1.1437', '2278.4', '0.5649'],
@@ -566,10 +566,10 @@ function CombustionContent() {
       />
 
       <Fig small src={`${BASE}/image49.png`}
-        caption="Temperature distribution in the combustion chamber wall (cross-section taken between two channels)" />
+        caption="Temperature distribution in the combustion chamber wall (cross section taken between two channels)" />
 
       <Para>
-        The temperature peak is reached just before the narrowest cross-section, near the contraction zone of the
+        The temperature peak is reached just before the narrowest cross section, near the contraction zone of the
         chamber throat.
       </Para>
       <Para>
@@ -614,7 +614,7 @@ function StarshipContent() {
       <Para>
         The goal is to fill the tank with cryogenic liquid nitrogen and increase the internal pressure until rupture,
         in order to analyse the failure mode. Anticipating this test and having access to a tank drawing published
-        online by an employee — including dimensions and sheet thickness — I reconstructed the tank geometry and
+        online by an employee, including dimensions and sheet thickness, I reconstructed the tank geometry and
         performed a hydrostatic pressure simulation to attempt to predict the failure zone and the critical pressure
         using the finite element method.
       </Para>
@@ -645,23 +645,23 @@ function LQRContent() {
     <>
       <Subsubsection title="Context" />
       <Para>
-        A traditional rocket is thrown away after a single flight — the equivalent of scrapping a commercial aircraft
+        A traditional rocket is thrown away after a single flight: the equivalent of scrapping a commercial aircraft
         after every trip. SpaceX changed this by landing their boosters propulsively: using the rocket's own engines
         to decelerate and return it to the launch site, where it can be refuelled and flown again. This is what drives
-        their cost advantage. Starship's Super Heavy booster goes further — it is caught mid-air by two mechanical
+        their cost advantage. Starship's Super Heavy booster goes further: it is caught mid air by two mechanical
         arms on the launch tower, since a booster of that size landing on legs would be structurally impractical.
       </Para>
       <Para>
-        Making this work is a flight software problem. The booster is an inherently unstable system — it naturally
+        Making this work is a flight software problem. The booster is an inherently unstable system; it naturally
         tips over. Its engines can be gimballed (their thrust direction tilted), and the flight software must
         coordinate those gimbal angles in real time, at every millisecond, to simultaneously control where the vehicle
         is going and how it is oriented. An uncorrected error compounds faster than a human could react.
       </Para>
       <Para>
-        This project builds that flight software from scratch. A 6-DOF rigid-body simulator acts as the virtual
-        rocket — it takes engine commands and propagates the full physical state of the vehicle forward in time.
-        An LQR full-state feedback controller reads that state, computes the optimal gimbal angles and thrust for each
-        engine, and sends the commands back. Closing this loop is called a Software-in-the-Loop (SIL) simulation:
+        This project builds that flight software from scratch. A 6 DOF rigid body simulator acts as the virtual
+        rocket, it takes engine commands and propagates the full physical state of the vehicle forward in time.
+        An LQR full state feedback controller reads that state, computes the optimal gimbal angles and thrust for each
+        engine, and sends the commands back. Closing this loop is called a Software in the Loop (SIL) simulation:
         the standard method for validating flight software before it ever runs on real hardware.
       </Para>
 
@@ -691,11 +691,11 @@ function LQRContent() {
               ref={el => { if (el) el.playbackRate = 1.1; }}
             />
           </div>
-          <p className="text-xs text-gray-500 italic text-center">6-DOF LQR simulation — Go to Setpoint manoeuvre</p>
+          <p className="text-xs text-gray-500 italic text-center">6 DOF LQR simulation: Go to Setpoint manoeuvre</p>
         </div>
       </div>
       <div className="flex justify-center mt-6 mb-3">
-        <p className="text-sm text-gray-400 font-light italic">The simulation runs live in your browser — no install needed.</p>
+        <p className="text-sm text-gray-400 font-light italic">The simulation runs live in your browser, no install needed.</p>
       </div>
       <div className="flex justify-center mb-8">
         <Link to="/rocketDemo"
@@ -711,12 +711,12 @@ function LQRContent() {
       <Subsubsection title="Objective" />
       <Para>
         The goal is to develop and validate, in simulation, the full guidance and control stack for a propulsively
-        landing rocket stage. This requires two things built in tandem: a numerically reliable 6-DOF rigid-body
-        integrator that serves as the virtual vehicle, and an LQR full-state feedback controller that commands it.
-        Neither is useful without the other — the integrator needs a controller to drive it to a meaningful scenario,
-        and the controller needs a physics-accurate plant to be tested against. The two are developed and unit-tested
-        separately, then connected in a Software-in-the-Loop (SIL) simulation that validates closed-loop behaviour at
-        flight-realistic update rates. The three parts below follow that order: first the integrator, then the
+        landing rocket stage. This requires two things built in tandem: a numerically reliable 6 DOF rigid body
+        integrator that serves as the virtual vehicle, and an LQR full state feedback controller that commands it.
+        Neither is useful without the other: the integrator needs a controller to drive it to a meaningful scenario,
+        and the controller needs a physics accurate plant to be tested against. The two are developed and unit tested
+        separately, then connected in a Software in the Loop (SIL) simulation that validates closed loop behaviour at
+        flight realistic update rates. The three parts below follow that order: first the integrator, then the
         controller, then the integration that ties them together.
       </Para>
       <Para>
@@ -732,11 +732,11 @@ function LQRContent() {
       </Para>
 
       {/* ── Part 1: the integrator ── */}
-      <Subsection title="Part 1 — The 6-DOF Rigid-Body Integrator (RK4)" />
+      <Subsection title="Part 1: The 6 DOF Rigid Body Integrator (RK4)" />
       <Para>
-        The integrator makes no concessions to simplicity: no linearisation, no small-angle assumption, no analytical
-        shortcut. It propagates the full nonlinear state forward in time using a fourth-order Runge-Kutta scheme at
-        sub-millisecond resolution, and must remain numerically stable over the full duration of a landing manoeuvre.
+        The integrator makes no concessions to simplicity: no linearisation, no small angle assumption, no analytical
+        shortcut. It propagates the full nonlinear state forward in time using a fourth order Runge Kutta scheme at
+        submillisecond resolution, and must remain numerically stable over the full duration of a landing manoeuvre.
       </Para>
 
       <Subsubsection title="State Representation" />
@@ -746,7 +746,7 @@ function LQRContent() {
       <EqBlock>{`\\mathbf{s} = \\bigl[\\,\\underbrace{x,\\,y,\\,z}_{\\text{position}},\\;\\underbrace{q_w,\\,q_x,\\,q_y,\\,q_z}_{\\text{attitude}},\\;\\underbrace{v_x,\\,v_y,\\,v_z}_{\\text{velocity}},\\;\\underbrace{\\omega_x,\\,\\omega_y,\\,\\omega_z}_{\\text{angular velocity}}\\,\\bigr]`}</EqBlock>
       <Para>
         Attitude is represented by a unit quaternion rather than Euler angles. This eliminates gimbal lock entirely and
-        keeps the kinematics well-conditioned at every orientation, including when the body undergoes large rotations.
+        keeps the kinematics well conditioned at every orientation, including when the body undergoes large rotations.
       </Para>
 
       <Subsubsection title="Equations of Motion" />
@@ -761,7 +761,7 @@ function LQRContent() {
       <EqBlock>{`\\dot{\\mathbf{q}} = \\frac{1}{2}\\,\\Omega(\\boldsymbol{\\omega})\\,\\mathbf{q}`}</EqBlock>
       <Para>
         where <Eq>{'\\Omega(\\boldsymbol{\\omega})'}</Eq> is the{' '}
-        <Eq>{'4\\times4'}</Eq> skew-symmetric matrix constructed from the body-frame angular velocity:
+        <Eq>{'4\\times4'}</Eq> skew symmetric matrix constructed from the body frame angular velocity:
       </Para>
       <EqBlock>{`\\Omega(\\boldsymbol{\\omega}) =
 \\begin{pmatrix}
@@ -789,14 +789,14 @@ function LQRContent() {
       <Para>
         The term <Eq>{'\\boldsymbol{\\omega}\\times(\\mathbf{I}\\,\\boldsymbol{\\omega})'}</Eq> is the gyroscopic term.
         It accounts for the redistribution of angular momentum between axes whenever the angular velocity vector is not
-        aligned with a principal axis of inertia. It is this term that governs all non-trivial rotational behaviour.
+        aligned with a principal axis of inertia. It is this term that governs all nontrivial rotational behaviour.
       </Para>
 
       <Subsubsection title="The RK4 Scheme" />
       <Para>
-        The four equations above are bundled into a single state-derivative function{' '}
-        <Eq>{'f(\\mathbf{s})'}</Eq>. The classical fourth-order Runge-Kutta method advances the state by one
-        time-step <Eq>{'h'}</Eq>:
+        The four equations above are bundled into a single state derivative function{' '}
+        <Eq>{'f(\\mathbf{s})'}</Eq>. The classical fourth order Runge Kutta method advances the state by one
+        time step <Eq>{'h'}</Eq>:
       </Para>
       <EqBlock>{`\\begin{aligned}
 \\mathbf{k}_1 &= f(\\mathbf{s}_n) \\\\
@@ -813,7 +813,7 @@ function LQRContent() {
       <Para>
         <strong className="text-white">Numerical reliability.</strong> Two measures preserve long-term accuracy. The
         inverse inertia tensor <Eq>{'\\mathbf{I}^{-1}'}</Eq> is computed once at initialisation and cached, avoiding
-        repeated matrix factorisation at every step. The quaternion is re-normalised after every step to prevent slow
+        repeated matrix factorisation at every step. The quaternion is renormalised after every step to prevent slow
         numerical drift from corrupting the attitude representation:
       </Para>
       <EqBlock>{`\\mathbf{q} \\leftarrow \\frac{\\mathbf{q}}{\\|\\mathbf{q}\\|}`}</EqBlock>
@@ -824,17 +824,17 @@ function LQRContent() {
         <Eq>{'I_1 = 300'}</Eq>, <Eq>{'I_2 = 100'}</Eq>, <Eq>{'I_3 = 30\\,\\text{kg}\\cdot\\text{m}^2'}</Eq>, and the
         body was given an initial angular velocity nearly aligned with the intermediate axis, with a small perturbation
         on the other two. The gyroscopic term in Euler's equation then drives the system into an unstable regime: the
-        Dzhanibekov effect. The body undergoes periodic half-turns and re-aligns, indefinitely. The real-time 3D
-        animation made this directly visible, which is something no closed-form solution could have offered as clearly.
+        Dzhanibekov effect. The body undergoes periodic half turns and realigns, indefinitely. The real time 3D
+        animation made this directly visible, which is something no closed form solution could have offered as clearly.
       </Para>
 
       {/* ── Part 2: the controller ── */}
-      <Subsection title="Part 2 — The LQR Controller" />
+      <Subsection title="Part 2: The LQR Controller" />
       <Para>
-        An LQR (Linear Quadratic Regulator) is a full-state feedback controller: it multiplies the current state error
+        An LQR (Linear Quadratic Regulator) is a full state feedback controller: it multiplies the current state error
         by a precomputed gain matrix <Eq>{'\\mathbf{K}'}</Eq> to produce the control command that optimally balances how
         quickly the error is driven to zero against how much actuator effort is spent. The gain is computed from a
-        tangent-space linearisation of the 6-DOF dynamics, and is what turns the raw simulator into a controllable
+        tangent space linearisation of the 6-DOF dynamics, and is what turns the raw simulator into a controllable
         vehicle.
       </Para>
 
@@ -843,21 +843,21 @@ function LQRContent() {
         LQR is, by definition, a linear law: it is exact only at the operating point{' '}
         <Eq>{'(\\mathbf{s}_{\\text{op}},\\mathbf{u}_{\\text{op}})'}</Eq> where the Jacobians{' '}
         <Eq>{'A=\\partial f/\\partial\\mathbf{s}'}</Eq> and{' '}
-        <Eq>{'B=\\partial f/\\partial\\mathbf{u}'}</Eq> were taken. The vehicle dynamics are strongly non-linear
+        <Eq>{'B=\\partial f/\\partial\\mathbf{u}'}</Eq> were taken. The vehicle dynamics are strongly nonlinear
         (<Eq>{'\\mathbf{R}(\\mathbf{q})'}</Eq>, gyroscopic coupling,{' '}
         <Eq>{'\\boldsymbol{\\omega}\\times(\\mathbf{I}\\boldsymbol{\\omega})'}</Eq>), so the operating point must be
         refreshed along the trajectory. At each refresh, <Eq>{'A'}</Eq> and <Eq>{'B'}</Eq> are recomputed by JAX
-        auto-differentiation of the dynamics function around the current <Eq>{'(\\mathbf{s},\\mathbf{u})'}</Eq>, and a
-        new gain <Eq>{'\\mathbf{K}'}</Eq> is obtained by solving the continuous-time algebraic Riccati equation:
+        auto differentiation of the dynamics function around the current <Eq>{'(\\mathbf{s},\\mathbf{u})'}</Eq>, and a
+        new gain <Eq>{'\\mathbf{K}'}</Eq> is obtained by solving the continuous time algebraic Riccati equation:
       </Para>
       <EqBlock>{`A^\\top P + P A - P B R^{-1} B^\\top P + Q = 0,
 \\qquad
 \\mathbf{K} = R^{-1} B^\\top P`}</EqBlock>
 
-      <Subsubsection title="Thrust-Vector-Control Encoding" />
+      <Subsubsection title="Thrust Vector Control Encoding" />
       <Para>
         Internally the LQR computes thrust as a Cartesian force vector{' '}
-        <Eq>{'[F_x, F_y, F_z]'}</Eq> per engine, which is the natural form for an affine state-space formulation. The
+        <Eq>{'[F_x, F_y, F_z]'}</Eq> per engine, which is the natural form for an affine state space formulation. The
         real vehicle, however, commands two gimbal angles and a thrust magnitude per engine. The controller therefore
         converts its Cartesian solution into the <Eq>{'[\\alpha,\\,\\beta,\\,T]'}</Eq> form an actuator actually
         receives, via the forward and inverse trigonometric mapping:
@@ -875,14 +875,14 @@ T     &= \\sqrt{F_x^2+F_y^2+F_z^2} \\\\
 \\end{aligned}`}</EqBlock>
 
       {/* ── Part 3: SIL integration & results ── */}
-      <Subsection title="Part 3 — Software-in-the-Loop Integration & Results" />
+      <Subsection title="Part 3: Software in the Loop Integration and Results" />
       <Para>
-        The integrator and controller are developed and unit-tested in isolation; neither result says anything about
-        closed-loop behaviour. The Software-in-the-Loop (SIL) simulation closes the loop: at every controller tick,
+        The integrator and controller are developed and unit tested in isolation; neither result says anything about
+        closed loop behaviour. The Software in the Loop (SIL) simulation closes the loop: at every controller tick,
         the gain <Eq>{'\\mathbf{K}'}</Eq> is applied to the live plant state, the resulting actuator command is fed
         back into the RK4 integrator, and the new state is fed back into the controller. The purpose is to validate
-        that the LQR law, re-linearised periodically along the trajectory, actually stabilises the full non-linear
-        vehicle from a non-trivial initial attitude to a target setpoint.
+        that the LQR law, relinearised periodically along the trajectory, actually stabilises the full nonlinear
+        vehicle from a nontrivial initial attitude to a target setpoint.
       </Para>
 
       <Subsubsection title="Architecture" />
@@ -903,13 +903,13 @@ T     &= \\sqrt{F_x^2+F_y^2+F_z^2} \\\\
       </ul>
       <Para>
         The crucial design choice is the bus variable. Although the controller solves internally in Cartesian forces,
-        the bus carries the <Eq>{'[\\alpha,\\,\\beta,\\,T]'}</Eq> gimbal command — the same signal the real vehicle
+        the bus carries the <Eq>{'[\\alpha,\\,\\beta,\\,T]'}</Eq> gimbal command, the same signal the real vehicle
         receives. Routing it across the SIL boundary forces the simulation to exercise the same trigonometric mapping
         shown above, so any singularity, saturation, or precision loss in that mapping appears in closed loop, not as
         a hidden internal quantity.
       </Para>
 
-      <Subsubsection title="Multi-Rate Scheduling" />
+      <Subsubsection title="Multi Rate Scheduling" />
       <Para>
         A real flight stack does not run every block at the same frequency, and the SIL reproduces that. Three
         independent rates are scheduled inside a single loop:
@@ -920,12 +920,12 @@ T     &= \\sqrt{F_x^2+F_y^2+F_z^2} \\\\
         rows={[
           ['RK4 integration', '8000 Hz', 'h = 0.125 ms, global error O(h⁴)'],
           ['Controller update', '5000 Hz', 'Realistic upper bound for an embedded LQR'],
-          ['LQR re-linearisation', '30 Hz', 'JAX auto-diff of f(s,u) and Riccati solve'],
+          ['LQR relinearisation', '30 Hz', 'JAX auto diff of f(s,u) and Riccati solve'],
         ]}
       />
       <Para>
-        The relinearisation rate is the load-bearing parameter. Because the LQR gain is only valid near its operating
-        point and the dynamics are strongly non-linear, the linearisation must be refreshed along the trajectory —
+        The relinearisation rate is the load bearing parameter. Because the LQR gain is only valid near its operating
+        point and the dynamics are strongly nonlinear, the linearisation must be refreshed along the trajectory,
         here at 30 Hz. Between refreshes, the controller applies the cached <Eq>{'\\mathbf{K}'}</Eq> at the full 5 kHz
         rate; the cost stays in the affordable range while the linearisation stays close enough to the trajectory to
         remain valid.
@@ -952,16 +952,16 @@ T     &= \\sqrt{F_x^2+F_y^2+F_z^2} \\\\
       <Subsubsection title="Results" />
       <Para>
         The closed loop converges. The vehicle drives all three position channels onto their setpoint with no
-        steady-state offset and no oscillation past the transient. The TVC commands stay inside physically sensible
-        bounds: gimbal angles in the low-degree range, per-engine thrust modulating around the hover share. The final
+        steady state offset and no oscillation past the transient. The TVC commands stay inside physically sensible
+        bounds: gimbal angles in the low degree range, per engine thrust modulating around the hover share. The final
         quaternion norm, after 30 seconds at 8 kHz (<Eq>{'2.4 \\times 10^5'}</Eq> RK4 steps), is within{' '}
-        <Eq>{'10^{-8}'}</Eq> of unity, confirming that the per-step re-normalisation of the integrator holds up over
+        <Eq>{'10^{-8}'}</Eq> of unity, confirming that the per step renormalisation of the integrator holds up over
         the full SIL horizon.
       </Para>
       <Para>
         The most useful diagnostic is the disagreement curve between the controller's internal Cartesian command and
-        the gimbal-encoded command actually delivered to the plant. The two are mathematically inverse on paper; in the
-        SIL they round-trip through floating point, so any divergence flags either a singularity in the{' '}
+        the gimbal encoded command actually delivered to the plant. The two are mathematically inverse on paper; in the
+        SIL they round trip through floating point, so any divergence flags either a singularity in the{' '}
         <Eq>{'[\\alpha,\\beta,T]'}</Eq> chart or a saturation in the controller. Across the test scenario the
         disagreement stays at machine precision, which is the strongest possible statement that the SIL boundary is
         exercised cleanly and the controller never asks for a command the real vehicle could not execute.
@@ -969,10 +969,10 @@ T     &= \\sqrt{F_x^2+F_y^2+F_z^2} \\\\
 
       <Outcome accent="#9F8E6D" title="Key Outcomes">
         <ul className="space-y-1">
-          <li>· Full 6-DOF rigid-body propagation with quaternion kinematics and no gimbal lock; fourth-order Runge-Kutta at <Eq>{'h = 1\\,\\text{ms}'}</Eq>, global error <Eq>{'\\mathcal{O}(h^4)'}</Eq>, with per-step quaternion re-normalisation against long-term drift.</li>
+          <li>· Full 6 DOF rigid body propagation with quaternion kinematics and no gimbal lock; fourth order Runge Kutta at <Eq>{'h = 1\\,\\text{ms}'}</Eq>, global error <Eq>{'\\mathcal{O}(h^4)'}</Eq>, with per step quaternion renormalisation against long term drift.</li>
           <li>· Numerical reproduction of the Dzhanibekov effect: rotation about the intermediate inertia axis is unstable and the simulator captures it exactly.</li>
-          <li>· LQR re-linearised on-trajectory via JAX auto-diff + Riccati solve, no hand-derived Jacobians; SIL boundary carries <Eq>{'[\\alpha,\\beta,T]'}</Eq>, the real TVC command, not internal Cartesian forces.</li>
-          <li>· Closed-loop validation across the full SIL boundary at flight-realistic rates (5 kHz control, 8 kHz plant, 30 Hz re-linearisation), converging from a horizontal initial attitude to a 3-axis position setpoint with quaternion norm preserved to <Eq>{'10^{-8}'}</Eq> after <Eq>{'2.4\\times10^5'}</Eq> integration steps.</li>
+          <li>· LQR relinearised on trajectory via JAX auto diff and Riccati solve, no hand derived Jacobians; SIL boundary carries <Eq>{'[\\alpha,\\beta,T]'}</Eq>, the real TVC command, not internal Cartesian forces.</li>
+          <li>· Closed loop validation across the full SIL boundary at flight realistic rates (5 kHz control, 8 kHz plant, 30 Hz relinearisation), converging from a horizontal initial attitude to a 3 axis position setpoint with quaternion norm preserved to <Eq>{'10^{-8}'}</Eq> after <Eq>{'2.4\\times10^5'}</Eq> integration steps.</li>
         </ul>
       </Outcome>
     </>
@@ -997,46 +997,46 @@ function CanardContent() {
         The concept borrows from two places. Mike Patey's <em>Scrappy</em> build showed that fixed landing gear can
         carry an airfoil profile and produce lift instead of being pure parasitic drag, which is relevant here because a light
         aerobatic plane cannot afford the weight and complexity of a retraction mechanism. And the structural
-        architecture is modelled on the Kodiak bush-plane main gear, which is the most robust fixed-gear arrangement
-        I could find. My brief was to combine the two: a rigid, bolt-on landing-gear assembly whose fairing is a
+        architecture is modelled on the Kodiak bush plane main gear, which is the most robust fixed gear arrangement
+        I could find. My brief was to combine the two: a rigid, bolt on landing gear assembly whose fairing is a
         lifting surface, actuated as a differential control surface.
       </Para>
 
-      {/* TODO: add screenshots — full canard/gear assembly overview */}
+      {/* TODO: add screenshots, full canard/gear assembly overview */}
       <FigRow size="lg" items={[
         { src: `${BASE}/canard/assembly-overview.png`, caption: 'Canard landing-gear assembly (SolidWorks)' },
         { src: `${BASE}/canard/on-aircraft.png`, caption: 'Assembly mounted on the aircraft' },
       ]} />
 
-      <Subsection title="Landing-Gear Architecture: Rigid, but Sprung" />
+      <Subsection title="Landing Gear Architecture: Rigid, but Sprung" />
       <Para>
         The gear is conventional taildragger gear and nominally "rigid": there is no oleo strut, no rubber donut, no
-        dedicated spring element. The suspension comes from the structure itself. Each leg is a large-diameter tube
+        dedicated spring element. The suspension comes from the structure itself. Each leg is a large diameter tube
         ending in a hub and spindle, and each tube mounts into a <strong className="text-white">trunnion</strong> that
-        pivots on pins about an axis fixed to the chromoly-tube airframe. The two trunnions are tied together by
-        cross-braces.
+        pivots on pins about an axis fixed to the chromoly tube airframe. The two trunnions are tied together by
+        cross braces.
       </Para>
       <Para>
         Under landing loads, the vertical force at the wheels swings the legs about the trunnion pivot axes, which
-        rotates the trunnions slightly and forces the cross-braces to flex from a flat shape into a shallow arc. That
+        rotates the trunnions slightly and forces the cross braces to flex from a flat shape into a shallow arc. That
         controlled flexure <em>is</em> the spring: the load path deliberately routes energy into members sized to bend
-        elastically, rather than bending anything that isn't supposed to bend. Compared with the one-piece aluminium
+        elastically, rather than bending anything that isn't supposed to bend. Compared with the one piece aluminium
         arc used on most aerobatic planes, this architecture is heavier but far more tolerant of hard landings; the
         design brief was that the aircraft should be able to bounce off a runway without damage. The next step for
-        this part is an FEA study to quantify the effective spring rate and stress margins of the cross-brace flexure.
+        this part is an FEA study to quantify the effective spring rate and stress margins of the cross brace flexure.
       </Para>
 
-      {/* TODO: add screenshots — trunnion detail + load-path sketch from the review */}
+      {/* TODO: add screenshots, trunnion detail and load path sketch from the review */}
       <FigRow size="lg" items={[
         { src: `${BASE}/canard/trunnion-detail.png`, caption: 'Trunnion and pivot-pin detail' },
-        { src: `${BASE}/canard/load-path.png`, caption: 'Load path: wheel force → trunnion rotation → cross-brace flexure' },
+        { src: `${BASE}/canard/load-path.png`, caption: 'Load path: wheel force to trunnion rotation to cross brace flexure' },
       ]} />
 
       <Subsection title="Canards as the Aircraft's Roll Control" />
       <Para>
         The second function of the assembly is what makes it interesting: the gear fairings are canard surfaces, and
         they are the aircraft's <strong className="text-white">only roll-control surfaces</strong>, functionally the
-        ailerons. The aircraft is fly-by-wire with hydraulic actuation, which is what makes the mechanism practical:
+        ailerons. The aircraft is fly by wire with hydraulic actuation, which is what makes the mechanism practical:
         a hydraulic actuator drives a pushrod assembly (clevis pin, heim joint, pushrod angle bracket, second
         pushrod) into a bellcrank bolted directly to the canard. Actuating the piston deflects the two canards{' '}
         <strong className="text-white">in opposite directions</strong>, one up and one down, producing a rolling
@@ -1044,21 +1044,21 @@ function CanardContent() {
       </Para>
       <Para>
         Each canard rotates on a thrust bearing at the top and a second thrust bearing at the bottom, constraining the
-        surface axially while leaving rotation free. The whole canard unit is designed as a self-contained module that
+        surface axially while leaving rotation free. The whole canard unit is designed as a self contained module that
         bolts to the airframe as one piece, so installation and removal don't disturb the rest of the aircraft. Two
-        detail points came out of design review: the heim-joint attachment must be a bolt rather than a pin (a pin has
+        detail points came out of design review: the heim joint attachment must be a bolt rather than a pin (a pin has
         nothing constraining it axially at that joint), and the single actuator should be duplicated front and back
         for redundancy; the assembly is symmetric, so mirroring it is a straightforward change.
       </Para>
       <Para>
         Getting this mechanism right took <strong className="text-white">three design iterations</strong>. The
-        constraint that killed the first two was clearance at full deflection: with the actuator at end-of-stroke the
+        constraint that killed the first two was clearance at full deflection: with the actuator at end of stroke the
         linkage passes within millimetres of the wheel assembly and the gear leg. The final geometry was validated
         kinematically in SolidWorks by driving the actuator through its full stroke and checking the entire linkage
         for interference and binding at every position.
       </Para>
 
-      {/* TODO: add screenshots — pushrod/bellcrank mechanism, actuated positions */}
+      {/* TODO: add screenshots, pushrod/bellcrank mechanism, actuated positions */}
       <FigRow size="lg" items={[
         { src: `${BASE}/canard/mechanism.png`, caption: 'Hydraulic actuator, pushrod and bellcrank linkage' },
         { src: `${BASE}/canard/deflection.png`, caption: 'Differential deflection: one canard up, one down' },
@@ -1068,40 +1068,40 @@ function CanardContent() {
       <Para>
         One open question I'm aware of: the downwash and wake shed by the canards will interact with the airflow over
         the main wing, and that interference could affect the wing's lift distribution and handling. This still needs
-        to be verified through CFD or wind-tunnel / flight testing, and the canard position and landing-gear angle
+        to be verified through CFD or wind tunnel / flight testing, and the canard position and landing gear angle
         would be adjusted based on those results. The focus of this work was the mechanical side (the structure,
         actuation and mechanisms) rather than the aerodynamic optimization, which remains a next step.
       </Para>
 
-      {/* Temporarily hidden — Design Review (Video) section
+      {/* Temporarily hidden, Design Review (Video) section
       <Subsubsection title="Design Review (Video)" />
       <Para>
-        The full aircraft was presented in a recorded design review. The segment below starts at the landing-gear /
-        canard chapter, where I walk through the trunnion architecture, the flexure-based suspension and the
-        roll-control mechanism.
+        The full aircraft was presented in a recorded design review. The segment below starts at the landing gear /
+        canard chapter, where I walk through the trunnion architecture, the flexure based suspension and the
+        roll control mechanism.
       </Para>
       <div className="my-5 flex flex-col items-center">
         <div className="w-full max-w-2xl aspect-video rounded-md overflow-hidden border border-white/10 bg-black/30">
           <iframe
             src="https://www.youtube.com/embed/XNZeV1sazKA?start=1103"
-            title="Design review: canard landing-gear section"
+            title="Design review: canard landing gear section"
             className="w-full h-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
         </div>
         <p className="text-xs text-gray-500 mt-1.5 italic text-center max-w-lg">
-          Design-review walkthrough: landing-gear and canard section (from 18:23)
+          Design review walkthrough: landing gear and canard section (from 18:23)
         </p>
       </div>
       */}
 
       <Outcome accent="#9F8E6D" title="Key Outcomes">
         <ul className="space-y-1">
-          <li>· A single assembly performing two jobs: fixed main landing gear and the aircraft's only roll-control surface, enabling a wing with zero control surfaces.</li>
-          <li>· Passive suspension achieved through controlled structural flexure (Kodiak-style trunnion architecture), with no dedicated spring or shock element.</li>
+          <li>· A single assembly performing two jobs: fixed main landing gear and the aircraft's only roll control surface, enabling a wing with zero control surfaces.</li>
+          <li>· Passive suspension achieved through controlled structural flexure (Kodiak style trunnion architecture), with no dedicated spring or shock element.</li>
           <li>· Hydraulic pushrod/bellcrank mechanism producing differential canard deflection, kinematically validated in SolidWorks over the full actuator stroke with no interference or binding.</li>
-          <li>· Fully modular: the complete canard/gear unit bolts to the airframe as one self-contained piece, with a mirrored second actuator planned for redundancy.</li>
+          <li>· Fully modular: the complete canard/gear unit bolts to the airframe as one self contained piece, with a mirrored second actuator planned for redundancy.</li>
         </ul>
       </Outcome>
     </>
@@ -1178,14 +1178,6 @@ const DownloadsPage = () => {
           <p className="text-gray-400 font-light max-w-2xl leading-relaxed">
             Internship projects and personal studies in numerical simulation, structural analysis, mechanism design, and flight control.
           </p>
-          <a
-            href="/ali-portfolio/downloads/Portfolio-technique.pdf"
-            download
-            className="inline-flex items-center gap-2 mt-6 text-xs font-light tracking-wider text-gray-500 hover:text-[#9F8E6D] transition-colors duration-300 border border-white/10 hover:border-[#9F8E6D]/30 rounded-md px-4 py-2"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>DOWNLOAD PDF VERSION</span>
-          </a>
         </div>
 
         <div className="mb-4">
@@ -1198,10 +1190,10 @@ const DownloadsPage = () => {
 
         <div className="mt-16 space-y-2">
           <MajorSection title="Personal Projects" initialOpen={openSection === 'lqr'}>
-            <SubSection label="Personal Study" title="LQR Full-State Feedback Control & 6-DOF Body Integrator" accent="#9F8E6D" id="lqr" initialOpen={openSection === 'lqr'}>
+            <SubSection label="Personal Study" title="LQR Full State Feedback Control & 6 DOF Body Integrator" accent="#9F8E6D" id="lqr" initialOpen={openSection === 'lqr'}>
               <LQRContent />
             </SubSection>
-            <SubSection label="Personal Project" title="Canard Landing Gear & Roll-Control Assembly" accent="#9F8E6D" id="canard">
+            <SubSection label="Personal Project" title="Canard Landing Gear & Roll Control Assembly" accent="#9F8E6D" id="canard">
               <CanardContent />
             </SubSection>
             <SubSection label="Personal Study" title="Failure Prediction of the Starship Tank" accent="#9F8E6D">

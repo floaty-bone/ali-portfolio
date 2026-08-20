@@ -709,7 +709,7 @@ controls.minDistance = 2;
         </Link>
         <Link to="/downloadsPage#lqr" state={{ openSection: 'lqr' }}
           className="text-xs font-light tracking-widest text-white/40 hover:text-[#9F8E6D] uppercase whitespace-nowrap">
-          Personal Study — LQR & 6-DOF Body Integrator →
+          Personal Study: LQR & 6 DOF Body Integrator →
         </Link>
       </div>
 
@@ -742,9 +742,9 @@ controls.minDistance = 2;
           >?</span>
           {tooltip === 'landing' && (
             <div style={{ position: 'absolute', bottom: 'calc(100% + 8px)', right: 0, width: '300px', background: 'rgba(8,9,12,0.97)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', padding: '14px 16px', pointerEvents: 'none', zIndex: 10 }}>
-              <div style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.85)', marginBottom: '8px' }}>Booster Landing — Final Phase</div>
+              <div style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.85)', marginBottom: '8px' }}>Booster Landing: Final Phase</div>
               <div style={{ fontSize: '11px', lineHeight: '1.7', color: 'rgba(255,255,255,0.55)', fontWeight: 300 }}>
-                A real booster landing has several distinct phases: a hypersonic re-entry burn with all 13 engines, a grid-fin descent, then a landing burn. This simulation focuses on that last phase: the booster comes in at low altitude with only 3 center engines lit, corrects its attitude and velocity, and touches down on the catch pad.
+                A real booster landing has several distinct phases: a hypersonic reentry burn with all 13 engines, a grid-fin descent, then a landing burn. This simulation focuses on that last phase: the booster comes in at low altitude with only 3 center engines lit, corrects its attitude and velocity, and touches down on the catch pad.
               </div>
               <div style={{ marginTop: '10px', fontSize: '11px', lineHeight: '1.7', color: 'rgba(255,255,255,0.55)', fontWeight: 300 }}>
                 The mechazilla chopstick arms close automatically as the booster enters the final approach corridor.
@@ -787,12 +787,12 @@ controls.minDistance = 2;
           >?</span>
           {tooltip === 'hover' && (
             <div style={{ position: 'absolute', bottom: 'calc(100% + 8px)', right: 0, width: '300px', background: 'rgba(8,9,12,0.97)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', padding: '14px 16px', pointerEvents: 'none', zIndex: 10 }}>
-              <div style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.85)', marginBottom: '8px' }}>Multi-Waypoint LQR Setpoint Tracking</div>
+              <div style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.85)', marginBottom: '8px' }}>Multi Waypoint LQR Setpoint Tracking</div>
               <div style={{ fontSize: '11px', lineHeight: '1.7', color: 'rgba(255,255,255,0.55)', fontWeight: 300 }}>
-                Starting from rest at the origin, the same LQR controller tracks a sequence of 3D position setpoints in free space. At each waypoint the controller re-linearises around the new target and drives the booster there from any initial condition.
+                Starting from rest at the origin, the same LQR controller tracks a sequence of 3D position setpoints in free space. At each waypoint the controller relinearises around the new target and drives the booster there from any initial condition.
               </div>
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                {[['Phase 1', '(0, 0, 0) to (70, 70, 100) m'], ['Phase 2', 'to (−70, 70, 200) m'], ['Phase 3', 'to (70, 131, 300) m'], ['Phase 4', 'to (0, 0, 48) m — autonomous catch']].map(([k, v]) => (
+                {[['Phase 1', '(0, 0, 0) to (70, 70, 100) m'], ['Phase 2', 'to (−70, 70, 200) m'], ['Phase 3', 'to (70, 131, 300) m'], ['Phase 4', 'to (0, 0, 48) m: autonomous catch']].map(([k, v]) => (
                   <div key={k} style={{ display: 'flex', gap: '10px', fontSize: '10px', alignItems: 'baseline' }}>
                     <span style={{ color: 'rgba(159,142,109,0.7)', fontWeight: 500, minWidth: '52px' }}>{k}</span>
                     <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: 300 }}>{v}</span>
@@ -800,7 +800,7 @@ controls.minDistance = 2;
                 ))}
               </div>
               <div style={{ marginTop: '10px', fontSize: '11px', lineHeight: '1.7', color: 'rgba(255,255,255,0.55)', fontWeight: 300 }}>
-                On the final approach the chopstick arms close and the booster is caught — identical catch logic to the landing scenario.
+                On the final approach the chopstick arms close and the booster is caught, identical catch logic to the landing scenario.
               </div>
               <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 {[['Engines', '3 center engines (hover thrust)'], ['Actuation', 'TVC: gimbal α, β + throttle'], ['Integrator', 'RK4 @ 5000 Hz']].map(([k, v]) => (
