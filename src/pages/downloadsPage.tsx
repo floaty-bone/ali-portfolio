@@ -66,25 +66,34 @@ function DataTable({ caption, rows, head }: { caption: string; rows: string[][];
   );
 }
 
-function Fig({ src, caption, small }: { src: string; caption: string; small?: boolean }) {
+function Fig({ src, caption, small, medium, large, sizeOverride }: { src: string; caption: string; small?: boolean; medium?: boolean; large?: boolean; sizeOverride?: string }) {
+  const imgClass = sizeOverride ? sizeOverride
+    : small ? 'max-h-48 max-w-sm' : medium ? 'max-h-[30rem] max-w-3xl' : large ? 'max-h-[40rem] max-w-4xl' : 'max-h-60 max-w-xl';
   return (
     <div className="my-4 flex flex-col items-center">
       <div className="rounded-md bg-black/30 border border-white/10 inline-block">
-        <img src={src} alt={caption} className={`h-auto block w-auto ${small ? 'max-h-48 max-w-sm' : 'max-h-60 max-w-xl'}`} />
+        <img src={src} alt={caption} className={`h-auto block w-auto ${imgClass}`} />
       </div>
       <p className="text-xs text-gray-500 mt-1.5 italic text-center max-w-lg">{caption}</p>
     </div>
   );
 }
 
-function FigRow({ items, size }: { items: { src: string; caption?: string }[]; size?: 'lg' }) {
-  const imgClass = size === 'lg' ? 'h-auto w-auto max-h-64 max-w-lg block' : 'h-auto w-auto max-h-48 max-w-sm block';
+function FigRow({ items, size, sizeOverride }: { items: { src: string; caption?: string }[]; size?: 'lg' | 'md'; sizeOverride?: string }) {
+  const heightCap = sizeOverride ? sizeOverride.match(/max-h-(\[[^\]]+\]|\S+)/)?.[0].replace('max-h-', 'h-')
+    : size === 'lg' ? 'h-[28rem]'
+    : size === 'md' ? 'h-[19.6rem]'
+    : 'h-48';
+  const widthCap = sizeOverride ? sizeOverride.match(/max-w-(\[[^\]]+\]|\S+)/)?.[0]
+    : size === 'lg' ? 'max-w-2xl'
+    : size === 'md' ? 'max-w-[29.4rem]'
+    : 'max-w-sm';
   return (
     <div className="my-4">
       <div className="flex gap-3 justify-center flex-wrap">
         {items.map((item, i) => (
-          <div key={i} className="rounded-md bg-black/30 border border-white/10 inline-block">
-            <img src={item.src} alt={item.caption ?? ''} className={imgClass} />
+          <div key={i} className={`rounded-md bg-black/30 border border-white/10 ${heightCap} ${widthCap} flex items-center justify-center overflow-hidden`}>
+            <img src={item.src} alt={item.caption ?? ''} className="h-full w-auto object-contain block" />
           </div>
         ))}
       </div>
@@ -206,7 +215,7 @@ function GEContent() {
         and control of the force sensor, then synchronised it with the site database for data logging.
       </Para>
 
-      <FigRow items={[
+      <FigRow size="lg" items={[
         { src: `${BASE}/image9.png`, caption: 'Mechanical design of the measurement station' },
         { src: `${BASE}/image10.png`, caption: 'Software interface and data acquisition system' },
       ]} />
@@ -227,7 +236,7 @@ function GEContent() {
         used, which represented a significant cost for the company.
       </Para>
 
-      <Fig src={`${BASE}/image99.png`} caption="FEA analysis of the initial design" />
+      <Fig large src={`${BASE}/image99.png`} caption="FEA analysis of the initial design" />
 
       <Subsection title="Project 3: Stress Analysis of SF6 Gas Chamber" />
 
@@ -244,7 +253,7 @@ function GEContent() {
         Material used: A-S7G03.
       </Para>
 
-      <Fig src={`${BASE}/image1.png`} caption="FEA model of the gas chamber" />
+      <Fig large src={`${BASE}/image1.png`} caption="FEA model of the gas chamber" />
     </>
   );
 }
@@ -275,7 +284,7 @@ function CatContent() {
         src={`${BASE}/cat/13.png`}
         caption="D5 track tensioner: cross section showing the main components involved in the failure modes (spring tube, piston, piston seal, retainer, cylinder, plug). Grease pressure acts on the piston base to tension the track; the plug seals the rear of the cylinder and is bolted to the housing."
       />
-      <FigRow items={[{ src: `${BASE}/cat/14.png` }, { src: `${BASE}/cat/15.png` }]} />
+      <FigRow items={[{ src: `${BASE}/cat/14.png` }, { src: `${BASE}/cat/15.png` }]} sizeOverride="max-h-64 max-w-md" />
 
       <Subsection title="Automated Failure Mode Classification of Warranty Reports" />
       <Para>
@@ -323,8 +332,8 @@ function CatContent() {
         cases. That contradiction became the focus of the next phase.
       </Para>
 
-      <FigRow items={[{ src: `${BASE}/cat/19.png` }, { src: `${BASE}/cat/20.png` }]} />
-      <Fig src={`${BASE}/cat/21.png`}
+      <FigRow sizeOverride="max-h-[15.68rem] max-w-[23.52rem]" items={[{ src: `${BASE}/cat/19.png` }, { src: `${BASE}/cat/20.png` }]} />
+      <Fig sizeOverride="max-h-[21.6rem] max-w-[51.84rem]" src={`${BASE}/cat/21.png`}
         caption="Failure mode distribution per component after automated classification of the warranty records. Grease leak dominates across seals, valves and plug." />
 
       <Subsection title="FEA of the Fuse System: Why Plugs Were Cracking" />
@@ -367,7 +376,7 @@ function CatContent() {
         leaving the plug as the <em>de facto</em> weakest link, exactly consistent with the warranty record.
       </Para>
 
-      <FigRow items={[{ src: `${BASE}/cat/30.png` }, { src: `${BASE}/cat/31.png` }]} />
+      <FigRow sizeOverride="max-h-[15.6rem] max-w-[31.2rem]" items={[{ src: `${BASE}/cat/30.png` }, { src: `${BASE}/cat/31.png` }]} />
       <p className="text-xs text-gray-500 -mt-2 italic mb-4">
         Von Mises stress in the fuse assembly at 130 pressure units. The plug threads reach 329 MPa (yield = 310 MPa)
         while the fuse plate remains elastic; the fuse never triggers before plug failure.
@@ -389,7 +398,7 @@ function CatContent() {
         service ceiling.
       </Para>
 
-      <Fig src={`${BASE}/cat/35.png`}
+      <Fig sizeOverride="max-h-[19.5rem] max-w-[46.8rem]" src={`${BASE}/cat/35.png`}
         caption="O ring compression vs. pressure for each plate thickness. Grey bands mark the transition between guaranteed sealing (min C% > 5.7%) and certain leakage (avg C% < 0%)." />
 
       <Para>
@@ -437,34 +446,24 @@ function CatContent() {
         Control phase.
       </Para>
 
-      {/* Concept 1 and 3 side by side, then Concept 2 row */}
-      <div className="flex gap-8 justify-center my-4 flex-wrap">
-        <div className="flex flex-col items-center gap-2">
-          {[`${BASE}/cat/37.png`, `${BASE}/cat/38.png`, `${BASE}/cat/39.png`].map(src => (
-            <div key={src} className="rounded bg-black/30 border border-white/10">
-              <img src={src} alt="" className="h-auto w-auto max-h-36 max-w-56 block" />
+      {/* Concept cards: each concept's images contained in one uniform rectangle, laid out horizontally */}
+      <div className="flex flex-col gap-6 items-center my-4">
+        {[
+          { label: 'Concept 1', imgs: [`${BASE}/cat/37.png`, `${BASE}/cat/38.png`, `${BASE}/cat/39.png`] },
+          { label: 'Concept 2', imgs: [`${BASE}/cat/40.png`, `${BASE}/cat/41.png`, `${BASE}/cat/42.png`] },
+          { label: 'Concept 3', imgs: [`${BASE}/cat/43.png`, `${BASE}/cat/44.png`, `${BASE}/cat/45.png`] },
+        ].map(concept => (
+          <div key={concept.label} className="w-full max-w-[72.8rem] rounded-md bg-black/30 border border-white/10 overflow-hidden">
+            <div className="flex justify-center">
+              {concept.imgs.map(src => (
+                <div key={src} className="border-r border-white/10 last:border-0 h-[19.5rem] bg-black/20 flex items-center justify-center">
+                  <img src={src} alt="" className="h-full w-auto object-contain" />
+                </div>
+              ))}
             </div>
-          ))}
-          <p className="text-xs text-gray-500 italic">Concept 1</p>
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          {[`${BASE}/cat/43.png`, `${BASE}/cat/44.png`, `${BASE}/cat/45.png`].map(src => (
-            <div key={src} className="rounded bg-black/30 border border-white/10">
-              <img src={src} alt="" className="h-auto w-auto max-h-36 max-w-56 block" />
-            </div>
-          ))}
-          <p className="text-xs text-gray-500 italic">Concept 3</p>
-        </div>
-      </div>
-      <div className="border-t border-white/10 pt-4 mb-4">
-        <div className="flex gap-3 justify-center flex-wrap">
-          {[`${BASE}/cat/40.png`, `${BASE}/cat/41.png`, `${BASE}/cat/42.png`].map(src => (
-            <div key={src} className="rounded bg-black/30 border border-white/10">
-              <img src={src} alt="" className="h-auto w-auto max-h-36 max-w-56 block" />
-            </div>
-          ))}
-        </div>
-        <p className="text-xs text-gray-500 mt-1 italic text-center">Concept 2</p>
+            <p className="text-xs text-gray-500 italic text-center py-2">{concept.label}</p>
+          </div>
+        ))}
       </div>
 
       <Outcome accent="#E8A020" title="Key Outcomes">
@@ -516,7 +515,7 @@ function CombustionContent() {
         <li>Distance between the channel and the inner wall kept constant at 3 mm</li>
       </ul>
 
-      <Fig small src={`${BASE}/image43.jpg`}
+      <Fig sizeOverride="max-h-[21rem] max-w-[33.6rem]" src={`${BASE}/image43.jpg`}
         caption="Cooling channel design (CAD assembly of combustion chamber + nozzle)" />
 
       <Subsubsection title="Study Parameters" />
@@ -549,7 +548,7 @@ function CombustionContent() {
         generated.
       </Para>
 
-      <Fig small src={`${BASE}/image44.jpg`} caption="Fluid + solid zone mesh" />
+      <Fig sizeOverride="max-h-[32rem] max-w-[44.8rem]" src={`${BASE}/image44.jpg`} caption="Fluid + solid zone mesh" />
 
       <Para>After simulation in ANSYS Fluent + ANSYS Thermal, the following results were obtained:</Para>
 
@@ -565,7 +564,7 @@ function CombustionContent() {
         ]}
       />
 
-      <Fig small src={`${BASE}/image49.png`}
+      <Fig sizeOverride="max-h-[32rem] max-w-[44.8rem]" src={`${BASE}/image49.png`}
         caption="Temperature distribution in the combustion chamber wall (cross section taken between two channels)" />
 
       <Para>
@@ -577,7 +576,7 @@ function CombustionContent() {
         for height and 0.8 and 3.0 mm for width), the following results were obtained:
       </Para>
 
-      <Fig small src={`${BASE}/image50.png`}
+      <Fig sizeOverride="max-h-[21rem] max-w-[33.6rem]" src={`${BASE}/image50.png`}
         caption="Maximum combustion chamber temperature as a function of L and H" />
 
       <Subsubsection title="Conclusion" />
@@ -619,7 +618,7 @@ function StarshipContent() {
         using the finite element method.
       </Para>
 
-      <Fig small src={`${BASE}/image51.png`} caption="FEA simulation and failure zone prediction" />
+      <Fig large src={`${BASE}/image51.png`} caption="FEA simulation and failure zone prediction" />
 
       <Outcome accent="#4CAF50" title="Results">
         <ul className="space-y-1">
@@ -1003,7 +1002,7 @@ function CanardContent() {
       </Para>
 
       {/* TODO: add screenshots, full canard/gear assembly overview */}
-      <FigRow size="lg" items={[
+      <FigRow size="md" items={[
         { src: `${BASE}/canard/assembly-overview.png`, caption: 'Canard landing-gear assembly (SolidWorks)' },
         { src: `${BASE}/canard/on-aircraft.png`, caption: 'Assembly mounted on the aircraft' },
       ]} />
@@ -1027,7 +1026,7 @@ function CanardContent() {
       </Para>
 
       {/* TODO: add screenshots, trunnion detail and load path sketch from the review */}
-      <FigRow size="lg" items={[
+      <FigRow size="md" items={[
         { src: `${BASE}/canard/trunnion-detail.png`, caption: 'Trunnion and pivot-pin detail' },
         { src: `${BASE}/canard/load-path.png`, caption: 'Load path: wheel force to trunnion rotation to cross brace flexure' },
       ]} />
@@ -1059,7 +1058,7 @@ function CanardContent() {
       </Para>
 
       {/* TODO: add screenshots, pushrod/bellcrank mechanism, actuated positions */}
-      <FigRow size="lg" items={[
+      <FigRow size="md" items={[
         { src: `${BASE}/canard/mechanism.png`, caption: 'Hydraulic actuator, pushrod and bellcrank linkage' },
         { src: `${BASE}/canard/deflection.png`, caption: 'Differential deflection: one canard up, one down' },
       ]} />
