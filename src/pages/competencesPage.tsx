@@ -47,7 +47,6 @@ const languages = [
 
 const CompetencesPage = () => {
   const [index, setIndex] = useState(0);
-  const skill = skills[index];
 
   return (
     <PageShell>

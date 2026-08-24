@@ -244,7 +244,6 @@ function MajorSection({ title, children, initialOpen }: { title: string; childre
       ? React.cloneElement(child as React.ReactElement<{ index?: number }>, { index: i + 1 })
       : child,
   );
-  const count = React.Children.count(children);
 
   return (
     <div className="w-full">
