@@ -20,13 +20,13 @@ const HIGHLIGHTS = [
   },
   {
     to: '/downloadsPage',
-    state: undefined,
+    state: { openSection: 'caterpillar' },
     kicker: 'Final Year Internship',
     title: 'Caterpillar',
   },
   {
     to: '/downloadsPage',
-    state: undefined,
+    state: { openSection: 'ge' },
     kicker: 'Engineering Internship',
     title: 'General Electric Vernova',
   },

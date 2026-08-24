@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, ExternalLink } from 'lucide-react';
+import { ExternalLink, X } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
@@ -19,14 +19,89 @@ function EqBlock({ children }: { children: string }) {
   return <div className="my-3 overflow-x-auto" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
+// ─── Lightbox: click any figure to inspect it full screen ────────────────────
+
+type LightboxItem = { src: string; caption?: string };
+const LightboxCtx = React.createContext<(item: LightboxItem) => void>(() => {});
+const useLightbox = () => React.useContext(LightboxCtx);
+
+function LightboxProvider({ children }: { children: React.ReactNode }) {
+  const [item, setItem] = useState<LightboxItem | null>(null);
+
+  useEffect(() => {
+    if (!item) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setItem(null);
+    window.addEventListener('keydown', onKey);
+    // Freeze the page behind the overlay.
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [item]);
+
+  return (
+    <LightboxCtx.Provider value={setItem}>
+      {children}
+      {item && (
+        <div
+          className="fixed inset-0 z-[200] flex animate-fade-in cursor-zoom-out flex-col items-center
+                     justify-center gap-6 bg-ink/94 p-6 backdrop-blur-xl sm:p-12"
+          onClick={() => setItem(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <img
+            src={item.src}
+            alt={item.caption ?? ''}
+            className="max-h-[82vh] max-w-full animate-zoom-in rounded-xl object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+          {item.caption && (
+            <p className="max-w-2xl text-center font-mono text-[0.65rem] leading-relaxed tracking-wide text-white/45">
+              {item.caption}
+            </p>
+          )}
+          <button
+            onClick={() => setItem(null)}
+            aria-label="Close"
+            className="absolute right-7 top-7 text-white/40 transition-colors duration-300 hover:text-sand"
+          >
+            <X className="h-4 w-4" strokeWidth={1.5} />
+          </button>
+        </div>
+      )}
+    </LightboxCtx.Provider>
+  );
+}
+
+/* Frame shared by every figure: hover lift, zoom cursor, opens the lightbox. */
+function ZoomFrame({
+  src, caption, className = '', imgClassName = '',
+}: { src: string; caption?: string; className?: string; imgClassName?: string }) {
+  const open = useLightbox();
+  return (
+    <button
+      type="button"
+      onClick={() => open({ src, caption })}
+      className={`group/fig relative block cursor-zoom-in overflow-hidden ${className}`}
+    >
+      <img
+        src={src}
+        alt={caption ?? ''}
+        loading="lazy"
+        className={`block opacity-90 transition-opacity duration-500 group-hover/fig:opacity-100 ${imgClassName}`}
+      />
+    </button>
+  );
+}
+
 // ─── Layout primitives ────────────────────────────────────────────────────────
 
 function Subsection({ title }: { title: string }) {
   return (
-    <h4 className="mb-3 mt-8 flex items-center gap-3 text-base font-medium tracking-display text-sand-soft">
-      <span className="h-px w-5 bg-sand/50" />
-      {title}
-    </h4>
+    <h4 className="mb-4 mt-10 text-base font-normal tracking-display text-sand-soft">{title}</h4>
   );
 }
 
@@ -42,31 +117,31 @@ function Para({ children }: { children: React.ReactNode }) {
   return <p className="mb-3.5 max-w-3xl text-[0.92rem] font-light leading-[1.75] text-white/65">{children}</p>;
 }
 
-function Outcome({ accent, title, children }: { accent: string; title: string; children: React.ReactNode }) {
+function Outcome({ title, children }: { accent?: string; title: string; children: React.ReactNode }) {
   return (
-    <div className="mt-6 rounded-xl p-5" style={{ background: `${accent}10`, border: `1px solid ${accent}33` }}>
-      <p className="mb-2.5 font-mono text-[0.62rem] font-medium uppercase tracking-[0.2em]" style={{ color: accent }}>{title}</p>
-      <div className="space-y-1 text-sm font-light leading-relaxed text-white/70">{children}</div>
+    <div className="mt-8 border-l border-sand/35 pl-6">
+      <p className="mb-3 font-mono text-[0.62rem] font-medium uppercase tracking-[0.2em] text-sand">{title}</p>
+      <div className="space-y-1 text-sm font-light leading-relaxed text-white/65">{children}</div>
     </div>
   );
 }
 
 function DataTable({ caption, rows, head }: { caption: string; rows: string[][]; head: string[] }) {
   return (
-    <div className="my-4">
-      <div className="overflow-x-auto rounded-xl border border-white/10">
+    <div className="my-6">
+      <div className="overflow-x-auto">
         <table className="w-full text-xs text-white/65">
           <thead>
-            <tr className="border-b border-white/10 bg-white/[0.04]">
+            <tr className="border-b border-white/15">
               {head.map((h) => (
-                <th key={h} className="px-4 py-3 text-left font-mono text-[0.6rem] font-medium uppercase tracking-[0.14em] text-white/50">{h}</th>
+                <th key={h} className="py-3 pr-8 text-left font-mono text-[0.6rem] font-medium uppercase tracking-[0.14em] text-white/40 last:pr-0">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {rows.map((row, i) => (
-              <tr key={i} className="border-b border-white/[0.06] transition-colors duration-200 last:border-0 hover:bg-white/[0.03]">
-                {row.map((cell, j) => <td key={j} className="px-4 py-2.5 font-light">{cell}</td>)}
+              <tr key={i} className="border-b border-white/[0.06] last:border-0">
+                {row.map((cell, j) => <td key={j} className="py-2.5 pr-8 font-light last:pr-0">{cell}</td>)}
               </tr>
             ))}
           </tbody>
@@ -81,10 +156,8 @@ function Fig({ src, caption, small, medium, large, sizeOverride }: { src: string
   const imgClass = sizeOverride ? sizeOverride
     : small ? 'max-h-48 max-w-sm' : medium ? 'max-h-[30rem] max-w-3xl' : large ? 'max-h-[40rem] max-w-4xl' : 'max-h-60 max-w-xl';
   return (
-    <div className="my-4 flex flex-col items-center">
-      <div className="inline-block overflow-hidden rounded-xl border border-white/10 bg-black/40">
-        <img src={src} alt={caption} className={`block h-auto w-auto ${imgClass}`} />
-      </div>
+    <div className="my-6 flex flex-col items-center">
+      <ZoomFrame src={src} caption={caption} className="inline-block" imgClassName={`h-auto w-auto ${imgClass}`} />
       <p className="mt-3 max-w-lg text-center font-mono text-[0.62rem] leading-relaxed tracking-wide text-white/35">{caption}</p>
     </div>
   );
@@ -100,12 +173,16 @@ function FigRow({ items, size, sizeOverride }: { items: { src: string; caption?:
     : size === 'md' ? 'max-w-[29.4rem]'
     : 'max-w-sm';
   return (
-    <div className="my-4">
-      <div className="flex gap-3 justify-center flex-wrap">
+    <div className="my-6">
+      <div className="flex flex-wrap justify-center gap-3">
         {items.map((item, i) => (
-          <div key={i} className={`rounded-xl bg-black/40 border border-white/10 ${heightCap} ${widthCap} flex items-center justify-center overflow-hidden`}>
-            <img src={item.src} alt={item.caption ?? ''} className="h-full w-auto object-contain block" />
-          </div>
+          <ZoomFrame
+            key={i}
+            src={item.src}
+            caption={item.caption}
+            className={`${heightCap} ${widthCap} flex items-center justify-center`}
+            imgClassName="h-full w-auto object-contain"
+          />
         ))}
       </div>
       {items.some(i => i.caption) && (
@@ -119,19 +196,76 @@ function FigRow({ items, size, sizeOverride }: { items: { src: string; caption?:
 
 // ─── Major section (top-level accordion) ─────────────────────────────────────
 
+/* Smoothly animates its children's height between collapsed and expanded.
+   grid-template-rows 0fr → 1fr is the only way to transition to auto height. */
+function Collapse({ open, children }: { open: boolean; children: React.ReactNode }) {
+  // Mount lazily on first open, then keep mounted so closing animates too.
+  // Sections carry a lot of KaTeX and imagery — rendering them all up front
+  // would cost far more than the animation is worth.
+  const [mounted, setMounted] = useState(open);
+  useEffect(() => {
+    if (open) setMounted(true);
+  }, [open]);
+
+  return (
+    <div
+      className="grid transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+      style={{ gridTemplateRows: open ? '1fr' : '0fr', opacity: open ? 1 : 0 }}
+      aria-hidden={!open}
+    >
+      <div className="overflow-hidden">{mounted && children}</div>
+    </div>
+  );
+}
+
+/* Plus that rotates into a cross when its section opens. The vertical stroke
+   fades out as it turns, so an open section reads as a single quiet minus. */
+function PlusToggle({ open }: { open: boolean }) {
+  return (
+    <span
+      className="relative ml-4 flex h-3.5 w-3.5 flex-shrink-0 self-center items-center justify-center transition-transform
+                 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+      style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
+    >
+      <span className="absolute h-px w-full bg-white/40 transition-colors duration-500 group-hover:bg-sand" />
+      <span
+        className="absolute h-full w-px bg-white/40 transition-all duration-500 group-hover:bg-sand"
+        style={{ opacity: open ? 0 : 1 }}
+      />
+    </span>
+  );
+}
+
 function MajorSection({ title, children, initialOpen }: { title: string; children: React.ReactNode; initialOpen?: boolean }) {
   const [open, setOpen] = useState(initialOpen ?? false);
+  // Number the sub-sections 01, 02, … in source order.
+  const numbered = React.Children.map(children, (child, i) =>
+    React.isValidElement(child)
+      ? React.cloneElement(child as React.ReactElement<{ index?: number }>, { index: i + 1 })
+      : child,
+  );
+  const count = React.Children.count(children);
+
   return (
     <div className="w-full">
-      <button className="group flex w-full items-center justify-between py-7 text-left" onClick={() => setOpen(o => !o)}>
-        <div className="flex w-full items-center gap-6">
-          <h2 className="display whitespace-nowrap text-2xl transition-colors duration-300 group-hover:text-sand sm:text-3xl">{title}</h2>
-          <div className="h-px flex-1 transition-colors duration-500" style={{ background: open ? 'rgba(201,169,106,0.35)' : 'rgba(255,255,255,0.08)' }} />
-          <ChevronRight className="h-5 w-5 flex-shrink-0 text-white/35 transition-all duration-300 group-hover:text-sand"
-            style={{ transform: open ? 'rotate(90deg)' : 'rotate(0deg)', color: open ? '#C9A96A' : undefined }} />
-        </div>
+      <button className="group flex w-full items-center gap-6 py-8 text-left" onClick={() => setOpen(o => !o)}>
+        <h2 className="display whitespace-nowrap text-2xl transition-colors duration-500 group-hover:text-sand sm:text-3xl">
+          {title}
+        </h2>
+
+        {/* Light strip: sweeps in from the left as the section opens */}
+        <span className="relative h-px flex-1 bg-white/[0.08]">
+          <span
+            className="absolute inset-0 origin-left bg-sand/60 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{ transform: open ? 'scaleX(1)' : 'scaleX(0)' }}
+          />
+        </span>
+        <PlusToggle open={open} />
       </button>
-      {open && <div className="pb-12 space-y-0">{children}</div>}
+
+      <Collapse open={open}>
+        <div className="pb-12">{numbered}</div>
+      </Collapse>
     </div>
   );
 }
@@ -139,28 +273,55 @@ function MajorSection({ title, children, initialOpen }: { title: string; childre
 // ─── Sub-section (nested accordion inside a MajorSection) ────────────────────
 
 function SubSection({
-  label, title, accent, children, id, initialOpen,
+  label, title, children, id, initialOpen, index,
 }: {
-  label: string; title: string; accent: string; children: React.ReactNode; id?: string; initialOpen?: boolean;
+  label: string; title: string; accent?: string; children: React.ReactNode;
+  id?: string; initialOpen?: boolean; index?: number;
 }) {
   const [open, setOpen] = useState(initialOpen ?? false);
+
   return (
-    <div id={id} className="w-full border-b transition-colors duration-300"
-      style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
-      <button className="group flex w-full items-center justify-between py-6 text-left" onClick={() => setOpen(o => !o)}>
-        <div className="flex items-center gap-7">
-          <div className="w-[3px] flex-shrink-0 self-stretch rounded-full transition-colors duration-500"
-            style={{ background: open ? accent : 'rgba(255,255,255,0.10)', minHeight: '44px' }} />
-          <div>
-            <p className="mb-1.5 font-mono text-[0.62rem] font-medium uppercase tracking-[0.2em] transition-colors duration-300"
-              style={{ color: open ? accent : 'rgba(255,255,255,0.35)' }}>{label}</p>
-            <h3 className="text-xl font-light tracking-display text-white transition-colors duration-300 group-hover:text-sand-soft">{title}</h3>
-          </div>
-        </div>
-        <ChevronRight className="ml-4 h-4 w-4 flex-shrink-0 transition-transform duration-300"
-          style={{ transform: open ? 'rotate(90deg)' : 'rotate(0deg)', color: open ? accent : 'rgba(255,255,255,0.30)' }} />
+    <div id={id} className="w-full border-b border-white/[0.07]">
+      <button
+        className="group flex w-full items-stretch gap-6 py-7 text-left sm:gap-10"
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+      >
+        {/* Light strip: draws down from the top as the project opens */}
+        <span className="relative w-px flex-shrink-0 self-stretch overflow-hidden bg-white/[0.09]">
+          <span
+            className="absolute inset-0 origin-top bg-sand transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{ transform: open ? 'scaleY(1)' : 'scaleY(0)' }}
+          />
+        </span>
+
+        {index !== undefined && (
+          <span
+            className="hidden self-start font-mono text-[0.62rem] tabular-nums tracking-[0.18em] transition-colors duration-500 sm:block"
+            style={{ color: open ? '#C9A96A' : 'rgba(255,255,255,0.22)' }}
+          >
+            {String(index).padStart(2, '0')}
+          </span>
+        )}
+
+        <span className="min-w-0 flex-1">
+          <span
+            className="mb-2 block font-mono text-[0.62rem] font-medium uppercase tracking-[0.2em] transition-colors duration-500"
+            style={{ color: open ? '#C9A96A' : 'rgba(255,255,255,0.30)' }}
+          >
+            {label}
+          </span>
+          <span className="block text-xl font-light tracking-display text-white/90 transition-colors duration-300 group-hover:text-sand">
+            {title}
+          </span>
+        </span>
+
+        <PlusToggle open={open} />
       </button>
-      {open && <div className="animate-fade-in pb-12 pl-10 pt-2">{children}</div>}
+
+      <Collapse open={open}>
+        <div className="pb-14 pt-1 sm:pl-[4.5rem]">{children}</div>
+      </Collapse>
     </div>
   );
 }
@@ -171,22 +332,26 @@ function RocketDemoCard() {
   const navigate = useNavigate();
   return (
     <div
-      className="panel panel-hover group cursor-pointer overflow-hidden border-sand/25 bg-sand/[0.05]"
+      className="group flex cursor-pointer flex-col items-start gap-6 border-y border-white/[0.07] py-8
+                 transition-colors duration-500 hover:border-sand/30 md:flex-row md:items-center"
       onClick={() => navigate('/rocketDemo')}
     >
-      <div className="flex flex-col items-start gap-6 p-8 md:flex-row md:items-center">
-        <div className="min-w-0 flex-1">
-          <p className="eyebrow mb-2.5">Live 3D demo · Personal study</p>
-          <h3 className="mb-2.5 text-2xl font-light tracking-display text-white">Starship Booster Landing</h3>
-          <p className="max-w-xl text-sm font-light leading-relaxed text-white/55">
-            Experimenting with LQR full state feedback control, live 3D simulation launch demo.
-          </p>
-        </div>
-        <span className="btn btn-primary flex-shrink-0">
-          Launch demo
-          <ExternalLink className="h-3.5 w-3.5" />
-        </span>
+      <div className="min-w-0 flex-1">
+        <p className="eyebrow mb-2.5">Live 3D demo · Personal study</p>
+        <h3 className="mb-2.5 text-2xl font-light tracking-display text-white/90 transition-colors duration-300 group-hover:text-sand">
+          Starship Booster Landing
+        </h3>
+        <p className="max-w-xl text-sm font-light leading-relaxed text-white/50">
+          Experimenting with LQR full state feedback control, live 3D simulation launch demo.
+        </p>
       </div>
+      <span
+        className="flex flex-shrink-0 items-center gap-2.5 font-mono text-[0.62rem] uppercase tracking-[0.18em]
+                   text-white/45 transition-colors duration-300 group-hover:text-sand"
+      >
+        Launch demo
+        <ExternalLink className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+      </span>
     </div>
   );
 }
@@ -1110,7 +1275,51 @@ function CanardContent() {
   );
 }
 
+// ─── Reading progress ─────────────────────────────────────────────────────────
+
+/* Hairline across the very top that tracks how far down the page you are.
+   The portfolio is long and accordions make it longer, so it doubles as a
+   hint that there is more below. */
+function ReadingProgress() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const doc = document.documentElement;
+      const scrollable = doc.scrollHeight - window.innerHeight;
+      setProgress(scrollable > 0 ? Math.min(1, window.pageYOffset / scrollable) : 0);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return (
+    <div className="fixed inset-x-0 top-0 z-[60] h-px bg-transparent">
+      <div
+        className="h-full origin-left bg-sand/70"
+        style={{ transform: `scaleX(${progress})`, transition: 'transform 120ms linear' }}
+      />
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
+
+// Which top-level accordion each deep-link id lives under, so the parent opens
+// with it. Ids are shared with the Home page's project list.
+const PERSONAL_IDS = ['lqr', 'canard', 'starship', 'combustion'];
+const INTERNSHIP_IDS = ['caterpillar', 'ge'];
 
 const DownloadsPage = () => {
   const location = useLocation();
@@ -1130,12 +1339,14 @@ const DownloadsPage = () => {
       const top = el.getBoundingClientRect().top + window.pageYOffset - navOffset;
       window.scrollTo({ top, behavior: 'smooth' });
     };
-    const timers = [60, 250, 500, 900, 1400].map(d => setTimeout(scrollToTarget, d));
+    const timers = [60, 250, 500, 900, 1400, 2200].map(d => setTimeout(scrollToTarget, d));
     return () => timers.forEach(clearTimeout);
   }, [openSection]);
 
   return (
     <PageShell>
+      <LightboxProvider>
+      <ReadingProgress />
       <div className="gutter mx-auto max-w-6xl pb-20 pt-40">
         <SectionHeading
           eyebrow="Case studies"
@@ -1149,31 +1360,32 @@ const DownloadsPage = () => {
         </Reveal>
 
         <div className="mt-16 space-y-2">
-          <MajorSection title="Personal Projects" initialOpen={openSection === 'lqr'}>
-            <SubSection label="Personal Study" title="LQR Full State Feedback Control & 6 DOF Body Integrator" accent="#C9A96A" id="lqr" initialOpen={openSection === 'lqr'}>
+          <MajorSection title="Personal Projects" initialOpen={PERSONAL_IDS.includes(openSection)}>
+            <SubSection label="Personal Study" title="LQR Full State Feedback Control & 6 DOF Body Integrator" id="lqr" initialOpen={openSection === 'lqr'}>
               <LQRContent />
             </SubSection>
-            <SubSection label="Personal Project" title="Canard Landing Gear & Roll Control Assembly" accent="#C9A96A" id="canard">
+            <SubSection label="Personal Project" title="Canard Landing Gear & Roll Control Assembly" id="canard" initialOpen={openSection === 'canard'}>
               <CanardContent />
             </SubSection>
-            <SubSection label="Personal Study" title="Failure Prediction of the Starship Tank" accent="#C9A96A">
+            <SubSection label="Personal Study" title="Failure Prediction of the Starship Tank" id="starship" initialOpen={openSection === 'starship'}>
               <StarshipContent />
             </SubSection>
-            <SubSection label="Personal Study" title="Optimisation of Regenerative Cooling in a Combustion Chamber" accent="#C9A96A">
+            <SubSection label="Personal Study" title="Optimisation of Regenerative Cooling in a Combustion Chamber" id="combustion" initialOpen={openSection === 'combustion'}>
               <CombustionContent />
             </SubSection>
           </MajorSection>
 
-          <MajorSection title="Internships">
-            <SubSection label="Final Year Internship" title="Caterpillar" accent="#E8A020">
+          <MajorSection title="Internships" initialOpen={INTERNSHIP_IDS.includes(openSection)}>
+            <SubSection label="Final Year Internship" title="Caterpillar" id="caterpillar" initialOpen={openSection === 'caterpillar'}>
               <CatContent />
             </SubSection>
-            <SubSection label="Engineering Internship" title="General Electric Vernova" accent="#4A9EBB">
+            <SubSection label="Engineering Internship" title="General Electric Vernova" id="ge" initialOpen={openSection === 'ge'}>
               <GEContent />
             </SubSection>
           </MajorSection>
         </div>
       </div>
+      </LightboxProvider>
     </PageShell>
   );
 };

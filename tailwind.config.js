@@ -31,6 +31,10 @@ export default {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        "zoom-in": {
+          "0%": { opacity: "0", transform: "scale(0.94)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
         "scroll-cue": {
           "0%": { opacity: "0", transform: "translateY(-60%)" },
           "40%": { opacity: "1" },
@@ -40,6 +44,7 @@ export default {
       animation: {
         "fade-up": "fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both",
         "fade-in": "fade-in 1.2s ease both",
+        "zoom-in": "zoom-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both",
         "scroll-cue": "scroll-cue 2.2s ease-in-out infinite",
       },
     },

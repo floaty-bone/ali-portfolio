@@ -287,15 +287,11 @@ export class TrajectoryPlayer {
 
   private _makeStatusEl(): HTMLElement {
     const el = document.createElement("div");
-    // Styling mirrors the site design system (see src/index.css tokens).
     el.style.cssText = `
-      position:fixed; top:5.25rem; right:1.25rem; z-index:1000;
-      font:500 0.62rem/1 'JetBrains Mono', ui-monospace, monospace;
-      letter-spacing:0.16em; text-transform:uppercase; color:#C9A96A;
-      background:rgba(7,7,11,0.80);
-      -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
-      border:1px solid rgba(201,169,106,0.30); border-radius:999px;
-      padding:0.45rem 0.9rem; pointer-events:none; display:none;
+      position:fixed; top:64px; right:16px; z-index:1000;
+      font:13px/1 monospace; color:#8ab4d4;
+      background:rgba(10,12,16,0.85); border:1px solid rgba(255,255,255,0.08);
+      border-radius:6px; padding:6px 12px; pointer-events:none; display:none;
     `;
     document.body.appendChild(el);
     return el;

@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -599,16 +598,7 @@ controls.minDistance = 2;
 
     // ── FPS counter ───────────────────────────────────────────────────────────
     const fpsEl = document.createElement("div");
-    fpsEl.style.cssText = [
-      'position:fixed', 'bottom:1.25rem', 'left:1.25rem', 'z-index:1000',
-      "font:500 0.6rem/1 'JetBrains Mono', ui-monospace, monospace",
-      'letter-spacing:0.16em', 'text-transform:uppercase',
-      'color:rgba(255,255,255,0.45)',
-      'background:rgba(7,7,11,0.80)',
-      '-webkit-backdrop-filter:blur(14px)', 'backdrop-filter:blur(14px)',
-      'border:1px solid rgba(255,255,255,0.10)', 'border-radius:999px',
-      'padding:0.45rem 0.8rem', 'pointer-events:none',
-    ].join(';');
+    fpsEl.style.cssText = `position:fixed;bottom:16px;left:16px;z-index:1000;font:13px/1 monospace;color:#8ab4d4;background:rgba(10,12,16,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:5px 10px;pointer-events:none;`;
     document.body.appendChild(fpsEl);
     let fpsFrames = 0, fpsLast = performance.now();
 
@@ -691,206 +681,145 @@ controls.minDistance = 2;
 
   const isLoading = simStatus === 'loading';
 
+  const btnBase: React.CSSProperties = {
+    width: '100%', padding: '8px 0', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.10)',
+    cursor: 'pointer', fontFamily: 'inherit', fontSize: '10px', fontWeight: 400,
+    letterSpacing: '0.18em', textTransform: 'uppercase', transition: 'opacity 0.2s', background: 'none',
+  };
+
   // ── Overlay ─────────────────────────────────────────────────────────────────
   return (
-    <div className="fixed inset-0 bg-[#0d0e10] font-sans">
-      <div ref={containerRef} className="h-full w-full" />
+    <div style={{ position: 'fixed', inset: 0, background: '#0d0e10' }}>
+      <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
 
       {/* Loading overlay */}
       {!sceneReady && (
-        <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center gap-7 bg-[#0d0e10]">
-          <div className="h-10 w-10 animate-spin rounded-full border border-sand/25 border-t-sand" />
-          <p className="eyebrow">Loading scene</p>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 100, background: '#0d0e10', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px' }}>
+          <div style={{ width: '40px', height: '40px', border: '1px solid rgba(159,142,109,0.25)', borderTopColor: '#9F8E6D', borderRadius: '50%', animation: 'spin 1.2s linear infinite' }} />
+          <p style={{ fontFamily: 'inherit', fontSize: '11px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.55)', textTransform: 'uppercase' }}>Loading scene</p>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       )}
 
-      {/* Top bar — mirrors the site nav */}
-      <header className="pointer-events-none absolute inset-x-0 top-0 z-50 border-b border-white/[0.07] bg-ink/70 backdrop-blur-xl">
-        <div className="flex h-[var(--nav-h)] items-center justify-between gap-6 px-6 lg:px-10">
-          <Link
-            to="/downloadsPage"
-            className="group pointer-events-auto flex items-center gap-2.5 font-mono text-[0.62rem]
-                       uppercase tracking-[0.18em] text-white/50 transition-colors duration-300 hover:text-sand"
-          >
-            <ArrowLeft className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-1" />
-            <span className="hidden sm:inline">Back to Portfolio</span>
-          </Link>
+{/* Back link + study link */}
+      <div style={{ position: 'absolute', top: '24px', left: '50%', transform: 'translateX(-50%)', zIndex: 50, display: 'flex', gap: '32px', alignItems: 'center' }}>
+        <Link to="/downloadsPage"
+          className="text-[0.68rem] font-light tracking-widest text-white/40 hover:text-[#9F8E6D] uppercase whitespace-nowrap">
+          ← Back to Portfolio
+        </Link>
+        <Link to="/downloadsPage#lqr" state={{ openSection: 'lqr' }}
+          className="text-[0.68rem] font-light tracking-widest text-white/40 hover:text-[#9F8E6D] uppercase whitespace-nowrap">
+          Personal Study: LQR & 6 DOF Body Integrator →
+        </Link>
+      </div>
 
-          <div className="min-w-0 text-center">
-            <p className="eyebrow mb-0.5">Live 3D Demo</p>
-            <h1 className="truncate text-sm font-light tracking-display text-white">
-              LQR Full State Feedback &amp; 6 DOF Body Integrator
-            </h1>
-          </div>
-
-          <Link
-            to="/downloadsPage#lqr"
-            state={{ openSection: 'lqr' }}
-            className="group pointer-events-auto flex items-center gap-2.5 font-mono text-[0.62rem]
-                       uppercase tracking-[0.18em] text-white/50 transition-colors duration-300 hover:text-sand"
-          >
-            <span className="hidden sm:inline">Read the Study</span>
-            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
+      {/* Control panel — bottom right */}
+      <div style={{
+        position: 'absolute', bottom: '16px', right: '16px', zIndex: 1000,
+        background: 'rgba(8,9,12,0.82)', border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: '10px', padding: '18px 20px', width: '230px', boxSizing: 'border-box',
+        fontFamily: 'inherit', color: 'rgba(255,255,255,0.85)',
+      }}>
+        <div style={{ fontSize: '9px', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.55)', textTransform: 'uppercase', marginBottom: '16px', fontWeight: 300 }}>
+          Simulation Control
         </div>
-      </header>
-
-      {/* Simulation control — bottom right */}
-      <div
-        className="panel absolute bottom-5 right-5 z-[1000] w-[262px] p-5"
-        style={{ background: 'rgba(7,7,11,0.82)' }}
-      >
-        <p className="eyebrow mb-4">Simulation control</p>
 
         {/* Simulate Landing */}
-        <div className="relative">
+        <div style={{ position: 'relative' }}>
           <button
             onClick={runDemo}
             disabled={isLoading}
-            className="w-full rounded-lg border border-white/15 py-2.5 font-mono text-[0.62rem] uppercase
-                       tracking-[0.18em] text-white/85 transition-all duration-300
-                       hover:border-white/35 hover:bg-white/[0.07]
-                       disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+            style={{ ...btnBase, borderColor: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)', opacity: isLoading ? 0.4 : 1, position: 'relative' }}
+            onMouseEnter={e => { if (!isLoading) { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.30)'; } }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
           >
-            Simulate landing
+            Simulate Landing
           </button>
           <span
             onMouseEnter={() => setTooltip('landing')}
             onMouseLeave={() => setTooltip(null)}
-            className="absolute right-2.5 top-1/2 flex h-[15px] w-[15px] -translate-y-1/2 items-center
-                       justify-center rounded-full border border-white/25 font-mono text-[8px]
-                       leading-none text-white/40"
-          >
-            ?
-          </span>
+            style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', width: '14px', height: '14px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.25)', color: 'rgba(255,255,255,0.40)', fontSize: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'default', lineHeight: 1, pointerEvents: 'all' }}
+          >?</span>
           {tooltip === 'landing' && (
-            <Tooltip title="Booster Landing: Final Phase">
-              <p>
-                A real booster landing has several distinct phases: a hypersonic reentry burn with all
-                13 engines, a grid-fin descent, then a landing burn. This simulation focuses on that
-                last phase: the booster comes in at low altitude with only 3 center engines lit,
-                corrects its attitude and velocity, and touches down on the catch pad.
-              </p>
-              <p>
-                The mechazilla chopstick arms close automatically as the booster enters the final
-                approach corridor.
-              </p>
-              <SpecList
-                rows={[
-                  ['Engines', '3 center engines (landing burn)'],
-                  ['Actuation', 'TVC: gimbal α, β + throttle'],
-                  ['Integrator', 'RK4 @ 5000 Hz'],
-                ]}
-              />
-            </Tooltip>
+            <div style={{ position: 'absolute', bottom: 'calc(100% + 8px)', right: 0, width: '300px', background: 'rgba(8,9,12,0.97)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', padding: '14px 16px', pointerEvents: 'none', zIndex: 10 }}>
+              <div style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.85)', marginBottom: '8px' }}>Booster Landing: Final Phase</div>
+              <div style={{ fontSize: '11px', lineHeight: '1.7', color: 'rgba(255,255,255,0.55)', fontWeight: 300 }}>
+                A real booster landing has several distinct phases: a hypersonic reentry burn with all 13 engines, a grid-fin descent, then a landing burn. This simulation focuses on that last phase: the booster comes in at low altitude with only 3 center engines lit, corrects its attitude and velocity, and touches down on the catch pad.
+              </div>
+              <div style={{ marginTop: '10px', fontSize: '11px', lineHeight: '1.7', color: 'rgba(255,255,255,0.55)', fontWeight: 300 }}>
+                The mechazilla chopstick arms close automatically as the booster enters the final approach corridor.
+              </div>
+              <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {[['Engines', '3 center engines (landing burn)'], ['Actuation', 'TVC: gimbal α, β + throttle'], ['Integrator', 'RK4 @ 5000 Hz']].map(([k, v]) => (
+                  <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '8px', fontSize: '10px' }}>
+                    <span style={{ color: 'rgba(255,255,255,0.30)', fontWeight: 300, whiteSpace: 'nowrap' }}>{k}</span>
+                    <span style={{ color: 'rgba(159,142,109,0.8)', fontWeight: 400, textAlign: 'right' }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
-
-        <p className="mt-3 text-center font-mono text-[0.58rem] uppercase tracking-[0.14em] text-white/40">
+        <div style={{ fontSize: '9px', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.55)', textAlign: 'center', marginTop: '6px', fontWeight: 400 }}>
           or press Space
-        </p>
-        <p className="mt-1.5 text-center font-mono text-[0.58rem] leading-relaxed tracking-[0.06em] text-sand/70">
-          scroll to zoom out if the rocket isn't visible
-        </p>
+        </div>
+        <div style={{ fontSize: '9px', letterSpacing: '0.10em', color: 'rgba(159,142,109,0.8)', textAlign: 'center', marginTop: '5px', marginBottom: '16px', fontWeight: 400 }}>
+          scroll to zoom out if rocket isn't visible
+        </div>
 
-        <div className="my-4 h-px bg-white/[0.08]" />
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', marginBottom: '16px' }} />
 
         {/* Simulate Hover */}
-        <div className="relative">
+        <div style={{ position: 'relative' }}>
           <button
             onClick={runHover}
             disabled={isLoading}
-            className="w-full rounded-lg border border-sand/40 py-2.5 font-mono text-[0.62rem] uppercase
-                       tracking-[0.18em] text-sand transition-all duration-300
-                       hover:border-sand/70 hover:bg-sand/10
-                       disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+            style={{ ...btnBase, borderColor: 'rgba(159,142,109,0.40)', color: '#9F8E6D', opacity: isLoading ? 0.4 : 1 }}
+            onMouseEnter={e => { if (!isLoading) { e.currentTarget.style.background = 'rgba(159,142,109,0.10)'; e.currentTarget.style.borderColor = 'rgba(159,142,109,0.70)'; } }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.borderColor = 'rgba(159,142,109,0.40)'; }}
           >
             {isLoading ? 'Running…' : 'Simulate Hover Test'}
           </button>
           <span
             onMouseEnter={() => setTooltip('hover')}
             onMouseLeave={() => setTooltip(null)}
-            className="absolute right-2.5 top-1/2 flex h-[15px] w-[15px] -translate-y-1/2 items-center
-                       justify-center rounded-full border border-sand/35 font-mono text-[8px]
-                       leading-none text-sand/60"
-          >
-            ?
-          </span>
+            style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', width: '14px', height: '14px', borderRadius: '50%', border: '1px solid rgba(159,142,109,0.35)', color: 'rgba(159,142,109,0.55)', fontSize: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'default', lineHeight: 1, pointerEvents: 'all' }}
+          >?</span>
           {tooltip === 'hover' && (
-            <Tooltip title="Multi-Waypoint LQR Setpoint Tracking">
-              <p>
-                Starting from rest at the origin, the same LQR controller tracks a sequence of 3D
-                position setpoints in free space. At each waypoint the controller relinearises around
-                the new target and drives the booster there from any initial condition.
-              </p>
-              <div className="flex flex-col gap-1.5">
-                {[
-                  ['Phase 1', '(0, 0, 0) to (70, 70, 100) m'],
-                  ['Phase 2', 'to (−70, 70, 200) m'],
-                  ['Phase 3', 'to (70, 131, 300) m'],
-                  ['Phase 4', 'to (0, 0, 48) m: autonomous catch'],
-                ].map(([k, v]) => (
-                  <div key={k} className="flex items-baseline gap-3 text-[0.62rem]">
-                    <span className="min-w-[3.4rem] font-mono uppercase tracking-[0.12em] text-sand/80">
-                      {k}
-                    </span>
-                    <span className="font-light text-white/50">{v}</span>
+            <div style={{ position: 'absolute', bottom: 'calc(100% + 8px)', right: 0, width: '300px', background: 'rgba(8,9,12,0.97)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', padding: '14px 16px', pointerEvents: 'none', zIndex: 10 }}>
+              <div style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.85)', marginBottom: '8px' }}>Multi Waypoint LQR Setpoint Tracking</div>
+              <div style={{ fontSize: '11px', lineHeight: '1.7', color: 'rgba(255,255,255,0.55)', fontWeight: 300 }}>
+                Starting from rest at the origin, the same LQR controller tracks a sequence of 3D position setpoints in free space. At each waypoint the controller relinearises around the new target and drives the booster there from any initial condition.
+              </div>
+              <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                {[['Phase 1', '(0, 0, 0) to (70, 70, 100) m'], ['Phase 2', 'to (−70, 70, 200) m'], ['Phase 3', 'to (70, 131, 300) m'], ['Phase 4', 'to (0, 0, 48) m: autonomous catch']].map(([k, v]) => (
+                  <div key={k} style={{ display: 'flex', gap: '10px', fontSize: '10px', alignItems: 'baseline' }}>
+                    <span style={{ color: 'rgba(159,142,109,0.7)', fontWeight: 500, minWidth: '52px' }}>{k}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: 300 }}>{v}</span>
                   </div>
                 ))}
               </div>
-              <p>
-                On the final approach the chopstick arms close and the booster is caught — identical
-                catch logic to the landing scenario.
-              </p>
-              <SpecList
-                rows={[
-                  ['Engines', '3 center engines (hover thrust)'],
-                  ['Actuation', 'TVC: gimbal α, β + throttle'],
-                  ['Integrator', 'RK4 @ 5000 Hz'],
-                ]}
-              />
-            </Tooltip>
+              <div style={{ marginTop: '10px', fontSize: '11px', lineHeight: '1.7', color: 'rgba(255,255,255,0.55)', fontWeight: 300 }}>
+                On the final approach the chopstick arms close and the booster is caught, identical catch logic to the landing scenario.
+              </div>
+              <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {[['Engines', '3 center engines (hover thrust)'], ['Actuation', 'TVC: gimbal α, β + throttle'], ['Integrator', 'RK4 @ 5000 Hz']].map(([k, v]) => (
+                  <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '8px', fontSize: '10px' }}>
+                    <span style={{ color: 'rgba(255,255,255,0.30)', fontWeight: 300, whiteSpace: 'nowrap' }}>{k}</span>
+                    <span style={{ color: 'rgba(159,142,109,0.8)', fontWeight: 400, textAlign: 'right' }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
 
         {simError && (
-          <p className="mt-3 break-words font-mono text-[0.6rem] font-light text-[#e06c75]">
+          <div style={{ marginTop: '10px', fontSize: '10px', color: '#e06c75', wordBreak: 'break-word', fontWeight: 300 }}>
             {simError}
-          </p>
+          </div>
         )}
       </div>
-    </div>
-  );
-}
-
-// ── Overlay helpers ───────────────────────────────────────────────────────────
-
-function Tooltip({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div
-      className="panel pointer-events-none absolute bottom-[calc(100%+10px)] right-0 z-10 w-[310px]
-                 animate-fade-in space-y-2.5 p-4 text-[0.68rem] font-light leading-relaxed text-white/55"
-      style={{ background: 'rgba(7,7,11,0.96)' }}
-    >
-      <p className="font-mono text-[0.62rem] font-medium uppercase tracking-[0.16em] text-white/85">
-        {title}
-      </p>
-      {children}
-    </div>
-  );
-}
-
-function SpecList({ rows }: { rows: string[][] }) {
-  return (
-    <div className="flex flex-col gap-1 border-t border-white/[0.08] pt-2.5">
-      {rows.map(([k, v]) => (
-        <div key={k} className="flex justify-between gap-3 text-[0.6rem]">
-          <span className="whitespace-nowrap font-mono uppercase tracking-[0.12em] text-white/30">
-            {k}
-          </span>
-          <span className="text-right font-light text-sand/80">{v}</span>
-        </div>
-      ))}
     </div>
   );
 }
