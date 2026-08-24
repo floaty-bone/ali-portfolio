@@ -4,6 +4,25 @@ const PAD  = { top: 18, right: 52, bottom: 20, left: 46 };
 const CW   = 400;
 const CH   = 118;
 
+// ── Chart chrome, matched to the site design system ───────────────────────────
+const MONO       = "'JetBrains Mono', ui-monospace, monospace";
+const SAND       = "#C9A96A";
+const CHART_BG   = "#0a0a0f";
+const AXIS_LINE  = "rgba(255,255,255,0.18)";
+const GRID_LINE  = "rgba(255,255,255,0.05)";
+const ZERO_LINE  = "rgba(255,255,255,0.12)";
+
+// Data series — same roles as before, retuned from fluorescent to the
+// site's calmer palette. The setpoint uses the brand sand.
+const C_POS      = "#4ade80";  // measured position
+const C_SETPOINT = SAND;       // commanded setpoint
+const C_ALPHA    = "#38bdf8";  // gimbal α
+const C_BETA     = "#4ade80";  // gimbal β
+const C_THRUST   = "#fbbf24";  // thrust
+const C_OMEGA_X  = "#c084fc";
+const C_OMEGA_Y  = "#f472b6";
+const C_OMEGA_Z  = "#818cf8";
+
 // Minimum ms between redraws (~20 Hz is plenty for telemetry charts)
 const RENDER_INTERVAL_MS = 50;
 
@@ -30,20 +49,20 @@ function drawAxes(
   title: string, leftColor: string, rightColor: string | null, leftUnit?: string,
 ) {
   const xp = PAD.left, yb = PAD.top + ph;
-  ctx.strokeStyle = "rgba(255,255,255,0.05)"; ctx.lineWidth = 1;
+  ctx.strokeStyle = GRID_LINE; ctx.lineWidth = 1;
   for (let i = 0; i <= 4; i++) {
     const y = PAD.top + (i / 4) * ph;
     ctx.beginPath(); ctx.moveTo(xp, y); ctx.lineTo(xp + pw, y); ctx.stroke();
   }
   if (yMinL < 0 && yMaxL > 0) {
     const y0 = PAD.top + ph - ((0 - yMinL) / (yMaxL - yMinL)) * ph;
-    ctx.strokeStyle = "rgba(255,255,255,0.12)";
+    ctx.strokeStyle = ZERO_LINE;
     ctx.beginPath(); ctx.moveTo(xp, y0); ctx.lineTo(xp + pw, y0); ctx.stroke();
   }
-  ctx.strokeStyle = "rgba(255,255,255,0.2)"; ctx.lineWidth = 1;
+  ctx.strokeStyle = AXIS_LINE; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(xp, PAD.top); ctx.lineTo(xp, yb); ctx.lineTo(xp + pw, yb); ctx.stroke();
   if (rightColor) { ctx.beginPath(); ctx.moveTo(xp + pw, PAD.top); ctx.lineTo(xp + pw, yb); ctx.stroke(); }
-  ctx.font = "9px monospace"; ctx.textAlign = "right"; ctx.fillStyle = leftColor;
+  ctx.font = `9px ${MONO}`; ctx.textAlign = "right"; ctx.fillStyle = leftColor;
   for (let i = 0; i <= 2; i++) {
     const v = yMinL + (i / 2) * (yMaxL - yMinL);
     const y = PAD.top + ph - ((v - yMinL) / (yMaxL - yMinL)) * ph;
@@ -57,8 +76,10 @@ function drawAxes(
       ctx.fillText(v.toFixed(1), xp + pw + 4, y + 3);
     }
   }
-  ctx.fillStyle = "#8ab4d4"; ctx.font = "bold 9px monospace"; ctx.textAlign = "left"; ctx.fillText(title, xp + 3, PAD.top - 4);
-  ctx.font = "8px monospace"; ctx.fillStyle = leftColor; ctx.textAlign = "left"; ctx.fillText(leftUnit ?? (leftColor === "#55cc88" ? "m" : "deg"), 2, PAD.top + 4);
+  // Section title, uppercase + tracked to match the site's mono eyebrows
+  ctx.fillStyle = SAND; ctx.font = `500 9px ${MONO}`; ctx.textAlign = "left";
+  ctx.fillText(title.toUpperCase(), xp + 3, PAD.top - 5);
+  ctx.font = `8px ${MONO}`; ctx.fillStyle = leftColor; ctx.textAlign = "left"; ctx.fillText(leftUnit ?? (leftColor === C_POS ? "m" : "deg"), 2, PAD.top + 4);
   if (rightColor) { ctx.textAlign = "right"; ctx.fillStyle = rightColor; ctx.fillText("kN", CW - 2, PAD.top + 4); }
 }
 
@@ -95,7 +116,7 @@ function hline(
 }
 
 function legend(ctx: CanvasRenderingContext2D, ph: number, items: [string, string, number | null][]) {
-  ctx.font = "9px monospace"; ctx.textAlign = "left";
+  ctx.font = `9px ${MONO}`; ctx.textAlign = "left";
   let lx = PAD.left + 3; const ly = PAD.top + ph + 13;
   for (const [color, lbl, val] of items) {
     ctx.fillStyle = color;
@@ -112,13 +133,13 @@ function drawPositionPlot(
   totalTime: number, range: Range,
 ) {
   const pw = CW - PAD.left - PAD.right, ph = CH - PAD.top - PAD.bottom;
-  ctx.fillStyle = "#0a0c10"; ctx.fillRect(0, 0, CW, CH);
+  ctx.fillStyle = CHART_BG; ctx.fillRect(0, 0, CW, CH);
   const [yMin, yMax] = range.padded();
-  drawAxes(ctx, pw, ph, yMin, yMax, null, null, `Position ${axis}`, "#55cc88", null);
-  hline(ctx, setpoint, pw, ph, yMin, yMax, "#ff9955");
-  polyline(ctx, times, data, totalTime, pw, ph, yMin, yMax, "#55cc88", 1.5);
+  drawAxes(ctx, pw, ph, yMin, yMax, null, null, `Position ${axis}`, C_POS, null);
+  hline(ctx, setpoint, pw, ph, yMin, yMax, C_SETPOINT);
+  polyline(ctx, times, data, totalTime, pw, ph, yMin, yMax, C_POS, 1.5);
   const last = data.length ? data[data.length - 1] : null;
-  legend(ctx, ph, [["#55cc88", `pos ${axis}`, last], ["#ff9955", `sp ${axis}`, setpoint]]);
+  legend(ctx, ph, [[C_POS, `pos ${axis}`, last], [C_SETPOINT, `sp ${axis}`, setpoint]]);
 }
 
 function drawEnginePlot(
@@ -127,10 +148,10 @@ function drawEnginePlot(
   totalTime: number, abRange: Range, tRange: Range,
 ) {
   const pw = CW - PAD.left - PAD.right, ph = CH - PAD.top - PAD.bottom;
-  ctx.fillStyle = "#0a0c10"; ctx.fillRect(0, 0, CW, CH);
+  ctx.fillStyle = CHART_BG; ctx.fillRect(0, 0, CW, CH);
   const [aMin, aMax] = abRange.padded();
   const [tMin, tMax] = tRange.padded();
-  drawAxes(ctx, pw, ph, aMin, aMax, tMin, tMax, label, "#7ab4d4", "#ff9900");
+  drawAxes(ctx, pw, ph, aMin, aMax, tMin, tMax, label, C_ALPHA, C_THRUST);
 
   const tMaxT = Math.max(totalTime, 1e-3);
   const drawA = (d: number[], color: string) => {
@@ -157,16 +178,16 @@ function drawEnginePlot(
     }
     ctx.stroke();
   };
-  drawA(alpha, "#00d4ff"); drawA(beta, "#55ff88"); drawT(thrust, "#ff9900");
+  drawA(alpha, C_ALPHA); drawA(beta, C_BETA); drawT(thrust, C_THRUST);
 
   const lastA = alpha.length ? alpha[alpha.length - 1] : null;
   const lastB = beta.length  ? beta[beta.length - 1]   : null;
   const lastT = thrust.length ? thrust[thrust.length - 1] : null;
   const maxA = isFinite(abRange.max) ? abRange.max : null;
   legend(ctx, ph, [
-    ["#00d4ff", `α=${lastA !== null ? lastA.toFixed(2) : "N/A"} mx=${maxA !== null ? maxA.toFixed(2) : "N/A"}`, null],
-    ["#55ff88", `β=${lastB !== null ? lastB.toFixed(2) : "N/A"} mx=${maxA !== null ? maxA.toFixed(2) : "N/A"}`, null],
-    ["#ff9900", lastT !== null ? `T=${lastT.toFixed(1)}kN` : "T=N/A", null],
+    [C_ALPHA, `α=${lastA !== null ? lastA.toFixed(2) : "N/A"} mx=${maxA !== null ? maxA.toFixed(2) : "N/A"}`, null],
+    [C_BETA, `β=${lastB !== null ? lastB.toFixed(2) : "N/A"} mx=${maxA !== null ? maxA.toFixed(2) : "N/A"}`, null],
+    [C_THRUST, lastT !== null ? `T=${lastT.toFixed(1)}kN` : "T=N/A", null],
   ]);
 }
 
@@ -176,23 +197,22 @@ function drawOmegaCombinedPlot(
   totalTime: number, range: Range,
 ) {
   const pw = CW - PAD.left - PAD.right, ph = CH - PAD.top - PAD.bottom;
-  ctx.fillStyle = "#0a0c10"; ctx.fillRect(0, 0, CW, CH);
+  ctx.fillStyle = CHART_BG; ctx.fillRect(0, 0, CW, CH);
   const [yMin, yMax] = range.padded(0.1);
-  drawAxes(ctx, pw, ph, yMin, yMax, null, null, "Body Rates", "#c084fc", null, "rad/s");
-  polyline(ctx, times, omegaX, totalTime, pw, ph, yMin, yMax, "#c084fc", 1.5);
-  polyline(ctx, times, omegaY, totalTime, pw, ph, yMin, yMax, "#f472b6", 1.5);
-  polyline(ctx, times, omegaZ, totalTime, pw, ph, yMin, yMax, "#818cf8", 1.5);
+  drawAxes(ctx, pw, ph, yMin, yMax, null, null, "Body Rates", C_OMEGA_X, null, "rad/s");
+  polyline(ctx, times, omegaX, totalTime, pw, ph, yMin, yMax, C_OMEGA_X, 1.5);
+  polyline(ctx, times, omegaY, totalTime, pw, ph, yMin, yMax, C_OMEGA_Y, 1.5);
+  polyline(ctx, times, omegaZ, totalTime, pw, ph, yMin, yMax, C_OMEGA_Z, 1.5);
   const lastX = omegaX.length ? omegaX[omegaX.length - 1] : null;
   const lastY = omegaY.length ? omegaY[omegaY.length - 1] : null;
   const lastZ = omegaZ.length ? omegaZ[omegaZ.length - 1] : null;
-  legend(ctx, ph, [["#c084fc", "ωX", lastX], ["#f472b6", "ωY", lastY], ["#818cf8", "ωZ", lastZ]]);
+  legend(ctx, ph, [[C_OMEGA_X, "ωX", lastX], [C_OMEGA_Y, "ωY", lastY], [C_OMEGA_Z, "ωZ", lastZ]]);
 }
 
 // ── LivePlots class ────────────────────────────────────────────────────────────
 export class LivePlots {
   private readonly ctxs: CanvasRenderingContext2D[] = [];
   private _wrapperEl: HTMLElement | null = null;
-  private _collapsed = true;
   private _dirty     = false;
   private _lastRender = 0;
 
@@ -214,7 +234,13 @@ export class LivePlots {
   private thrustRange: Range[] = [new Range(), new Range(), new Range()];
   private omegaRange:  Range   = new Range();
 
-  constructor() { this._buildPanel(); }
+  constructor() {
+    this._buildPanel();
+    // The panel is open from the start, so paint the empty axes immediately
+    // rather than leaving seven blank canvases until the first sim frame.
+    this._dirty = true;
+    this.render();
+  }
 
   /** Call before a live setpoint session to cap memory and scroll the x-axis. */
   setSlidingWindow(maxSamples: number): void {
@@ -295,7 +321,7 @@ export class LivePlots {
   }
 
   render(): void {
-    if (this._collapsed || !this._dirty) return;
+    if (!this._dirty) return;
     const now = performance.now();
     if (now - this._lastRender < RENDER_INTERVAL_MS) return;
     this._lastRender = now;
@@ -326,25 +352,52 @@ export class LivePlots {
   private _buildPanel(): void {
     const wrapper = document.createElement("div");
     this._wrapperEl = wrapper;
-    wrapper.style.cssText = "position:fixed;top:20px;left:20px;z-index:1000;font:400 12px/1.6 inherit;color:rgba(255,255,255,0.85);transform:translateZ(0);contain:layout paint;will-change:transform;";
+    wrapper.style.cssText = [
+      "position:fixed",
+      "top:5.25rem",
+      "left:1.25rem",
+      "z-index:1000",
+      "font:400 12px/1.6 Inter, ui-sans-serif, system-ui, sans-serif",
+      "color:rgba(255,255,255,0.85)",
+      "border-radius:1rem",
+      "border:1px solid rgba(255,255,255,0.10)",
+      "background:rgba(7,7,11,0.80)",
+      "backdrop-filter:blur(14px)",
+      "-webkit-backdrop-filter:blur(14px)",
+      "box-shadow:inset 0 1px 0 rgba(255,255,255,0.06), 0 24px 60px -32px rgba(0,0,0,0.9)",
+      "overflow:hidden",
+      "transform:translateZ(0)",
+      "contain:layout paint",
+      "will-change:transform",
+    ].join(";");
 
+    // Static header — the panel is always open, so there is no toggle here.
     const titleBar = document.createElement("div");
-    titleBar.style.cssText = "display:flex;align-items:center;justify-content:space-between;background:rgba(8,9,12,0.82);border:1px solid rgba(255,255,255,0.08);border-radius:10px 10px 0 0;padding:10px 16px;cursor:pointer;user-select:none;";
+    titleBar.style.cssText =
+      "display:flex;align-items:center;gap:0.6rem;border-bottom:1px solid rgba(255,255,255,0.08);padding:0.7rem 1rem;user-select:none;";
+
+    const dot = document.createElement("span");
+    dot.style.cssText =
+      `width:5px;height:5px;border-radius:50%;background:${SAND};flex:none;box-shadow:0 0 8px ${SAND};`;
+
     const titleText = document.createElement("span");
-    titleText.textContent = "Telemetry";
-    titleText.style.cssText = "font-weight:400;color:rgba(255,255,255,0.60);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;";
-    const chevron = document.createElement("span");
-    chevron.textContent = "▲"; chevron.style.cssText = "font-size:9px;color:rgba(255,255,255,0.45);transition:transform 0.2s;";
-    titleBar.appendChild(titleText); titleBar.appendChild(chevron);
+    titleText.textContent = "Live Telemetry";
+    titleText.style.cssText =
+      `font-family:${MONO};font-weight:500;color:${SAND};font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;`;
+
+    titleBar.appendChild(dot); titleBar.appendChild(titleText);
 
     const body = document.createElement("div");
-    body.style.cssText = "background:rgba(8,9,12,0.82);border:1px solid rgba(255,255,255,0.08);border-top:none;border-radius:0 0 10px 10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;max-height:80vh;overflow-y:scroll;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;";
+    body.className = "telemetry-scroll"; // slimmer scrollbar, see src/index.css
+    body.style.cssText =
+      "padding:0.7rem;display:flex;flex-direction:column;gap:0.5rem;max-height:min(72vh,720px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;";
 
     const dpr = window.devicePixelRatio || 1;
     for (let i = 0; i < 7; i++) {
       const canvas = document.createElement("canvas");
       canvas.width = CW * dpr; canvas.height = CH * dpr;
-      canvas.style.cssText = `width:${CW}px;height:${CH}px;display:block;border-radius:4px;`;
+      canvas.style.cssText =
+        `width:${CW}px;height:${CH}px;display:block;border-radius:0.5rem;border:1px solid rgba(255,255,255,0.06);`;
       body.appendChild(canvas);
       const ctx = canvas.getContext("2d")!;
       ctx.scale(dpr, dpr);
@@ -354,16 +407,6 @@ export class LivePlots {
     // Stop wheel events from reaching OrbitControls underneath
     body.addEventListener("wheel", (e) => { e.stopPropagation(); }, { passive: false });
     body.addEventListener("touchmove", (e) => { e.stopPropagation(); }, { passive: false });
-
-    body.style.display = "none";
-    chevron.style.transform = "rotate(180deg)";
-    titleBar.addEventListener("click", () => {
-      this._collapsed = !this._collapsed;
-      body.style.display = this._collapsed ? "none" : "flex";
-      chevron.style.transform = this._collapsed ? "rotate(180deg)" : "";
-      if (!this._collapsed) { this._dirty = true; this._lastRender = 0; this.render(); }
-    });
-
     wrapper.addEventListener("wheel", (e) => { e.stopPropagation(); }, { passive: false });
 
     wrapper.appendChild(titleBar); wrapper.appendChild(body);

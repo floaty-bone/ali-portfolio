@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Linkedin, ChevronRight, ExternalLink } from 'lucide-react';
+import { ChevronRight, ExternalLink } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
-import RippleMesh from '../components/RippleMesh';
+import { PageShell, Reveal, SectionHeading } from '../components/SiteChrome';
 
 const BASE = '/ali-portfolio/portfolio-images';
 
@@ -22,22 +22,31 @@ function EqBlock({ children }: { children: string }) {
 // ─── Layout primitives ────────────────────────────────────────────────────────
 
 function Subsection({ title }: { title: string }) {
-  return <h4 className="text-base font-semibold text-[#E8C97A] mt-5 mb-2">{title}</h4>;
+  return (
+    <h4 className="mb-3 mt-8 flex items-center gap-3 text-base font-medium tracking-display text-sand-soft">
+      <span className="h-px w-5 bg-sand/50" />
+      {title}
+    </h4>
+  );
 }
 
 function Subsubsection({ title }: { title: string }) {
-  return <h5 className="text-sm font-semibold text-white/80 mt-4 mb-1.5 uppercase tracking-wide">{title}</h5>;
+  return (
+    <h5 className="mb-2 mt-5 font-mono text-[0.65rem] font-medium uppercase tracking-[0.18em] text-white/45">
+      {title}
+    </h5>
+  );
 }
 
 function Para({ children }: { children: React.ReactNode }) {
-  return <p className="text-sm text-gray-300 leading-relaxed mb-3">{children}</p>;
+  return <p className="mb-3.5 max-w-3xl text-[0.92rem] font-light leading-[1.75] text-white/65">{children}</p>;
 }
 
 function Outcome({ accent, title, children }: { accent: string; title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg p-4 mt-5" style={{ background: `${accent}12`, border: `1px solid ${accent}40` }}>
-      <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: accent }}>{title}</p>
-      <div className="text-sm text-gray-300 leading-relaxed space-y-1">{children}</div>
+    <div className="mt-6 rounded-xl p-5" style={{ background: `${accent}10`, border: `1px solid ${accent}33` }}>
+      <p className="mb-2.5 font-mono text-[0.62rem] font-medium uppercase tracking-[0.2em]" style={{ color: accent }}>{title}</p>
+      <div className="space-y-1 text-sm font-light leading-relaxed text-white/70">{children}</div>
     </div>
   );
 }
@@ -45,23 +54,25 @@ function Outcome({ accent, title, children }: { accent: string; title: string; c
 function DataTable({ caption, rows, head }: { caption: string; rows: string[][]; head: string[] }) {
   return (
     <div className="my-4">
-      <div className="overflow-x-auto rounded-md border border-white/15">
-        <table className="w-full text-xs text-gray-300">
+      <div className="overflow-x-auto rounded-xl border border-white/10">
+        <table className="w-full text-xs text-white/65">
           <thead>
-            <tr className="border-b border-white/15 bg-white/5">
-              {head.map((h) => <th key={h} className="px-3 py-2 text-left font-semibold text-white/80">{h}</th>)}
+            <tr className="border-b border-white/10 bg-white/[0.04]">
+              {head.map((h) => (
+                <th key={h} className="px-4 py-3 text-left font-mono text-[0.6rem] font-medium uppercase tracking-[0.14em] text-white/50">{h}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {rows.map((row, i) => (
-              <tr key={i} className="border-b border-white/10 last:border-0">
-                {row.map((cell, j) => <td key={j} className="px-3 py-2">{cell}</td>)}
+              <tr key={i} className="border-b border-white/[0.06] transition-colors duration-200 last:border-0 hover:bg-white/[0.03]">
+                {row.map((cell, j) => <td key={j} className="px-4 py-2.5 font-light">{cell}</td>)}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-gray-500 mt-1.5 italic">{caption}</p>
+      <p className="mt-3 font-mono text-[0.62rem] tracking-wide text-white/35">{caption}</p>
     </div>
   );
 }
@@ -71,10 +82,10 @@ function Fig({ src, caption, small, medium, large, sizeOverride }: { src: string
     : small ? 'max-h-48 max-w-sm' : medium ? 'max-h-[30rem] max-w-3xl' : large ? 'max-h-[40rem] max-w-4xl' : 'max-h-60 max-w-xl';
   return (
     <div className="my-4 flex flex-col items-center">
-      <div className="rounded-md bg-black/30 border border-white/10 inline-block">
-        <img src={src} alt={caption} className={`h-auto block w-auto ${imgClass}`} />
+      <div className="inline-block overflow-hidden rounded-xl border border-white/10 bg-black/40">
+        <img src={src} alt={caption} className={`block h-auto w-auto ${imgClass}`} />
       </div>
-      <p className="text-xs text-gray-500 mt-1.5 italic text-center max-w-lg">{caption}</p>
+      <p className="mt-3 max-w-lg text-center font-mono text-[0.62rem] leading-relaxed tracking-wide text-white/35">{caption}</p>
     </div>
   );
 }
@@ -92,13 +103,13 @@ function FigRow({ items, size, sizeOverride }: { items: { src: string; caption?:
     <div className="my-4">
       <div className="flex gap-3 justify-center flex-wrap">
         {items.map((item, i) => (
-          <div key={i} className={`rounded-md bg-black/30 border border-white/10 ${heightCap} ${widthCap} flex items-center justify-center overflow-hidden`}>
+          <div key={i} className={`rounded-xl bg-black/40 border border-white/10 ${heightCap} ${widthCap} flex items-center justify-center overflow-hidden`}>
             <img src={item.src} alt={item.caption ?? ''} className="h-full w-auto object-contain block" />
           </div>
         ))}
       </div>
       {items.some(i => i.caption) && (
-        <p className="text-xs text-gray-500 mt-1.5 italic text-center">{items.map(i => i.caption).filter(Boolean).join('  ·  ')}</p>
+        <p className="mt-3 text-center font-mono text-[0.62rem] leading-relaxed tracking-wide text-white/35">{items.map(i => i.caption).filter(Boolean).join('  ·  ')}</p>
       )}
     </div>
   );
@@ -112,12 +123,12 @@ function MajorSection({ title, children, initialOpen }: { title: string; childre
   const [open, setOpen] = useState(initialOpen ?? false);
   return (
     <div className="w-full">
-      <button className="w-full flex items-center justify-between py-6 text-left group" onClick={() => setOpen(o => !o)}>
-        <div className="flex items-center gap-6 w-full">
-          <h2 className="text-3xl font-light tracking-wide text-white group-hover:text-[#9F8E6D] transition-colors duration-300 whitespace-nowrap">{title}</h2>
-          <div className="flex-1 h-px" style={{ background: open ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.07)' }} />
-          <ChevronRight className="w-5 h-5 flex-shrink-0 transition-transform duration-300 text-white/40 group-hover:text-[#9F8E6D]"
-            style={{ transform: open ? 'rotate(90deg)' : 'rotate(0deg)' }} />
+      <button className="group flex w-full items-center justify-between py-7 text-left" onClick={() => setOpen(o => !o)}>
+        <div className="flex w-full items-center gap-6">
+          <h2 className="display whitespace-nowrap text-2xl transition-colors duration-300 group-hover:text-sand sm:text-3xl">{title}</h2>
+          <div className="h-px flex-1 transition-colors duration-500" style={{ background: open ? 'rgba(201,169,106,0.35)' : 'rgba(255,255,255,0.08)' }} />
+          <ChevronRight className="h-5 w-5 flex-shrink-0 text-white/35 transition-all duration-300 group-hover:text-sand"
+            style={{ transform: open ? 'rotate(90deg)' : 'rotate(0deg)', color: open ? '#C9A96A' : undefined }} />
         </div>
       </button>
       {open && <div className="pb-12 space-y-0">{children}</div>}
@@ -136,20 +147,20 @@ function SubSection({
   return (
     <div id={id} className="w-full border-b transition-colors duration-300"
       style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
-      <button className="w-full flex items-center justify-between py-6 text-left group" onClick={() => setOpen(o => !o)}>
-        <div className="flex items-center gap-8">
-          <div className="w-1 self-stretch rounded-full flex-shrink-0 transition-colors duration-300"
-            style={{ background: open ? accent : 'rgba(255,255,255,0.10)', minHeight: '40px' }} />
+      <button className="group flex w-full items-center justify-between py-6 text-left" onClick={() => setOpen(o => !o)}>
+        <div className="flex items-center gap-7">
+          <div className="w-[3px] flex-shrink-0 self-stretch rounded-full transition-colors duration-500"
+            style={{ background: open ? accent : 'rgba(255,255,255,0.10)', minHeight: '44px' }} />
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1 transition-colors duration-300"
+            <p className="mb-1.5 font-mono text-[0.62rem] font-medium uppercase tracking-[0.2em] transition-colors duration-300"
               style={{ color: open ? accent : 'rgba(255,255,255,0.35)' }}>{label}</p>
-            <h3 className="text-xl font-light text-white group-hover:text-[#d4c9b4] transition-colors duration-300">{title}</h3>
+            <h3 className="text-xl font-light tracking-display text-white transition-colors duration-300 group-hover:text-sand-soft">{title}</h3>
           </div>
         </div>
-        <ChevronRight className="w-4 h-4 flex-shrink-0 transition-transform duration-300 ml-4"
+        <ChevronRight className="ml-4 h-4 w-4 flex-shrink-0 transition-transform duration-300"
           style={{ transform: open ? 'rotate(90deg)' : 'rotate(0deg)', color: open ? accent : 'rgba(255,255,255,0.30)' }} />
       </button>
-      {open && <div className="pl-9 pb-10 pt-2">{children}</div>}
+      {open && <div className="animate-fade-in pb-12 pl-10 pt-2">{children}</div>}
     </div>
   );
 }
@@ -160,25 +171,21 @@ function RocketDemoCard() {
   const navigate = useNavigate();
   return (
     <div
-      className="border rounded-xl overflow-hidden transition-colors duration-300 cursor-pointer group"
-      style={{ borderColor: 'rgba(159,142,109,0.30)', background: 'rgba(159,142,109,0.04)' }}
+      className="panel panel-hover group cursor-pointer overflow-hidden border-sand/25 bg-sand/[0.05]"
       onClick={() => navigate('/rocketDemo')}
     >
-      <div className="p-7 flex flex-col md:flex-row items-start md:items-center gap-6">
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-widest mb-1 text-[#9F8E6D]">Live 3D Demo: Personal Study</p>
-          <h3 className="text-xl font-light text-white mb-2">Starship Booster Landing</h3>
-          <p className="text-sm text-gray-300 leading-relaxed max-w-xl">
+      <div className="flex flex-col items-start gap-6 p-8 md:flex-row md:items-center">
+        <div className="min-w-0 flex-1">
+          <p className="eyebrow mb-2.5">Live 3D demo · Personal study</p>
+          <h3 className="mb-2.5 text-2xl font-light tracking-display text-white">Starship Booster Landing</h3>
+          <p className="max-w-xl text-sm font-light leading-relaxed text-white/55">
             Experimenting with LQR full state feedback control, live 3D simulation launch demo.
           </p>
         </div>
-        <div className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-light flex-shrink-0 transition-all duration-300"
-          style={{ border: '1px solid rgba(159,142,109,0.50)', color: '#9F8E6D' }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#9F8E6D'; e.currentTarget.style.color = 'white'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#9F8E6D'; }}>
-          <span>Launch Demo</span>
-          <ExternalLink className="w-3.5 h-3.5" />
-        </div>
+        <span className="btn btn-primary flex-shrink-0">
+          Launch demo
+          <ExternalLink className="h-3.5 w-3.5" />
+        </span>
       </div>
     </div>
   );
@@ -377,7 +384,7 @@ function CatContent() {
       </Para>
 
       <FigRow sizeOverride="max-h-[15.6rem] max-w-[31.2rem]" items={[{ src: `${BASE}/cat/30.png` }, { src: `${BASE}/cat/31.png` }]} />
-      <p className="text-xs text-gray-500 -mt-2 italic mb-4">
+      <p className="-mt-2 mb-4 font-mono text-[0.62rem] tracking-wide text-white/35">
         Von Mises stress in the fuse assembly at 130 pressure units. The plug threads reach 329 MPa (yield = 310 MPa)
         while the fuse plate remains elastic; the fuse never triggers before plug failure.
       </p>
@@ -461,7 +468,7 @@ function CatContent() {
                 </div>
               ))}
             </div>
-            <p className="text-xs text-gray-500 italic text-center py-2">{concept.label}</p>
+            <p className="py-2 text-center font-mono text-[0.62rem] tracking-wide text-white/35">{concept.label}</p>
           </div>
         ))}
       </div>
@@ -492,7 +499,7 @@ function CombustionContent() {
         temperatures. As temperature increases, the mechanical properties of metals degrade, most notably their yield
         strength. To address this issue, two methods exist for controlling the temperature of the chamber:
       </Para>
-      <ul className="text-sm text-gray-300 space-y-1.5 mb-3 pl-4">
+      <ul className="text-sm text-white/65 space-y-1.5 mb-3 pl-4">
         <li><strong className="text-white">Ablative cooling:</strong> involves the gradual erosion of the inner chamber
           walls, carrying away heat in the process. However, this method is destructive and assumes the engine will not
           be reused.</li>
@@ -508,7 +515,7 @@ function CombustionContent() {
         maximum inner wall temperature as the objective function and <Eq>{'L'}</Eq> and <Eq>{'H'}</Eq> as optimisation
         variables, with:
       </Para>
-      <ul className="text-sm text-gray-300 space-y-1 mb-3 pl-4">
+      <ul className="text-sm text-white/65 space-y-1 mb-3 pl-4">
         <li><Eq>{'L'}</Eq> between 0.8 and 3.0 mm</li>
         <li><Eq>{'H'}</Eq> between 1.5 and 5.0 mm</li>
         <li>Wall thickness kept constant at 10 mm</li>
@@ -580,7 +587,7 @@ function CombustionContent() {
         caption="Maximum combustion chamber temperature as a function of L and H" />
 
       <Subsubsection title="Conclusion" />
-      <Outcome accent="#9F8E6D" title="Optimal Result">
+      <Outcome accent="#C9A96A" title="Optimal Result">
         <Para>
           The optimum is reached at <Eq>{'H = 5\\ \\text{mm}'}</Eq> and <Eq>{'L = 0.8\\ \\text{mm}'}</Eq>, with a
           minimum temperature of <strong className="text-white">586.6 K</strong>.
@@ -676,7 +683,7 @@ function LQRContent() {
               muted
             />
           </div>
-          <p className="text-xs text-gray-500 italic text-center">Super Heavy booster caught by Mechazilla, 13 Oct 2024</p>
+          <p className="text-center font-mono text-[0.62rem] tracking-wide text-white/35">Super Heavy booster caught by Mechazilla, 13 Oct 2024</p>
         </div>
         <div className="flex flex-col items-center gap-2">
           <div className="rounded-md overflow-hidden">
@@ -690,20 +697,16 @@ function LQRContent() {
               ref={el => { if (el) el.playbackRate = 1.1; }}
             />
           </div>
-          <p className="text-xs text-gray-500 italic text-center">6 DOF LQR simulation: Go to Setpoint manoeuvre</p>
+          <p className="text-center font-mono text-[0.62rem] tracking-wide text-white/35">6 DOF LQR simulation: Go to Setpoint manoeuvre</p>
         </div>
       </div>
       <div className="flex justify-center mt-6 mb-3">
-        <p className="text-sm text-gray-400 font-light italic">The simulation runs live in your browser, no install needed.</p>
+        <p className="text-sm font-light text-white/50">The simulation runs live in your browser, no install needed.</p>
       </div>
       <div className="flex justify-center mb-8">
-        <Link to="/rocketDemo"
-          className="inline-flex items-center gap-3 px-10 py-3.5 rounded-lg text-sm font-light tracking-wider transition-all duration-300"
-          style={{ border: '1px solid rgba(159,142,109,0.45)', color: '#9F8E6D' }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#9F8E6D'; e.currentTarget.style.color = 'white'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#9F8E6D'; }}>
-          <ExternalLink className="w-4 h-4" />
-          <span>Launch Demo</span>
+        <Link to="/rocketDemo" className="btn btn-primary">
+          <ExternalLink className="h-4 w-4" />
+          <span>Launch demo</span>
         </Link>
       </div>
 
@@ -721,11 +724,11 @@ function LQRContent() {
       <Para>
         Full implementation:{' '}
         <a href="https://github.com/floaty-bone/rocket-integrator" target="_blank" rel="noreferrer"
-          className="text-[#9F8E6D] hover:underline">
+          className="text-[#C9A96A] hover:underline">
           github.com/floaty-bone/rocket-integrator
         </a>
         {' · '}
-        <Link to="/rocketDemo" className="inline-flex items-center gap-1 text-[#9F8E6D] hover:underline">
+        <Link to="/rocketDemo" className="inline-flex items-center gap-1 text-[#C9A96A] hover:underline">
           <ExternalLink className="w-3 h-3" />launch demo
         </Link>
       </Para>
@@ -891,12 +894,12 @@ T     &= \\sqrt{F_x^2+F_y^2+F_z^2} \\\\
         matrix, and the bus between them carries only signals that would exist on the real vehicle.
       </Para>
       <Para><strong className="text-white">Controller block.</strong></Para>
-      <ul className="text-sm text-gray-300 space-y-1 mb-3 pl-4">
+      <ul className="text-sm text-white/65 space-y-1 mb-3 pl-4">
         <li><strong className="text-white">Input:</strong> current state <Eq>{'\\mathbf{s}\\in\\mathbb{R}^{13}'}</Eq>, target setpoint <Eq>{'\\mathbf{s}^\\star\\in\\mathbb{R}^{13}'}</Eq>.</li>
         <li><strong className="text-white">Output:</strong> TVC command <Eq>{'\\mathbf{u}_{\\text{gimbal}}\\in\\mathbb{R}^{9}'}</Eq>, encoded as <Eq>{'[\\alpha,\\,\\beta,\\,T]'}</Eq> per engine.</li>
       </ul>
       <Para><strong className="text-white">Plant block.</strong></Para>
-      <ul className="text-sm text-gray-300 space-y-1 mb-3 pl-4">
+      <ul className="text-sm text-white/65 space-y-1 mb-3 pl-4">
         <li><strong className="text-white">Input:</strong> current state <Eq>{'\\mathbf{s}\\in\\mathbb{R}^{13}'}</Eq>, TVC command <Eq>{'\\mathbf{u}_{\\text{gimbal}}\\in\\mathbb{R}^{9}'}</Eq>.</li>
         <li><strong className="text-white">Output:</strong> next state <Eq>{'\\mathbf{s}^+\\in\\mathbb{R}^{13}'}</Eq>, computed by one RK4 step.</li>
       </ul>
@@ -966,7 +969,7 @@ T     &= \\sqrt{F_x^2+F_y^2+F_z^2} \\\\
         exercised cleanly and the controller never asks for a command the real vehicle could not execute.
       </Para>
 
-      <Outcome accent="#9F8E6D" title="Key Outcomes">
+      <Outcome accent="#C9A96A" title="Key Outcomes">
         <ul className="space-y-1">
           <li>· Full 6 DOF rigid body propagation with quaternion kinematics and no gimbal lock; fourth order Runge Kutta at <Eq>{'h = 1\\,\\text{ms}'}</Eq>, global error <Eq>{'\\mathcal{O}(h^4)'}</Eq>, with per step quaternion renormalisation against long term drift.</li>
           <li>· Numerical reproduction of the Dzhanibekov effect: rotation about the intermediate inertia axis is unstable and the simulator captures it exactly.</li>
@@ -1089,13 +1092,13 @@ function CanardContent() {
             allowFullScreen
           />
         </div>
-        <p className="text-xs text-gray-500 mt-1.5 italic text-center max-w-lg">
+        <p className="mt-3 max-w-lg text-center font-mono text-[0.62rem] leading-relaxed tracking-wide text-white/35">
           Design review walkthrough: landing gear and canard section (from 18:23)
         </p>
       </div>
       */}
 
-      <Outcome accent="#9F8E6D" title="Key Outcomes">
+      <Outcome accent="#C9A96A" title="Key Outcomes">
         <ul className="space-y-1">
           <li>· A single assembly performing two jobs: fixed main landing gear and the aircraft's only roll control surface, enabling a wing with zero control surfaces.</li>
           <li>· Passive suspension achieved through controlled structural flexure (Kodiak style trunnion architecture), with no dedicated spring or shock element.</li>
@@ -1115,8 +1118,6 @@ const DownloadsPage = () => {
   // (Link state={{ openSection: 'lqr' }}) or a #lqr hash in the URL.
   const openSection = (location.state as { openSection?: string } | null)?.openSection
     || location.hash.replace('#', '');
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [navVisible, setNavVisible] = useState(true);
 
   useEffect(() => {
     if (!openSection) return;
@@ -1133,72 +1134,32 @@ const DownloadsPage = () => {
     return () => timers.forEach(clearTimeout);
   }, [openSection]);
 
-  useEffect(() => {
-    let lastScroll = 0;
-    const handleScroll = () => {
-      const currentScroll = window.pageYOffset;
-      setScrollPosition(currentScroll);
-      setNavVisible(currentScroll < lastScroll || currentScroll < 50);
-      lastScroll = currentScroll;
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const handleContactClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setTimeout(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' }), 100);
-  };
-
   return (
-    <div className="min-h-screen text-white" style={{ background: 'transparent' }}>
-      <div className="fixed inset-0 z-0">
-        <RippleMesh className="w-full h-full" />
-      </div>
-      <div className="fixed inset-0 z-0" style={{ background: 'rgba(6,6,10,0.75)' }} />
+    <PageShell>
+      <div className="gutter mx-auto max-w-6xl pb-20 pt-40">
+        <SectionHeading
+          eyebrow="Case studies"
+          title={<>Technical <span className="text-white/35">Portfolio</span></>}
+          subtitle="Internship projects and personal studies in numerical simulation, structural analysis, mechanism design, and control."
+        />
 
-      <nav className={`fixed w-full z-50 transition-all duration-500 ${scrollPosition > 50 ? 'bg-black/90 backdrop-blur-sm' : 'bg-transparent'} ${navVisible ? 'translate-y-0' : '-translate-y-full'}`}>
-        <div className="w-full px-24 py-6 flex justify-between items-center">
-          <h1 className="text-xl font-light tracking-wide">Ali Abouelazz</h1>
-          <div className="flex gap-12 text-sm font-light tracking-wider">
-            <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">HOME</Link>
-            <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">TECHNICAL PORTFOLIO</Link>
-            <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">SKILLS</Link>
-            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">INTERESTS</Link>
-            <Link to="/rocketDemo" className="hover:text-[#9F8E6D] transition-colors duration-300">LQR CONTROL DEMO</Link>
-            <a href="#" onClick={handleContactClick} className="hover:text-[#9F8E6D] transition-colors duration-300">CONTACT</a>
-          </div>
-        </div>
-      </nav>
-
-      <div className="relative z-10 max-w-6xl mx-auto px-12 pt-40 pb-20">
-        <div className="mb-16">
-          <h2 className="text-5xl font-light text-white mb-4">Technical Portfolio</h2>
-          <p className="text-gray-400 font-light max-w-2xl leading-relaxed">
-            Internship projects and personal studies in numerical simulation, structural analysis, mechanism design, and flight control.
-          </p>
-        </div>
-
-        <div className="mb-4">
-          <Link to="/downloadsPage" state={{ openSection: 'lqr' }}
-            className="text-xs font-semibold uppercase tracking-widest text-gray-500 hover:text-[#9F8E6D] transition-colors duration-300 mb-4 inline-block">
-            Highlight
-          </Link>
+        <Reveal>
+          <p className="eyebrow-muted mb-4">Highlight</p>
           <RocketDemoCard />
-        </div>
+        </Reveal>
 
         <div className="mt-16 space-y-2">
           <MajorSection title="Personal Projects" initialOpen={openSection === 'lqr'}>
-            <SubSection label="Personal Study" title="LQR Full State Feedback Control & 6 DOF Body Integrator" accent="#9F8E6D" id="lqr" initialOpen={openSection === 'lqr'}>
+            <SubSection label="Personal Study" title="LQR Full State Feedback Control & 6 DOF Body Integrator" accent="#C9A96A" id="lqr" initialOpen={openSection === 'lqr'}>
               <LQRContent />
             </SubSection>
-            <SubSection label="Personal Project" title="Canard Landing Gear & Roll Control Assembly" accent="#9F8E6D" id="canard">
+            <SubSection label="Personal Project" title="Canard Landing Gear & Roll Control Assembly" accent="#C9A96A" id="canard">
               <CanardContent />
             </SubSection>
-            <SubSection label="Personal Study" title="Failure Prediction of the Starship Tank" accent="#9F8E6D">
+            <SubSection label="Personal Study" title="Failure Prediction of the Starship Tank" accent="#C9A96A">
               <StarshipContent />
             </SubSection>
-            <SubSection label="Personal Study" title="Optimisation of Regenerative Cooling in a Combustion Chamber" accent="#9F8E6D">
+            <SubSection label="Personal Study" title="Optimisation of Regenerative Cooling in a Combustion Chamber" accent="#C9A96A">
               <CombustionContent />
             </SubSection>
           </MajorSection>
@@ -1213,40 +1174,7 @@ const DownloadsPage = () => {
           </MajorSection>
         </div>
       </div>
-
-      <section className="relative z-10 py-40 px-24 mt-10">
-        <div className="max-w-7xl mx-auto flex justify-between items-start">
-          <div className="max-w-lg">
-            <h3 className="text-4xl font-light mb-8">Contact Me</h3>
-            <div className="space-y-8">
-              <div>
-                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">Email</span>
-                <a href="mailto:ali.abouelazz@gmail.com" className="text-lg font-light text-white hover:text-[#9F8E6D] transition-colors duration-300">
-                  ali.abouelazz@gmail.com
-                </a>
-              </div>
-              <div>
-                <span className="text-xs font-semibold text-[#9F8E6D] uppercase tracking-widest mb-2 block">WhatsApp contact only</span>
-                <a href="tel:+33777451629" className="text-lg font-light text-white hover:text-[#9F8E6D] transition-colors duration-300">
-                  +33 7 77 45 16 29
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="w-[200px] flex justify-center items-center">
-            <img src="/ali-portfolio/images-videos/profilePic.png" alt="Mohamed Ali Abouelazz Profile"
-              className="w-full h-auto object-cover rounded-lg shadow-lg" />
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto mt-24 pt-12 border-t border-white/10 flex justify-between items-center">
-          <div className="flex gap-8">
-            <a href="https://www.linkedin.com/in/ali-abouelazz-a00197220" className="text-white/70 hover:text-[#9F8E6D] transition-colors duration-300">
-              <Linkedin className="w-5 h-5" />
-            </a>
-          </div>
-        </div>
-      </section>
-    </div>
+    </PageShell>
   );
 };
 
