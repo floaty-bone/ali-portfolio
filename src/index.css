@@ -13,6 +13,8 @@
   --hairline: rgba(255, 255, 255, 0.08);
   --hairline-strong: rgba(255, 255, 255, 0.16);
   --nav-h: 4.75rem;
+  /* Whole-page scale. 0.8 renders the site the way Chrome's 80% zoom does. */
+  --zoom: 0.8;
 }
 
 html,
@@ -22,11 +24,14 @@ body,
   padding: 0;
   background: var(--ink);
   overflow-x: clip;
-  max-width: 100vw;
+  /* vw/vh are measured against the unzoomed viewport, so viewport-sized values
+     have to be divided by the zoom factor to still span the screen. */
+  max-width: calc(100vw / var(--zoom));
 }
 
 html {
   scroll-behavior: smooth;
+  zoom: var(--zoom);
 }
 
 body {
@@ -217,4 +222,15 @@ body {
 
 .telemetry-scroll {
   scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+}
+
+/* Viewport-height utilities, corrected for the root zoom (see --zoom above). */
+@layer utilities {
+  .min-h-screen {
+    min-height: calc(100vh / var(--zoom));
+  }
+
+  .h-screen {
+    height: calc(100vh / var(--zoom));
+  }
 }

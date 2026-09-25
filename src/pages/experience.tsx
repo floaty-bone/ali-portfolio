@@ -39,7 +39,7 @@ const ExperienceEducationPage = () => {
       <div className="fixed inset-0 z-0">
         <RippleMesh className="w-full h-full" />
       </div>
-      <div className="fixed inset-0 z-0" style={{ background: 'rgba(6,6,10,0.75)' }} />
+      <div className="fixed inset-0 z-0" style={{ background: 'rgba(6,6,10,0.6)' }} />
 
       {/* Navigation - identical to main page */}
       <nav className={`fixed w-full z-50 transition-all duration-500 ${scrollPosition > 50
@@ -58,7 +58,8 @@ const ExperienceEducationPage = () => {
             <Link to="/home" className="hover:text-[#9F8E6D] transition-colors duration-300">HOME</Link>
             <Link to="/downloadsPage" className="hover:text-[#9F8E6D] transition-colors duration-300">TECHNICAL PORTFOLIO</Link>
             <Link to="/competencesPage" className="hover:text-[#9F8E6D] transition-colors duration-300">SKILLS</Link>
-            <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">INTERESTS</Link>
+            {/* TEMP: Interests page hidden, will bring back later */}
+            {/* <Link to="/loisirs" className="hover:text-[#9F8E6D] transition-colors duration-300">INTERESTS</Link> */}
             <Link to="/rocketDemo" className="hover:text-[#9F8E6D] transition-colors duration-300">LQR CONTROL DEMO</Link>
             <a href='#' onClick={handleContactClick} className="hover:text-[#9F8E6D] transition-colors duration-300">CONTACT</a>
           </div>

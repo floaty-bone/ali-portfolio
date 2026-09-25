@@ -1,53 +1,100 @@
 import { useEffect, useRef } from 'react';
 
-// ── Shaders ──────────────────────────────────────────────────────────────────
+// Animated point-cloud topography: a fixed perspective grid of dots whose
+// heights form irregular rolling hills that swell and subside in place, and
+// that ripple where the cursor passes over them.
 
-// Lines are rendered as screen-space quads so we control line width + AA
-const LINE_VERT = `
-attribute vec2 a_ndc;
-attribute float a_perp;
-attribute vec4 a_color;
-varying float v_perp;
-varying vec4 v_color;
-void main() {
-  gl_Position = vec4(a_ndc, 0.0, 1.0);
-  v_perp = a_perp;
-  v_color = a_color;
+const VERT = `
+attribute vec2 a_grid;      // x, z in world units — the grid never moves
+uniform mat4  u_mvp;
+uniform float u_time;
+uniform vec2  u_mouse;      // cursor position on the terrain, in world x/z
+uniform float u_agitation;  // 0 at rest, rises while the cursor is moving
+uniform float u_px;         // canvas height in device pixels
+uniform float u_dpr;
+varying float v_h;
+varying float v_fade;
+
+float hash(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
 }
-`;
 
-const LINE_FRAG = `
-precision mediump float;
-varying float v_perp;
-varying vec4 v_color;
-void main() {
-  float aa = 1.0 - smoothstep(0.55, 1.0, abs(v_perp));
-  gl_FragColor = vec4(v_color.rgb, v_color.a * aa);
+// Value noise — smooth, but with no repeating structure the eye can lock onto.
+float vnoise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  float a = hash(i);
+  float b = hash(i + vec2(1.0, 0.0));
+  float c = hash(i + vec2(0.0, 1.0));
+  float d = hash(i + vec2(1.0, 1.0));
+  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y) * 2.0 - 1.0;
 }
-`;
 
-const POINT_VERT = `
-attribute vec3 a_pos;
-uniform mat4 u_mvp;
+// Each octave's domain is nudged around a small circle rather than translated,
+// so the hills breathe and reshape in place instead of drifting across the map.
+vec2 wobble(float t, float rate, float phase) {
+  return vec2(sin(t * rate + phase), cos(t * rate * 0.83 + phase)) * 0.55;
+}
+
+float height(vec2 p, float t) {
+  float h  = 0.90 * vnoise(p * 0.17 + wobble(t, 0.11, 0.0));
+  h += 0.46 * vnoise(p * 0.36 + wobble(t, 0.17, 1.7));
+  h += 0.22 * vnoise(p * 0.74 + wobble(t, 0.23, 3.1));
+  h += 0.11 * vnoise(p * 1.55 + wobble(t, 0.31, 4.6));
+  return h;
+}
+
 void main() {
-  vec4 clip = u_mvp * vec4(a_pos, 1.0);
+  float z = a_grid.y;
+  float h = height(a_grid, u_time);
+
+  // Cursor ripple: concentric waves centred on where the pointer meets the
+  // ground plane, always faintly present and whipped up while the mouse moves.
+  vec2  md = a_grid - u_mouse;
+  float mr = length(md);
+  float ring = sin(mr * 1.5 - u_time * 3.2) * exp(-mr * mr * 0.010);
+  h += (0.18 + 1.05 * u_agitation) * ring;
+
+  // Agitation also roughens the surface near the cursor.
+  float near = exp(-mr * mr * 0.006);
+  h += u_agitation * near * 0.45 * vnoise(a_grid * 0.9 + vec2(u_time * 0.9));
+
+  vec4 clip = u_mvp * vec4(a_grid.x, h, z, 1.0);
   gl_Position = clip;
-  gl_PointSize = clamp(8.0 / clip.w, 3.0, 8.0);
+  // Size relative to the canvas, not in fixed pixels, so the field reads the
+  // same on a small window and a large one.
+  gl_PointSize = clamp(u_px * 0.026 / clip.w, 0.8 * u_dpr, u_px * 0.0055);
+
+  v_h = h;
+  // fade out at the far edge and right at the near clip
+  v_fade = smoothstep(-72.0, -34.0, z) * (1.0 - smoothstep(0.5, 3.0, z));
 }
 `;
 
-const POINT_FRAG = `
+const FRAG = `
 precision mediump float;
+varying float v_h;
+varying float v_fade;
 void main() {
   vec2 d = gl_PointCoord - 0.5;
   float r = dot(d, d);
   if (r > 0.25) discard;
-  float aa = 1.0 - smoothstep(0.15, 0.25, r);
-  gl_FragColor = vec4(1.0, 1.0, 1.0, aa);
+  float aa = 1.0 - smoothstep(0.10, 0.25, r);
+
+  // deep slate in the valleys → cyan on the slopes → near-white on the peaks
+  float t = clamp(v_h * 0.55 + 0.5, 0.0, 1.0);
+  vec3 lo  = vec3(0.10, 0.22, 0.38);
+  vec3 mid = vec3(0.22, 0.72, 0.86);
+  vec3 hi  = vec3(0.88, 0.97, 1.00);
+  vec3 c = mix(mix(lo, mid, clamp(t * 2.0, 0.0, 1.0)),
+               mix(mid, hi, clamp((t - 0.5) * 2.0, 0.0, 1.0)),
+               step(0.5, t));
+
+  float a = aa * v_fade * (0.55 + 0.45 * t);
+  gl_FragColor = vec4(c, a);
 }
 `;
-
-// ── Math ─────────────────────────────────────────────────────────────────────
 
 type M4 = Float32Array;
 
@@ -69,11 +116,6 @@ function perspective(fovY: number, aspect: number, near: number, far: number): M
   return m;
 }
 
-function rotY(a: number): M4 {
-  const c = Math.cos(a), s = Math.sin(a);
-  return new Float32Array([c,0,-s,0, 0,1,0,0, s,0,c,0, 0,0,0,1]);
-}
-
 function rotX(a: number): M4 {
   const c = Math.cos(a), s = Math.sin(a);
   return new Float32Array([1,0,0,0, 0,c,s,0, 0,-s,c,0, 0,0,0,1]);
@@ -85,61 +127,12 @@ function translate(tx: number, ty: number, tz: number): M4 {
   return m;
 }
 
-// Project a 3D world point through MVP → NDC [x, y, depth_w]
-function project(mvp: M4, x: number, y: number, z: number): [number, number, number] {
-  const w = mvp[3]*x + mvp[7]*y + mvp[11]*z + mvp[15];
-  return [
-    (mvp[0]*x + mvp[4]*y + mvp[8]*z  + mvp[12]) / w,
-    (mvp[1]*x + mvp[5]*y + mvp[9]*z  + mvp[13]) / w,
-    w,
-  ];
-}
-
-
-// ── Color palette ─────────────────────────────────────────────────────────────
-
-function hsl(h: number, s: number, l: number): [number, number, number] {
-  const c = (1 - Math.abs(2 * l - 1)) * s;
-  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-  const m = l - c / 2;
-  let r = 0, g = 0, b = 0;
-  if      (h < 60)  { r = c; g = x; }
-  else if (h < 120) { r = x; g = c; }
-  else if (h < 180) { g = c; b = x; }
-  else if (h < 240) { g = x; b = c; }
-  else if (h < 300) { r = x; b = c; }
-  else              { r = c; b = x; }
-  return [r + m, g + m, b + m];
-}
-
-// Assign each particle a stable vibrant hue based on its 3D angle
-// Uses atan2 of x/z to spread hues around the full 360° wheel,
-// then biases away from dull yellow-green (60-120°) toward neons.
-function particleHues(particles: Float32Array, n: number): Float32Array {
-  const hues = new Float32Array(n);
-  for (let i = 0; i < n; i++) {
-    const raw = (Math.atan2(particles[i*3+2], particles[i*3]) / Math.PI + 1) * 180; // 0-360
-    // Remap 60-120 (yellow-green) → push toward electric lime / cyan instead
-    const h = (raw + i * 137.5) % 360; // golden-angle offset so nearby particles differ
-    hues[i] = h;
-  }
-  return hues;
-}
-
-// Blend hues of two endpoints, choose shorter arc around the wheel
-function blendHue(a: number, b: number): number {
-  let d = b - a;
-  if (d >  180) d -= 360;
-  if (d < -180) d += 360;
-  return (a + d * 0.5 + 360) % 360;
-}
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
 function compile(gl: WebGLRenderingContext, type: number, src: string) {
   const s = gl.createShader(type)!;
   gl.shaderSource(s, src);
   gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+    console.error('RippleMesh shader compile failed:', gl.getShaderInfoLog(s));
   return s;
 }
 
@@ -148,30 +141,56 @@ function makeProgram(gl: WebGLRenderingContext, vs: string, fs: string) {
   gl.attachShader(p, compile(gl, gl.VERTEX_SHADER, vs));
   gl.attachShader(p, compile(gl, gl.FRAGMENT_SHADER, fs));
   gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS))
+    console.error('RippleMesh program link failed:', gl.getProgramInfoLog(p));
   return p;
 }
 
-// ── Particles ─────────────────────────────────────────────────────────────────
+// ── Grid ─────────────────────────────────────────────────────────────────────
 
-const N    = 170;
-const CONN = 0.75;
-const LINE_W = 2.2; // pixels
+const COLS    = 180;   // across
+const ROWS    = 275;   // into the distance
+const SPACING = 0.285;
 
-function seedParticles(): Float32Array {
-  const p = new Float32Array(N * 3);
-  for (let i = 0; i < N; i++) {
-    const u  = Math.random() * 2 - 1;
-    const v  = Math.random() * 2 * Math.PI;
-    const r  = Math.cbrt(Math.random());
-    const sq = Math.sqrt(Math.max(0, 1 - u * u));
-    p[i*3]   = r * sq * Math.cos(v) * 2.2; // wide x
-    p[i*3+1] = r * sq * Math.sin(v) * 1.4;
-    p[i*3+2] = r * u  * 2.0;               // wide z
+function seedGrid(): Float32Array {
+  const g = new Float32Array(COLS * ROWS * 2);
+  let i = 0;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      g[i++] = (c - (COLS - 1) / 2) * SPACING;
+      g[i++] = 3.0 - r * SPACING; // rows recede from just in front of the camera
+    }
   }
-  return p;
+  return g;
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Camera ───────────────────────────────────────────────────────────────────
+
+const FOV   = 0.95;
+const PITCH = 0.19;  // radians, tipped down
+const CAM_Y = 3.4;   // eye height above the ground plane
+
+// Cast the cursor's screen position onto the y = 0 ground plane so the ripple
+// follows the pointer across the terrain in world units rather than in pixels.
+function cursorToGround(ndcX: number, ndcY: number, aspect: number): [number, number] | null {
+  const tanHalf = Math.tan(FOV / 2);
+  const vx = ndcX * tanHalf * aspect;
+  const vy = ndcY * tanHalf;
+  const vz = -1;
+
+  // view -> world is the transpose of the camera's rotation
+  const c = Math.cos(PITCH), sn = Math.sin(PITCH);
+  const wx = vx;
+  const wy = c * vy + sn * vz;
+  const wz = -sn * vy + c * vz;
+
+  if (wy > -1e-3) return null;      // ray points at or above the horizon
+  const t = -CAM_Y / wy;
+  if (t > 200) return null;         // grazing the horizon — too far to matter
+  return [wx * t, wz * t];
+}
+
+// ── Component ────────────────────────────────────────────────────────────────
 
 export default function RippleMesh({ className = '' }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -184,162 +203,88 @@ export default function RippleMesh({ className = '' }: { className?: string }) {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.clearColor(0, 0, 0, 1);
 
-    const lineProg  = makeProgram(gl, LINE_VERT,  LINE_FRAG);
-    const pointProg = makeProgram(gl, POINT_VERT, POINT_FRAG);
+    const prog = makeProgram(gl, VERT, FRAG);
+    gl.useProgram(prog);
 
-    const particles = seedParticles();
-    const hues      = particleHues(particles, N);
+    const grid = seedGrid();
+    const buf = gl.createBuffer()!;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, grid, gl.STATIC_DRAW);
 
-    // Point buffer (static)
-    const ptBuf = gl.createBuffer()!;
-    gl.bindBuffer(gl.ARRAY_BUFFER, ptBuf);
-    gl.bufferData(gl.ARRAY_BUFFER, particles, gl.STATIC_DRAW);
+    const gridLoc = gl.getAttribLocation(prog, 'a_grid');
+    gl.enableVertexAttribArray(gridLoc);
+    gl.vertexAttribPointer(gridLoc, 2, gl.FLOAT, false, 0, 0);
 
-    // Line buffer (dynamic — screen-space quads)
-    // Per line: 6 vertices, each vertex: [ndcX, ndcY, perp, r, g, b, a] = 7 floats
-    const FLOATS_PER_VERT = 7;
-    const MAX_LINES = N * N;
-    const lineData = new Float32Array(MAX_LINES * 6 * FLOATS_PER_VERT);
-    const lineBuf  = gl.createBuffer()!;
+    const uMVP    = gl.getUniformLocation(prog, 'u_mvp');
+    const uTime   = gl.getUniformLocation(prog, 'u_time');
+    const uMouse  = gl.getUniformLocation(prog, 'u_mouse');
+    const uAgit   = gl.getUniformLocation(prog, 'u_agitation');
+    const uPx     = gl.getUniformLocation(prog, 'u_px');
+    const uDpr    = gl.getUniformLocation(prog, 'u_dpr');
 
-    const ptMVP = gl.getUniformLocation(pointProg, 'u_mvp');
+    let animId = 0;
+    const t0 = performance.now() / 1000;
+    let lastFrame = t0;
 
-    let animId: number;
-    let lastT = performance.now() / 1000;
-    let ry = 0, rx = 0;
+    // Cursor state, parked far off the field until the pointer first moves.
+    let mouseX = 0, mouseZ = -18;
+    let agitation = 0;
+    let lastPx = 0, lastPy = 0, hasLast = false;
+
+    const onMove = (e: MouseEvent) => {
+      const r = canvas.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+
+      if (hasLast) {
+        const d = Math.hypot(e.clientX - lastPx, e.clientY - lastPy);
+        // Ramp up with movement, but cap so a fast flick doesn't blow it out.
+        agitation = Math.min(1, agitation + d / 260);
+      }
+      lastPx = e.clientX; lastPy = e.clientY; hasLast = true;
+
+      const ndcX = ((e.clientX - r.left) / r.width) * 2 - 1;
+      const ndcY = 1 - ((e.clientY - r.top) / r.height) * 2;
+      const hit = cursorToGround(ndcX, ndcY, r.width / r.height);
+      if (hit) { mouseX = hit[0]; mouseZ = hit[1]; }
+    };
+    window.addEventListener('mousemove', onMove);
 
     const resize = () => {
-      canvas.width  = canvas.offsetWidth  * devicePixelRatio;
-      canvas.height = canvas.offsetHeight * devicePixelRatio;
+      // Measure with getBoundingClientRect so the CSS root zoom is included —
+      // offsetWidth is in the element's own (pre-zoom) coordinate space.
+      const r = canvas.getBoundingClientRect();
+      canvas.width  = Math.max(1, Math.round(r.width  * devicePixelRatio));
+      canvas.height = Math.max(1, Math.round(r.height * devicePixelRatio));
       gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform1f(uDpr, devicePixelRatio);
+      gl.uniform1f(uPx, canvas.height);
     };
     resize();
     window.addEventListener('resize', resize);
 
     const draw = () => {
       const now = performance.now() / 1000;
-      const dt  = Math.min(now - lastT, 0.05); // cap at 50ms
-      lastT = now;
-      const W = canvas.width;
-      const H = canvas.height;
+      const t = now - t0;
+      const dt = Math.min(now - lastFrame, 0.05);
+      lastFrame = now;
 
-      ry += 0.18 * dt;
-      rx = Math.sin(now * 0.07) * 0.3;
+      // Agitation bleeds off once the cursor settles.
+      agitation *= Math.exp(-dt * 1.1);
 
       gl.clear(gl.COLOR_BUFFER_BIT);
 
-      const aspect = W / H;
-      const proj  = perspective(0.80, aspect, 0.5, 20);
-      const view  = translate(0, 0, -4.0);
-      const model = mul(rotY(ry), rotX(rx));
-      const mvp   = mul(proj, mul(view, model));
+      const aspect = canvas.width / canvas.height;
+      const proj = perspective(FOV, aspect, 0.3, 130);
+      // low camera, tipped down just enough to read the hills as terrain
+      const view = mul(rotX(PITCH), translate(0, -CAM_Y, 0));
+      const mvp  = mul(proj, view);
 
-      // ── Pre-project all particles to NDC ──────────────────────────────
-      const ndcs = new Float32Array(N * 3); // [ndcX, ndcY, w]
-      for (let i = 0; i < N; i++) {
-        const px = particles[i*3], py = particles[i*3+1], pz = particles[i*3+2];
-        const [nx, ny, w] = project(mvp, px, py, pz);
-        ndcs[i*3] = nx; ndcs[i*3+1] = ny; ndcs[i*3+2] = w;
-      }
+      gl.uniformMatrix4fv(uMVP, false, mvp);
+      gl.uniform1f(uTime, t);
+      gl.uniform2f(uMouse, mouseX, mouseZ);
+      gl.uniform1f(uAgit, agitation);
 
-      // ── Build screen-space quad geometry for each line ────────────────
-      let vc = 0; // vertex count
-      const hw = (LINE_W * 0.5 * devicePixelRatio); // half-width in pixels
-
-      for (let i = 0; i < N; i++) {
-        const wi = ndcs[i*3+2];
-        if (wi < 0) continue; // behind camera
-
-        const ax = ndcs[i*3],   ay = ndcs[i*3+1];
-        const sax = (ax + 1) * 0.5 * W;
-        const say = (ay + 1) * 0.5 * H;
-
-        for (let j = i + 1; j < N; j++) {
-          const wj = ndcs[j*3+2];
-          if (wj < 0) continue;
-
-          const dx = particles[i*3]   - particles[j*3];
-          const dy = particles[i*3+1] - particles[j*3+1];
-          const dz = particles[i*3+2] - particles[j*3+2];
-          const d  = Math.sqrt(dx*dx + dy*dy + dz*dz);
-          if (d >= CONN) continue;
-
-          const fade = 1 - d / CONN;
-          const h = blendHue(hues[i], hues[j]);
-          // Closer connections brighter (l 0.55→0.72), all fully saturated
-          const l = 0.55 + fade * 0.17;
-          const [r, g, b] = hsl(h, 1.0, l);
-          const a = fade * 0.95;
-
-          const bx = ndcs[j*3],   by = ndcs[j*3+1];
-          const sbx = (bx + 1) * 0.5 * W;
-          const sby = (by + 1) * 0.5 * H;
-
-          // screen direction + perpendicular
-          let ldx = sbx - sax, ldy = sby - say;
-          const ll = Math.sqrt(ldx*ldx + ldy*ldy);
-          if (ll < 0.5) continue;
-          ldx /= ll; ldy /= ll;
-          const px = -ldy, py = ldx; // perpendicular
-
-          // 4 corners in screen space → NDC
-          const corners: [number, number, number][] = [
-            [(sax + px*hw) / (W*0.5) - 1, (say + py*hw) / (H*0.5) - 1, -1],
-            [(sax - px*hw) / (W*0.5) - 1, (say - py*hw) / (H*0.5) - 1, +1],
-            [(sbx + px*hw) / (W*0.5) - 1, (sby + py*hw) / (H*0.5) - 1, -1],
-            [(sbx - px*hw) / (W*0.5) - 1, (sby - py*hw) / (H*0.5) - 1, +1],
-          ];
-
-          // Two triangles: [0,1,2] and [1,3,2]
-          const tris = [0,1,2, 1,3,2];
-          for (const ci of tris) {
-            const [cx, cy, perp] = corners[ci];
-            const base = vc * FLOATS_PER_VERT;
-            lineData[base]   = cx;
-            lineData[base+1] = cy;
-            lineData[base+2] = perp;
-            lineData[base+3] = r;
-            lineData[base+4] = g;
-            lineData[base+5] = b;
-            lineData[base+6] = a;
-            vc++;
-          }
-
-          if (vc + 6 >= MAX_LINES * 6) break;
-        }
-        if (vc + 6 >= MAX_LINES * 6) break;
-      }
-
-      // ── Upload and draw lines ─────────────────────────────────────────
-      gl.useProgram(lineProg);
-      gl.bindBuffer(gl.ARRAY_BUFFER, lineBuf);
-      gl.bufferData(gl.ARRAY_BUFFER, lineData.subarray(0, vc * FLOATS_PER_VERT), gl.DYNAMIC_DRAW);
-
-      const stride = FLOATS_PER_VERT * 4;
-      const ndcLoc   = gl.getAttribLocation(lineProg, 'a_ndc');
-      const perpLoc  = gl.getAttribLocation(lineProg, 'a_perp');
-      const colorLoc = gl.getAttribLocation(lineProg, 'a_color');
-
-      gl.enableVertexAttribArray(ndcLoc);
-      gl.vertexAttribPointer(ndcLoc,   2, gl.FLOAT, false, stride, 0);
-      gl.enableVertexAttribArray(perpLoc);
-      gl.vertexAttribPointer(perpLoc,  1, gl.FLOAT, false, stride, 2 * 4);
-      gl.enableVertexAttribArray(colorLoc);
-      gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, stride, 3 * 4);
-
-      gl.drawArrays(gl.TRIANGLES, 0, vc);
-
-      // ── Draw particles ────────────────────────────────────────────────
-      gl.useProgram(pointProg);
-      gl.uniformMatrix4fv(ptMVP, false, mvp);
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, ptBuf);
-      const posLoc = gl.getAttribLocation(pointProg, 'a_pos');
-      gl.enableVertexAttribArray(posLoc);
-      gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
-
-      gl.drawArrays(gl.POINTS, 0, N);
-
+      gl.drawArrays(gl.POINTS, 0, COLS * ROWS);
       animId = requestAnimationFrame(draw);
     };
     draw();
@@ -347,6 +292,7 @@ export default function RippleMesh({ className = '' }: { className?: string }) {
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onMove);
     };
   }, []);
 

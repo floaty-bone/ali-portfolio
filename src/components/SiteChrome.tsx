@@ -9,7 +9,8 @@ export const NAV_LINKS = [
   { to: '/home', label: 'Home' },
   { to: '/downloadsPage', label: 'Portfolio' },
   { to: '/competencesPage', label: 'Skills' },
-  { to: '/loisirs', label: 'Interests' },
+  // TEMP: Interests page hidden, will bring back later
+  // { to: '/loisirs', label: 'Interests' },
   { to: '/rocketDemo', label: 'LQR Demo' },
 ];
 
@@ -64,25 +65,34 @@ export function Reveal({
   );
 }
 
-// ─── Background: particle mesh, dimmed and vignetted so text stays crisp ──────
+// ─── Background: terrain field, dimmed and vignetted so text stays crisp ──────
 
-export function SiteBackground() {
+// `contained` scopes the background to its positioned parent (used for the home
+// hero) instead of pinning it to the viewport, and fades its lower edge into the
+// page so the section below starts on flat dark.
+export function SiteBackground({ contained = false }: { contained?: boolean }) {
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none">
-      <div className="absolute inset-0 opacity-[0.55]">
+    <div className={`${contained ? 'absolute' : 'fixed'} inset-0 z-0 overflow-hidden pointer-events-none`}>
+      <div className="absolute inset-0 opacity-[0.8]">
         <RippleMesh className="w-full h-full" />
       </div>
       {/* Flat scrim */}
-      <div className="absolute inset-0" style={{ background: 'rgba(7,7,11,0.82)' }} />
+      <div className="absolute inset-0" style={{ background: 'rgba(7,7,11,0.63)' }} />
       {/* Vignette + warm glow from the top-left */}
       <div
         className="absolute inset-0"
         style={{
           background:
             'radial-gradient(120% 90% at 15% 0%, rgba(201,169,106,0.10) 0%, transparent 55%),' +
-            'radial-gradient(100% 100% at 50% 50%, transparent 35%, rgba(7,7,11,0.85) 100%)',
+            'radial-gradient(100% 100% at 50% 50%, transparent 35%, rgba(7,7,11,0.72) 100%)',
         }}
       />
+      {contained && (
+        <div
+          className="absolute inset-x-0 bottom-0 h-40"
+          style={{ background: 'linear-gradient(to bottom, transparent, #07070b)' }}
+        />
+      )}
     </div>
   );
 }
@@ -272,10 +282,18 @@ export function ContactFooter() {
 
 // ─── Page shell ───────────────────────────────────────────────────────────────
 
-export function PageShell({ children }: { children: React.ReactNode }) {
+// `background="none"` lets a page place its own <SiteBackground contained /> in a
+// single section rather than behind the whole scroll.
+export function PageShell({
+  children,
+  background = 'fixed',
+}: {
+  children: React.ReactNode;
+  background?: 'fixed' | 'none';
+}) {
   return (
-    <div className="relative min-h-screen bg-transparent text-white">
-      <SiteBackground />
+    <div className="relative min-h-screen bg-[#07070b] text-white">
+      {background === 'fixed' && <SiteBackground />}
       <SiteNav />
       <main className="relative z-10">{children}</main>
       <ContactFooter />

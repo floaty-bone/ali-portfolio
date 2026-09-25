@@ -103,13 +103,30 @@ export default function RocketDemo() {
     scene.background = new THREE.Color(0x0d0e10);
     scene.fog = new THREE.FogExp2(0x0d0e10, 0.0008);
 
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
+    // Size from the container's own box, not window.innerWidth/Height: the page
+    // is rendered under a CSS root zoom, so the window dimensions are in a
+    // different coordinate space than this canvas and would leave the scene
+    // undersized in the top-left corner.
+    const viewSize = () => ({
+      w: Math.max(1, container.clientWidth),
+      h: Math.max(1, container.clientHeight),
+    });
+
+    // Device pixels per local CSS pixel, including the root zoom.
+    const pixelScale = () => {
+      const rect = container.getBoundingClientRect();
+      const zoom = container.clientWidth ? rect.width / container.clientWidth : 1;
+      return Math.min(window.devicePixelRatio * (zoom || 1), 2);
+    };
+
+    const v0 = viewSize();
+    const camera = new THREE.PerspectiveCamera(60, v0.w / v0.h, 1, 2000);
     camera.position.set(0, 60, 120);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(v0.w, v0.h);
+    renderer.setPixelRatio(pixelScale());
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 0.9;
     renderer.shadowMap.enabled = true;
@@ -648,9 +665,11 @@ controls.minDistance = 2;
 
     // ── Resize ────────────────────────────────────────────────────────────────
     const onResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+      const { w, h } = viewSize();
+      camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(pixelScale());
+      renderer.setSize(w, h);
     };
     window.addEventListener("resize", onResize);
 

@@ -1274,6 +1274,245 @@ function CanardContent() {
   );
 }
 
+function TabletContent() {
+  return (
+    <>
+      <Subsubsection title="Context" />
+      <Para>
+        This is a self directed concept study: a handheld{' '}
+        <strong className="text-white">ground control station for an unmanned aircraft</strong>, in the form of a
+        sealed, sunlight readable tablet controller. The footprint is 200 mm by 80 mm, landscape, with a display
+        occupying most of the front face, a joystick at each upper corner, three buttons on one side and a single
+        button on the other. I modelled the full assembly in CAD and then wrote it up as a mechanical teardown,
+        working from the outside in and setting out the reasoning behind each decision rather than only the result.
+      </Para>
+      <Para>
+        There was no customer specification behind it, so the first piece of work was deriving one from the use case:
+        outdoors, standing, for hours, in whatever weather the flight window allows. That gives IP54 minimum with IP65
+        as the goal, a 1.2 m drop onto concrete, −20 to 55 °C operating, full solar load at 1000 W/m², a full mission
+        day of endurance, two handed gloved operation, and a continuous command and video link.
+      </Para>
+
+      <Fig sizeOverride="max-h-[35rem] max-w-[57rem]" src={`${BASE}/tablet/1.png`}
+        caption="The device: front elevation and three-quarter view. Two joysticks and four buttons surround a display that occupies most of the front face." />
+
+      <Subsection title="The Tension That Shapes Everything" />
+      <Para>
+        Two requirements pull directly against each other. Sealing wants a closed box with as few joints as possible,
+        every one gasketed and clamped. Thermal management wants heat out of a device that cannot be vented, so every
+        watt has to conduct through solid structure to an outer surface. A sealed box is a good thermos. A third
+        requirement, <strong className="text-white">RF transparency</strong>, rules out the obvious answer of a metal
+        enclosure, because the command and video antenna sits inside the housing.
+      </Para>
+      <Para>
+        The architecture is the compromise between those three: a polymer enclosure for RF and cost, a metal internal
+        plate acting at once as structure, heat spreader and seal clamp, and the thermal path concentrated onto the
+        back face.
+      </Para>
+
+      <Fig sizeOverride="max-h-[32rem] max-w-[62rem]" src={`${BASE}/tablet/0.png`}
+        caption="Assembled to fully stripped: (A, B) front and rear assembled, (C) rear housing and heat spreader removed, (D) boards and battery exposed, (E, F) midplate installed then removed with the control seals beneath, (G) bare front housing." />
+
+      <Subsection title="Architecture: the Midplate Is the Structure" />
+      <Para>
+        The device is a layered stack built around a central structural plate: cover lens and display bonded into the
+        front frame, front housing, control seals, midplate, electronics, battery, heat spreader plate, rear housing.
+        The single decision underpinning everything else is that{' '}
+        <strong className="text-white">the midplate, not the housing, carries the load</strong>. The shells are
+        enclosures and sealing surfaces carrying no significant structural duty; every board, the battery and the
+        display reference the plate. That puts the grounding and the mechanical datum on one part, frees the shells to
+        be optimised for sealing and cosmetics rather than stiffness, and routes a drop through a stiff plate instead
+        of through the glass.
+      </Para>
+
+      <Fig sizeOverride="max-h-[32rem] max-w-[62rem]" src={`${BASE}/tablet/2.png`}
+        caption="Internal layout, rear housing removed: motherboard along the upper cavity, battery in the centre, joystick, button, charging and antenna daughterboards distributed around the perimeter. The green line is the perimeter gasket." />
+
+      <Para>
+        The electronics are deliberately split into a motherboard and five daughterboards. Splitting boards costs
+        money, since every interconnect is a connector, an assembly operation and a reliability risk, but it is right
+        here for four reasons: the controls sit at the extremities of a large, thin, non rectangular volume; small
+        commodity boards scrap cheaply where a full footprint board does not; the joysticks are the highest wear item
+        and are optional on this product, so isolating them supports both service and a de-populated variant; and
+        putting the antenna on its own board at the edge, away from the SoC and the switching regulators, buys more
+        noise margin than anything else available.
+      </Para>
+
+      <Fig sizeOverride="max-h-[40rem] max-w-[57rem]" src={`${BASE}/tablet/4.png`}
+        caption="Midplate: (A) in the assembly with the battery removed, (B) the part alone, with the mounting zone for each board, the control openings and the central battery pocket marked." />
+
+      <Subsubsection title="Four Jobs on One Part" />
+      <ul className="text-sm text-white/65 space-y-1.5 mb-3 pl-4">
+        <li><strong className="text-white">Structural spine:</strong> the stiffest member and the datum everything
+          else references.</li>
+        <li><strong className="text-white">Board carrier:</strong> a long channel for the motherboard, a narrower one
+          for the button and antenna board, end zones for the joystick and button boards.</li>
+        <li><strong className="text-white">Battery tray:</strong> the large central recess.</li>
+        <li><strong className="text-white">Seal clamp:</strong> its underside compresses the control seals against the
+          front housing.</li>
+      </ul>
+      <Para>
+        Consolidating these onto one die cast magnesium part (AZ91D, 1.2 mm nominal wall) is the right call: every
+        extra interface in the stack adds tolerance, and seal compression is only ever as consistent as the stack-up
+        controlling it. Magnesium gives the highest specific stiffness, integral bosses and pockets in one operation,
+        thermal spreading and an EMI ground plane. The costs are honest ones: it is anodically active, so it needs a
+        conversion coating and e-coat with the stainless fasteners isolated by it, and it blocks RF locally, so the
+        antenna keep-out is handled by cutting a window in the casting and overmoulding a polymer insert to restore
+        the stiffness there.
+      </Para>
+      <Para>
+        The plate enters the housing on a <strong className="text-white">transition fit</strong> and is retained by
+        screws, which is a deliberate distinction rather than loose terminology. An interference fit would have to be
+        driven home against populated boards and compressed seals, needing a fixture rather than an operator&rsquo;s
+        hands, and it would bow a large thin casting; since the underside of that casting is what sets the seal
+        compression, bowing is the one thing it cannot afford to do. The principle carried through the whole design:{' '}
+        <strong className="text-white">the fit locates, the screws clamp, the seals seal</strong>. A tight fit earns no
+        part of the IP rating.
+      </Para>
+
+      <Subsection title="Sealing: Four Interfaces, All of Which Have to Work" />
+      <Para>
+        Ingress protection is a system property. Water finds the weakest point on the perimeter, and the device is
+        only ever as sealed as its worst joint. There are four sealed interfaces here.
+      </Para>
+
+      <DataTable
+        caption="The four sealed interfaces and the part that closes each one"
+        head={['Interface', 'Seal', 'Design point']}
+        rows={[
+          ['Housing perimeter', 'Moulded silicone gasket, 50–60 Shore A, 20–30 % compression', 'Groove is one unbroken closed loop; every fastener sits outboard of it, so nothing penetrates the sealed volume'],
+          ['Control openings', 'Silicone seals, 40–50 Shore A, 15–25 % compression', 'Softer than the perimeter gasket so control feel is not degraded; compressed by the midplate underside'],
+          ['Display joint', 'Die-cut acrylic PSA on PU foam, 0.15–0.25 mm', 'Continuous closed loop; the foam bonds, seals and isolates the glass from frame flex in one part'],
+          ['Charging port', 'Silicone O-ring, 10–25 % radial squeeze, captive TPE plug', 'Radial rather than face seal, so sealing load is independent of how hard the user pushes'],
+        ]}
+      />
+
+      <Fig sizeOverride="max-h-[26rem] max-w-[40rem]" src={`${BASE}/tablet/8.png`}
+        caption="Control seals exposed in the housing, then covered and compressed by the midplate" />
+
+      <Fig sizeOverride="max-h-[26rem] max-w-[40rem]" src={`${BASE}/tablet/7.png`}
+        caption="Rear closure: continuous gasket groove, fixings in the land outboard of it" />
+
+      <Para>
+        Two features of the rear closure are worth calling out because both are easy to get wrong. The groove is{' '}
+        <strong className="text-white">unbroken</strong>: a gasket made from segments leaks at the joins, and a groove
+        that stops and restarts forces exactly that. And <strong className="text-white">every fastener is outboard of
+        the seal</strong>, which removes a whole category of problem, since a screw crossing a sealed boundary needs
+        its own seal and each one is an independent leak path. The corresponding requirement is that the mating bosses
+        in the front housing must be blind.
+      </Para>
+      <Para>
+        The real design risk on the control seals is compression control. The squeeze is set by a stack-up running
+        through housing, seal, midplate and screw joint. Too little and they leak; too much and the buttons stiffen,
+        the seals take a permanent set and the midplate is preloaded in bending. That wants hard stops which bottom
+        the plate against the housing, so seal performance does not depend on how hard an operator drove the screws.
+      </Para>
+
+      <Fig sizeOverride="max-h-[26rem] max-w-[40rem]" src={`${BASE}/tablet/3.png`}
+        caption="Display bonding land: a flat step, not a channel, which is what makes the joint a pre-formed tape rather than a dispensed bead" />
+
+      <Fig sizeOverride="max-h-[26rem] max-w-[40rem]" src={`${BASE}/tablet/9.png`}
+        caption="USB-C port: captive plug with an O-ring compressed radially against the bore wall" />
+
+      <Para>
+        The display land is a flat step rather than a recessed channel, and that geometry decides the joint. A channel
+        has walls to contain a dispensed adhesive bead; a flat land has nothing to contain a liquid, so it implies a
+        pre-formed adhesive, which means tape. A foam cored PSA does three jobs at once: it bonds, the closed cell
+        foam conforms and seals, and it decouples the glass from the frame so a drop or a squeeze is not transmitted
+        into the display as a bending load. That third function is easy to overlook and is often the reason a display
+        survives a drop. The land has to be at least 1.5 mm wide to carry it, which sets a floor under the bezel.
+      </Para>
+
+      <Subsection title="Thermal: the Back of the Device Is the Radiator" />
+      <Para>
+        A sealed enclosure has no useful internal convection, so every watt from the SoC, the power conversion and the
+        backlight has to conduct through solid material to an external surface. For part of the day the environment is
+        heating the enclosure rather than cooling it. A stamped aluminium 5052-H32 plate, 0.6 to 0.8 mm, takes a
+        concentrated flux from a die of perhaps 100 mm² and spreads it across a large area, dropping the flux density
+        by two orders of magnitude before it crosses into the polymer housing.
+      </Para>
+
+      <Fig sizeOverride="max-h-[26rem] max-w-[40rem]" src={`${BASE}/tablet/6.png`}
+        caption="Heat spreader: one pressed blank, pads stepping down onto the hot components, panel closing over the battery pocket" />
+
+      <Fig sizeOverride="max-h-[26rem] max-w-[40rem]" src={`${BASE}/tablet/5.png`}
+        caption="Rear view with the plate fitted. Amber is the moulded polymer housing, blue the metal spreader" />
+
+      <Para>
+        The pressing makes the part&rsquo;s dual role legible. Two small pads step down to meet the SoC and its
+        neighbours; the large panel behind them closes over the battery pocket, so the same part that collects the
+        heat also retains and protects the cell. The step formed around the main panel stiffens sheet that would
+        otherwise oil-can, and the mounting tabs are bent from the same blank rather than added as brackets, so it
+        costs one tool and no assembly operations.
+      </Para>
+      <Para>
+        Combining those two functions is efficient but sets a heat source and a temperature sensitive component on the
+        same conductive body, and cell life falls away above roughly 45 °C. Two things keep them apart: the pads are
+        local, so heat enters well away from the cell, and the panel over the battery sits off the cell face with an
+        air gap or a low conductivity pad rather than a thermal one. The pads themselves never touch the package
+        directly; a 2 to 3 W/m·K silicone gap pad at 20 to 40 % compression takes up the tolerance stack, and gap pads
+        beat grease here because they do not pump out over thermal cycles.
+      </Para>
+      <Para>
+        The battery is a lithium polymer pouch cell, which brings three mechanical obligations that get skipped
+        regularly: an 8 to 10 % swell allowance designed into the pocket from the start, since a cell in a tight
+        pocket bows the midplate and with the display directly above that force ends up in the glass; nothing rigid
+        bearing on the cell face; and retention without adhesive, so a full-day duty cycle device can have its battery
+        replaced rather than destroyed.
+      </Para>
+
+      <Subsection title="Fastening" />
+      <Para>
+        Fasteners are tiered by duty rather than standardised for convenience: M1.6 A2 stainless on the perimeter and
+        battery access into heat-set inserts, M2 for the midplate retention screws because they carry the seal clamp
+        load and come out every time the battery is serviced, and M1.6 thread-forming without inserts for the internal
+        board fixings that are assembled once at the factory. Thread-forming screws degrade their formed thread on
+        every cycle, so any joint a technician will open gets an insert. M2.5 is laptop chassis hardware and spends
+        boss diameter an 80 mm short edge does not have.
+      </Para>
+      <Para>
+        Perimeter spacing was set from compression uniformity rather than by eye: roughly 530 mm of perimeter once the
+        chamfered corners and the lower notch are allowed for, at a 20 to 28 mm pitch, gives about twenty fasteners,
+        closing up at the corners where a gasketed flange most wants to lift. The heads are countersunk so nothing
+        stands proud to catch or take an impact when the device is set down on rough ground, and the perimeter is
+        tightened in a star pattern, since working sequentially around the edge rolls the gasket compression ahead of
+        the fasteners.
+      </Para>
+
+      <Subsection title="What the Concept Does Not Yet Have" />
+      <Para>
+        Writing up the assembly sequence surfaced a real omission:{' '}
+        <strong className="text-white">the midplate as modelled has no aperture for the display cable</strong>. The
+        display sits in front of the plate and its driving connector is on the motherboard behind it, so the flex has
+        to cross the plate and currently has no route. It is cheap to add now and expensive later, because the slot
+        position is not free: it is fixed by where the display&rsquo;s flex tail exits and where the mating connector
+        sits. It also needs to be more than a hole, namely a slot sized for a service loop, fully radiused and
+        deburred because a cast edge against a polyimide flex is a cutting edge under vibration, with strain relief on
+        both sides and clearance from the battery pocket.
+      </Para>
+      <Para>
+        The other open items, in order: fix the thickness and mass budget, since only the footprint is currently
+        frozen; settle the target IP rating, which decides whether the display bond must seal or only retain, and
+        whether an ePTFE pressure equalisation vent is needed; build a thermal resistance network and test it, since
+        the passive path is sized by judgement and the answer decides between aluminium, copper and a vapour chamber;
+        run the tolerance stack behind the seal compression hard stops; define the antenna, which drives the keep-out
+        and therefore the RF window in the casting; decide the joystick service strategy; and run a drop simulation to
+        test the assumption that the midplate takes the load path.
+      </Para>
+
+      <Outcome accent="#C9A96A" title="Key Outcomes">
+        <ul className="space-y-1">
+          <li>· A full sealed enclosure architecture resolving a three way conflict between ingress protection, passive thermal management and RF transparency: polymer shell, structural magnesium midplate, and the back face as the radiator.</li>
+          <li>· One die cast midplate carrying four functions at once (structural spine, board carrier, battery tray and seal clamp), eliminating the tolerance stack that separate parts would introduce.</li>
+          <li>· Four sealed interfaces specified to an IP65 target, each with the seal type, durometer and compression range chosen for the duty rather than defaulted.</li>
+          <li>· Every material choice documented against the alternatives it beat, from PC/ABS over ABS on heat deflection temperature to silicone over nitrile on low temperature flexibility and compression set.</li>
+          <li>· An honest defect list: a missing display cable pass-through caught during write-up, plus the analysis still standing between the concept and a released design (thermal model, tolerance stack, drop simulation).</li>
+        </ul>
+      </Outcome>
+    </>
+  );
+}
+
 // ─── Reading progress ─────────────────────────────────────────────────────────
 
 /* Hairline across the very top that tracks how far down the page you are.
@@ -1287,8 +1526,11 @@ function ReadingProgress() {
     const update = () => {
       frame = 0;
       const doc = document.documentElement;
-      const scrollable = doc.scrollHeight - window.innerHeight;
-      setProgress(scrollable > 0 ? Math.min(1, window.pageYOffset / scrollable) : 0);
+      // clientHeight/scrollTop rather than innerHeight/pageYOffset: under the
+      // CSS root zoom those window values are in a different coordinate space
+      // than scrollHeight, which would skew the progress bar.
+      const scrollable = doc.scrollHeight - doc.clientHeight;
+      setProgress(scrollable > 0 ? Math.min(1, doc.scrollTop / scrollable) : 0);
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -1317,7 +1559,7 @@ function ReadingProgress() {
 
 // Which top-level accordion each deep-link id lives under, so the parent opens
 // with it. Ids are shared with the Home page's project list.
-const PERSONAL_IDS = ['lqr', 'canard', 'starship', 'combustion'];
+const PERSONAL_IDS = ['lqr', 'canard', 'starship', 'combustion', 'gcs-tablet'];
 const INTERNSHIP_IDS = ['caterpillar', 'ge'];
 
 const DownloadsPage = () => {
@@ -1371,6 +1613,9 @@ const DownloadsPage = () => {
             </SubSection>
             <SubSection label="Personal Study" title="Optimisation of Regenerative Cooling in a Combustion Chamber" id="combustion" initialOpen={openSection === 'combustion'}>
               <CombustionContent />
+            </SubSection>
+            <SubSection label="Personal Project" title="Ground Control Station Tablet: Conceptual Mechanical Teardown" id="gcs-tablet" initialOpen={openSection === 'gcs-tablet'}>
+              <TabletContent />
             </SubSection>
           </MajorSection>
 

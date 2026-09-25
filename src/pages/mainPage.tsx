@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { PageShell, Reveal, SectionHeading } from '../components/SiteChrome';
+import { PageShell, Reveal, SectionHeading, SiteBackground } from '../components/SiteChrome';
 
 // A glimpse of the technical portfolio — labels and titles taken verbatim
 // from the portfolio page sections.
@@ -45,10 +45,11 @@ const HomePage = () => {
   }, [location.state]);
 
   return (
-    <PageShell>
+    <PageShell background="none">
       {/* ── Hero ────────────────────────────────────────────────────────── */}
       <section className="gutter relative flex min-h-screen items-center pb-24 pt-[var(--nav-h)]">
-        <div className="mx-auto w-full max-w-6xl">
+        <SiteBackground contained />
+        <div className="relative z-10 mx-auto w-full max-w-6xl">
           <p className="eyebrow mb-7 animate-fade-up">
             Grenoble INP <span className="text-sand/50">·</span> Product Engineering
           </p>
